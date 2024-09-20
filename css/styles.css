@@ -1,0 +1,13 @@
+body, main {
+	margin: 0;
+	padding: 0;
+}
+
+nav, footer { padding: 10px; }
+
+nav, footer { background-color: antiquewhite; }
+
+nav {
+	display: flex;
+	flex-direction: column;
+}
