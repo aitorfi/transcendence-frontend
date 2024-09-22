@@ -9,25 +9,34 @@ let ballSpeedX, ballSpeedY;
 let player1Up, player1Down;
 let player2Up, player2Down;
 let gameLoopId;
-let player1Score = 0;
-let player2Score = 0;
-let wait = false;
+let timeoutId;
+let player1Score;
+let player2Score;
+let wait;
 
 //constants  
 const BALL_SIZE = 10;
 const PADDLE_SPEED = 6;
 const PADDLE_HEIGHT = 100;
 const PADDLE_WIDTH = 10;
+const BALL_DIR_RIGHT = '+';
+const BALL_DIR_LEFT = '-';
+const BALL_DIR_UP = '-';
+const BALL_DIR_DOWN = '+';
 
 export function initializeGame() {
 	canvas = document.getElementById('pongCanvas');
 	ctx = canvas.getContext('2d');
-	ballSpeedX = 4;
-	ballSpeedY = 1;
+	setBallSpeed();
+	/*ballSpeedX = 4;
+	ballSpeedY = 1;*/
 	player1Up = false;
 	player1Down = false;
 	player2Up = false;
 	player2Down = false;
+	player1Score = 0;
+	player2Score = 0;
+	wait = false;
 
 	// calculo para encontrar el punto medio de una superficie disponible
     player1Y = (canvas.height - PADDLE_HEIGHT) / 2;
@@ -61,7 +70,7 @@ function gameLoop() {
 	checkLeftAndRightCollision();
 	if (wait == true)
 	{
-		setTimeout(refresh, 2000);
+		timeoutId = setTimeout(refresh, 2000);
 		wait = false;
 	}
 	else
@@ -125,7 +134,6 @@ function leftCollision()
 			resetPlayerPositions();
 			wait = true;
 			showWinMessage("Player 2 wins");
-			terminateGame();
 		}
 	}
 }
@@ -143,7 +151,6 @@ function rightCollision()
 			resetPlayerPositions();
 			wait = true;
 			showWinMessage("Player 1 wins");
-			terminateGame();
 		}
 	}
 }
@@ -157,6 +164,8 @@ function checkLeftAndRightCollision()
 export function terminateGame() {
 	if (gameLoopId)
 		cancelAnimationFrame(gameLoopId);
+	if (timeoutId)
+		clearTimeout(timeoutId);
 }
 
 function showWinMessage(message) {
@@ -171,6 +180,7 @@ function resetBall()
 {
 	ballX = canvas.width / 2;
 	ballY = canvas.height / 2;
+	setBallSpeed();
 }
 
 function resetPlayerPositions()
@@ -187,4 +197,26 @@ function updateScore()
 
 function refresh() {
 	gameLoopId = requestAnimationFrame(gameLoop);
+}
+
+function getDirectionSideForBall()
+{
+	return Math.random() < 0.5 ? BALL_DIR_RIGHT : BALL_DIR_LEFT;
+}
+
+function getDirectionUpOrDownBall()
+{
+	return Math.random() < 0.5 ? BALL_DIR_UP : BALL_DIR_DOWN;
+}
+
+function setBallSpeed()
+{
+	let ballDirSideways = getDirectionSideForBall();
+	let ballDirUpOrDown = getDirectionUpOrDownBall();
+	ballSpeedX = 4;
+	if (ballDirSideways == BALL_DIR_LEFT)
+		ballSpeedX = (-1) * ballSpeedX;
+	ballSpeedY = 1;
+	if (ballDirUpOrDown == BALL_DIR_UP)
+		ballSpeedY = (-1) * ballSpeedY;
 }
