@@ -26,7 +26,26 @@
 	/*z-index: 0; /* El canvas debe estar detrás del título */
 }
 
+.scoreboard {
+    display: flex;
+    justify-content: space-between;  /* Asegura la separación máxima */
+    width: 40%;  /* Ocupar todo el ancho del contenedor */
+    padding: 10px;  /* Añadir espacio adicional si lo necesitas */
+}
+
 #player1-score, #player2-score  {
-	color: white;
+	background-color: white;
+	border-radius: 12px;
+	color: black;
+	font-style: italic;
 	font-size: 24px;
+	flex-basis: 35%; /* Esto asegura que cada marcador ocupe el 45% del ancho del contenedor */
+}
+
+#player1-score {
+	text-align: center;
+}
+
+#player2-score {
+	text-align: center;
 }
