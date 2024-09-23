@@ -1,0 +1,52 @@
+
+    <!-- Main profile section -->
+    <div class="container mt-4 text-center">
+        <div class="position-relative">
+            <!-- Imagen que actúa como botón -->
+            <img src="https://via.placeholder.com/100" class="rounded-circle" alt="Avatar" id="profileImage" style="cursor: pointer;">
+    
+            <!-- Campo de entrada de archivo oculto -->
+            <input type="file" id="imageInput" style="display: none;" accept="image/*">
+            
+            <!-- Badge o etiqueta que puedes mantener si lo deseas -->
+    </div>
+
+        <!-- Username field -->
+        <div class="mt-4 text-center">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" class="form-control text-center mx-auto" value="Value" style="max-width: 200px;">
+        </div>
+
+        <!-- Match History -->
+        <div class="mt-4">
+            <h4 class="text-center">Match History</h4>
+
+            <!-- First match (lost) -->
+            <div class="d-flex justify-content-between align-items-center mb-3 p-2 border">
+                <div class="d-flex align-items-center">
+                    <span class="bg-danger text-white p-2 rounded-circle me-2">
+                        <i class="bi bi-x-lg"></i>
+                    </span>
+                    <span>Username_1</span>
+                </div>
+                <div>5 - 3</div>
+            </div>
+
+            <!-- Second match (won) -->
+            <div class="d-flex justify-content-between align-items-center mb-3 p-2 border">
+                <div class="d-flex align-items-center">
+                    <span class="bg-success text-white p-2 rounded-circle me-2">
+                        <i class="bi bi-check-lg"></i>
+                    </span>
+                    <span>Username_1</span>
+                </div>
+                <div>1 - 5</div>
+            </div>
+        </div>
+
+        <!-- Change Password button -->
+        <div class="text-center mt-4">
+            <button class="btn btn-secondary rounded-pill px-4">Change Password</button>
+        </div>
+    </div>
+</div>

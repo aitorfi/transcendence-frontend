@@ -15,15 +15,25 @@ const ROUTES = {
 		title: "Home | " + DEFAULT_PAGE_TITLE,
 		description: "This is the home page",
 	},
-	"/about": {
-		template: "../templates/about.html",
-		title: "About Us | " + DEFAULT_PAGE_TITLE,
-		description: "This is the about page",
+	"/Profile": {
+		template: "../templates/Profile.html",
+		title: "Profile | " + DEFAULT_PAGE_TITLE,
+		description: "This is the Profile page",
 	},
-	"/contact": {
-		template: "../templates/contact.html",
-		title: "Contact Us | " + DEFAULT_PAGE_TITLE,
-		description: "This is the contact page",
+	"/SignOut": {
+		template: "../templates/SignOut.html",
+		title: "Sign Out | " + DEFAULT_PAGE_TITLE,
+		description: "This is the Sign Out page",
+	},
+	"/SignIn": {
+		template: "../templates/SignIn.html",
+		title: "Sign In | " + DEFAULT_PAGE_TITLE,
+		description: "This is the Sign In page",
+	},
+	"/SignUp": {
+		template: "../templates/SignUp.html",
+		title: "Sign Up | " + DEFAULT_PAGE_TITLE,
+		description: "This is the Sign Up page",
 	},
 	"/LocalMultiplayer": {
 		template: "../templates/pong.html",
