@@ -11,7 +11,7 @@ const ROUTES = {
 		description: "Page not found",
 	},
 	"/": {
-		template: "../templates/index.html",
+		template: "../templates/home.html",
 		title: "Home | " + DEFAULT_PAGE_TITLE,
 		description: "This is the home page",
 	},
@@ -25,7 +25,7 @@ const ROUTES = {
 		title: "Contact Us | " + DEFAULT_PAGE_TITLE,
 		description: "This is the contact page",
 	},
-	"/game": {
+	"/SinglePlayerGame": {
 		template: "../templates/pong.html",
 		title: "Game | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Pong Game",
@@ -37,15 +37,17 @@ window.onload = loadWindowLocation; // Handle the initial url
 
 // Custom navigation event for links with the class spa-route
 document.addEventListener("click", (event) => {
-	if (!/*event.target.matches(".navbar-brand") ||*/ event.target.matches(".spa-route"))
+	if (!event.target.matches(".spa-route"))
 		return;
 	navigationEventHandler(event);
 });
 
+
 // Handles navigation events by setting the new window location and calling loadWindowLocation
 function navigationEventHandler(event) {
 	event.preventDefault();
-	window.history.pushState({}, "", event.target.href); // Set window location
+	const path = event.target.dataset.path || event.target.href;
+	window.history.pushState({}, "", /*event.target.href*/ path); // Set window location
 	loadWindowLocation();
 }
 
@@ -66,7 +68,7 @@ async function loadWindowLocation() {
 	
 		// Manejo de scripts
 		terminateGame();
-		if (locationPath === "/game") {
+		if (locationPath === "/SinglePlayerGame") {
 			initializeGame();
 		}
 	} catch (error) {
