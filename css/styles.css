@@ -5,9 +5,16 @@ body, main {
 
 nav, footer { padding: 10px; }
 
-nav, footer { background-color: antiquewhite; }
+nav, footer { background-color: rgb(173, 172, 170); }
 
 nav {
 	display: flex;
 	flex-direction: column;
 }
+
+.navbar .bi-three-dots-vertical {
+	font-size: 1.2rem; /* Ajusta el tamaño del icono si es necesario */
+	vertical-align: middle; /* Alinea el ícono verticalmente */
+  }
+
+  
