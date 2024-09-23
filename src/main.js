@@ -37,7 +37,7 @@ window.onload = loadWindowLocation; // Handle the initial url
 
 // Custom navigation event for links with the class spa-route
 document.addEventListener("click", (event) => {
-	if (!event.target.matches(".spa-route"))
+	if (!/*event.target.matches(".navbar-brand") ||*/ event.target.matches(".spa-route"))
 		return;
 	navigationEventHandler(event);
 });
