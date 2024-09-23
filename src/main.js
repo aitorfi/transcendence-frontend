@@ -1,6 +1,6 @@
 'use strict'
 
-import { initializeGame, terminateGame } from "./app.js"
+import { initializeGame, terminateGame } from "./LocalMultiplayer.js"
 
 const DEFAULT_PAGE_TITLE = "JS SPA Router";
 
@@ -25,7 +25,7 @@ const ROUTES = {
 		title: "Contact Us | " + DEFAULT_PAGE_TITLE,
 		description: "This is the contact page",
 	},
-	"/SinglePlayerGame": {
+	"/LocalMultiplayer": {
 		template: "../templates/pong.html",
 		title: "Game | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Pong Game",
@@ -68,7 +68,7 @@ async function loadWindowLocation() {
 	
 		// Manejo de scripts
 		terminateGame();
-		if (locationPath === "/SinglePlayerGame") {
+		if (locationPath === "/LocalMultiplayer") {
 			initializeGame();
 		}
 	} catch (error) {
