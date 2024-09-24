@@ -37,8 +37,13 @@ const ROUTES = {
 	},
 	"/LocalMultiplayer": {
 		template: "../templates/pong.html",
-		title: "Game | " + DEFAULT_PAGE_TITLE,
-		description: "This is the Pong Game",
+		title: "Local Game | " + DEFAULT_PAGE_TITLE,
+		description: "This is the Pong Local Multiplayer Game",
+	},
+	"/Tournament": {
+		template: "../templates/Tournament.html",
+		title: "Tournament | " + DEFAULT_PAGE_TITLE,
+		description: "This is the Tournament page for the Pong Game",
 	}
 };
 
