@@ -37,7 +37,7 @@ const ROUTES = {
 		description: "This is the Sign Up page",
 	},
 	"/LocalMultiplayer": {
-		template: "../templates/pong.html",
+		template: "../templates/pong2.html",
 		title: "Local Game | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Pong Local Multiplayer Game",
 	},
