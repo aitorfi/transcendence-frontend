@@ -86,6 +86,13 @@ async function loadWindowLocation() {
 		if (locationPath === "/LocalMultiplayer") {
 			initializeGame();
 		}
+
+		if (locationPath === "/SignUp") {
+            const script = document.createElement('script');
+            script.src = './src/SignUp.js'; // Ruta a tu archivo signup.js
+            document.body.appendChild(script);
+        }
+
 	} catch (error) {
 	  	console.error('Error fetching template:', error);
 	}
