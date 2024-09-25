@@ -1,6 +1,7 @@
 'use strict'
 
 import { initializeGame, terminateGame } from "./LocalMultiplayer.js"
+import { initializeGameIA, terminateGameIA } from "./SinglePlayerIA.js"
 
 const DEFAULT_PAGE_TITLE = "JS SPA Router";
 
@@ -36,7 +37,7 @@ const ROUTES = {
 		description: "This is the Sign Up page",
 	},
 	"/LocalMultiplayer": {
-		template: "../templates/pong.html",
+		template: "../templates/pong2.html",
 		title: "Local Game | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Pong Local Multiplayer Game",
 	},
@@ -44,7 +45,12 @@ const ROUTES = {
 		template: "../templates/Tournament.html",
 		title: "Tournament | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Tournament page for the Pong Game",
-	}
+	},
+	"/SinglePlayerIA": {
+		template: "../templates/pong.html",
+		title: "Single Game | " + DEFAULT_PAGE_TITLE,
+		description: "This is the Single Game page for the Pong Game",
+	},
 };
 
 window.onpopstate = loadWindowLocation; // Event listener for url changes
@@ -82,9 +88,15 @@ async function loadWindowLocation() {
 		document.querySelector('meta[name="description"]').setAttribute("content", route.description);
 	
 		// Manejo de scripts
+
 		terminateGame();
 		if (locationPath === "/LocalMultiplayer") {
 			initializeGame();
+		}
+		if (locationPath === "/SinglePlayerIA") {
+			initializeGameIA();
+			//añadido para arrancar la IA
+			startAI();
 		}
 	} catch (error) {
 	  	console.error('Error fetching template:', error);
