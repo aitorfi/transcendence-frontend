@@ -14,6 +14,12 @@ let player1Score;
 let player2Score;
 let wait;
 
+//añadidos para IA
+let IAstartTime = Date.now();
+let lastDirection = null; // null para el inicio, 0 para arriba, 1 para abajo
+let isAIRunning = false;
+let ballxIa, ballyIA;
+
 //constants  
 const BALL_SIZE = 10;
 const PADDLE_SPEED = 6;
@@ -27,7 +33,8 @@ const SPEED_INC = 0.15;
 const ANGLE_INC = 0.4;
 
 
-export function initializeGame() {
+
+export function initializeGameIA() {
 	canvas = document.getElementById('pongCanvas');
 	ctx = canvas.getContext('2d');
 	setBallSpeed();
@@ -70,6 +77,7 @@ function gameLoop() {
 	updatePlayerAndBall();
 	checkLowerAndUpperCollision();
 	checkLeftAndRightCollision();
+	moveAI();
 	if (wait == true)
 	{
 		timeoutId = setTimeout(refresh, 2000);
@@ -257,7 +265,7 @@ function checkLeftAndRightCollision()
 	rightCollision();  
 }
 
-export function terminateGame() {
+export function terminateGameIA() {
 	if (gameLoopId)
 		cancelAnimationFrame(gameLoopId);
 	if (timeoutId)
@@ -316,3 +324,83 @@ function setBallSpeed()
 	if (ballDirUpOrDown == BALL_DIR_UP)
 		ballSpeedY = (-1) * ballSpeedY;
 }
+
+//añadido para IA
+
+/* function simulateKeyPress(key, isPressed) {
+    const secondsElapsed = Math.floor((Date.now() - IAstartTime) / 1000);
+    console.log(`[${secondsElapsed}s] Simulando ${isPressed ? 'presión' : 'liberación'} de tecla: ${key}`);
+    const event = new KeyboardEvent(isPressed ? 'keydown' : 'keyup', {
+        bubbles: true,
+        cancelable: true,
+        key: key
+    });
+    document.dispatchEvent(event);
+} */
+
+function setBallForIA(){
+
+	player2Up = false;
+	player2Down = false;
+	ballyIA = ballY;
+}
+
+function moveAI() {
+    console.log("Moviendo IA");
+	//player2Up = false;
+	//player2Down = false;
+	if(ballyIA > player2Y + 50)
+	{
+		player2Down = true;
+	}
+	else
+	{
+		player2Up = true;
+	}
+	/* setTimeout(() => {
+        player2Up = false;
+        player2Down = false;
+        console.log("Ambos valores ahora son false.");
+    }, 22222200000); */
+}
+
+
+
+function startAI() {
+    if (isAIRunning) {
+        console.log("La IA ya está en ejecución");
+        return;
+    }
+    console.log("Iniciando IA");
+    IAstartTime = Date.now(); // Reiniciar el tiempo de inicio
+    lastDirection = null; // Reiniciar la dirección
+    if (!window.aiInterval) {
+        window.aiInterval = setInterval(setBallForIA, 1000); // Ejecutar exactamente cada 1 segundo
+    }
+    isAIRunning = true;
+}
+
+function stopAI() {
+    if (!isAIRunning) {
+        console.log("La IA no está en ejecución");
+        return;
+    }
+    console.log("Deteniendo IA");
+    if (window.aiInterval) {
+        clearInterval(window.aiInterval);
+        window.aiInterval = null;
+    }
+    // Asegurarse de soltar ambas teclas al detener
+    player2Up = false;
+	player2Down = false;
+    lastDirection = null;
+    isAIRunning = false;
+}
+
+
+
+// Exponer funciones al ámbito global para pruebas manuales
+window.startAI = startAI;
+window.stopAI = stopAI;
+
+console.log("app3.js ha terminado de cargarse");
