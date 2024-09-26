@@ -46,6 +46,11 @@ const ROUTES = {
 		title: "Tournament | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Tournament page for the Pong Game",
 	},
+	"/TournamentInterface": {
+		template: "../templates/TournamentInterface.html",
+		title: "Tournaments | " + DEFAULT_PAGE_TITLE,
+		description: "This is the Tournaments page for the Pong Game",
+	},
 	"/SinglePlayerIA": {
 		template: "../templates/pong.html",
 		title: "Single Game | " + DEFAULT_PAGE_TITLE,
