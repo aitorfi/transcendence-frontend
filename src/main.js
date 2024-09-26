@@ -106,7 +106,7 @@ async function loadWindowLocation() {
 		if (locationPath === "/SinglePlayerIA") {
 			initializeGameIA();
 			//añadido para arrancar la IA
-			startAI();
+			//startAI();
 		}
 	} catch (error) {
 	  	console.error('Error fetching template:', error);
