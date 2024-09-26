@@ -1,5 +1,5 @@
 
-document.getElementById('signupForm').addEventListener('submit', async function(event) {
+document.getElementById('RegisterForm').addEventListener('submit', async function(event) {
     event.preventDefault();
 
     const email = document.getElementById('email').value;
@@ -9,10 +9,10 @@ document.getElementById('signupForm').addEventListener('submit', async function(
 
     if (password !== confirmPassword) {
         alert('Passwords do not match');
-        return; // en vez de alert que mande de nuevo a la pagina de signup con aviso de que error en contraseña
+        return; // en vez de alert que mande de nuevo a la pagina de Register con aviso de que error en contraseña
     }
 
-const SignUPdata = {
+const Registerdata = {
     email: email,
     password: password,
     username: username,
@@ -21,8 +21,7 @@ const SignUPdata = {
     created_at: null,
     updated_at: null,
     two_factor_auth: false,
-    session_42: null,
-    
+    session_42: null
 }
 
 if (!email || !password || !username) {
@@ -31,7 +30,7 @@ if (!email || !password || !username) {
 }
 
 
-const dataJSON = JSON.stringify(SignUPdata);
+const dataJSON = JSON.stringify(Registerdata);
 
 try {
     // Hacer el POST request usando fetch

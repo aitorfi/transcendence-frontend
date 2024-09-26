@@ -12,9 +12,14 @@ const ROUTES = {
 		description: "Page not found",
 	},
 	"/": {
-		template: "../templates/home.html",
+		template: "../templates/NoLogHome.html",
 		title: "Home | " + DEFAULT_PAGE_TITLE,
 		description: "This is the home page",
+	},
+	"/Logged": {
+		template: "../templates/home.html",
+		title: "Home logged | " + DEFAULT_PAGE_TITLE,
+		description: "This is the logged home page",
 	},
 	"/Profile": {
 		template: "../templates/Profile.html",
@@ -26,13 +31,13 @@ const ROUTES = {
 		title: "Sign Out | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Sign Out page",
 	},
-	"/SignIn": {
-		template: "../templates/SignIn.html",
+	"/Login": {
+		template: "../templates/Login.html",
 		title: "Sign In | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Sign In page",
 	},
-	"/SignUp": {
-		template: "../templates/SignUp.html",
+	"/Register": {
+		template: "../templates/Register.html",
 		title: "Sign Up | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Sign Up page",
 	},
@@ -98,9 +103,9 @@ async function loadWindowLocation() {
 		if (locationPath === "/LocalMultiplayer") {
 			initializeGame();
 		}
-		if (locationPath === "/SignUp") {
+		if (locationPath === "/Register") {
             const script = document.createElement('script');
-            script.src = './src/SignUp.js'; // Ruta a tu archivo signup.js
+            script.src = './src/Register.js'; // Ruta a tu archivo Register.js
             document.body.appendChild(script);
         }
 		if (locationPath === "/SinglePlayerIA") {
