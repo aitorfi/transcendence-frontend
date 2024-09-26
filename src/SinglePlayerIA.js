@@ -1,10 +1,15 @@
 'use strict'
 
+import { calculation } from "./iaCalc.js"
+
 //Game variables
 let canvas;
 let ctx;
 let player1Y, player2Y;
 let ballX, ballY;
+
+let ballIAX, ballIAY;
+
 let ballSpeedX, ballSpeedY;
 let player1Up, player1Down;
 let player2Up, player2Down;
@@ -18,7 +23,7 @@ let wait;
 let IAstartTime = Date.now();
 let lastDirection = null; // null para el inicio, 0 para arriba, 1 para abajo
 let isAIRunning = false;
-let ballxIa, ballyIA;
+//let ballxIa, ballyIA;
 
 //constants  
 const BALL_SIZE = 10;
@@ -53,6 +58,9 @@ export function initializeGameIA() {
     ballX = canvas.width / 2 /*- BALL_SIZE / 2;*/
     ballY = canvas.height / 2 /*- BALL_SIZE / 2;*/
 
+	ballIAX = ballX;
+	ballIAY = ballY;
+
     document.addEventListener('keydown', (event) => {
 		if (event.key === 'w') player1Up = true;
 		if (event.key === 's') player1Down = true;
@@ -66,6 +74,19 @@ export function initializeGameIA() {
 		if (event.key === 'ArrowUp') player2Up = false;
 		if (event.key === 'ArrowDown') player2Down = false;
     });
+	
+	/* if (!window.aiInterval) {
+        window.aiInterval = setInterval(calculation, 1000); // Ejecutar exactamente cada 1 segundo
+    } */
+
+	if (!window.aiInterval) {
+		window.aiInterval = setInterval(() => {
+		  let coor = calculation(ballX, ballY, ballSpeedX, ballSpeedY);
+		  ballIAX = coor[0];
+		  ballIAY = coor[1];
+		  //console.log("Posición actualizada de la pelota:");
+		}, 1000);
+	  }
 
     gameLoop();
 }
@@ -99,6 +120,13 @@ function drawBall(x, y, size, color) {
 	ctx.fill();
 }
 
+function drawIABall(x, y, size, color) {
+	ctx.fillStyle = color;
+	ctx.beginPath();
+	ctx.arc(x, y, size, 0, Math.PI * 2);
+	ctx.fill();
+}
+
 function cleanCanva()
 {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -109,6 +137,7 @@ function drawCanva()
 	drawRect(0, player1Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
 	drawRect(canvas.width - PADDLE_WIDTH, player2Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
 	drawBall(ballX, ballY, BALL_SIZE, 'white');
+	//drawIABall(ballIAX, ballIAY, BALL_SIZE, 'green');
 }
 
 function updatePlayerAndBall()
@@ -163,7 +192,6 @@ function leftCollision()
 		{
 			ballSpeedX = -ballSpeedX;
 			ballX += 0.5;
-			console.log("y = ",  Math.abs(ballSpeedY).toFixed(3), " x = ",  Math.abs(ballSpeedX).toFixed(3));
 			if (ballSpeedY <= 0)
 			{
 				ballSpeedY = ballSpeedY + ANGLE_INC;
@@ -291,6 +319,8 @@ function resetPlayerPositions()
 {
 	player1Y = (canvas.height - PADDLE_HEIGHT) / 2;
     player2Y = (canvas.height - PADDLE_HEIGHT) / 2;
+	player2Down = false;
+	player2Up = false;
 }
 
 function updateScore()
@@ -327,16 +357,38 @@ function setBallSpeed()
 
 //añadido para IA
 
-/* function simulateKeyPress(key, isPressed) {
-    const secondsElapsed = Math.floor((Date.now() - IAstartTime) / 1000);
-    console.log(`[${secondsElapsed}s] Simulando ${isPressed ? 'presión' : 'liberación'} de tecla: ${key}`);
-    const event = new KeyboardEvent(isPressed ? 'keydown' : 'keyup', {
-        bubbles: true,
-        cancelable: true,
-        key: key
-    });
-    document.dispatchEvent(event);
-} */
+function moveAI()
+{
+	/* if(player2Y >= ballIAY - 90  && player2Y <= ballIAY)
+	{
+		player2Up = false;
+		player2Down = false;
+	}
+	if (player2Y < ballIAY - 90)
+	{
+		//player2Up = false;
+		player2Down = true;
+	}
+	if (player2Y > ballIAY)
+	{
+		//player2Down = false;
+		player2Up = true;
+	} */
+
+	
+	if (player2Y < ballIAY - 80)
+	{
+		player2Up = false;
+		player2Down = true;
+	}
+	if (player2Y > ballIAY -10)
+	{
+		player2Down = false;
+		player2Up = true;
+	}
+}
+
+// de aqui para abajo no se usa
 
 function setBallForIA(){
 
@@ -345,7 +397,7 @@ function setBallForIA(){
 	ballyIA = ballY;
 }
 
-function moveAI() {
+function moveAIviejo() {
     console.log("Moviendo IA");
 	//player2Up = false;
 	//player2Down = false;
