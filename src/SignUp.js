@@ -15,7 +15,13 @@ document.getElementById('signupForm').addEventListener('submit', async function(
 const SignUPdata = {
     email: email,
     password: password,
-    userName: username,
+    username: username,
+    avatar: null,
+    status: 'offline',
+    created_at: null,
+    updated_at: null,
+    two_factor_auth: false,
+    session_42: null,
 }
 
 if (!email || !password || !username) {
@@ -23,7 +29,6 @@ if (!email || !password || !username) {
     return;
 }
 
-console.log("hola");
 
 const dataJSON = JSON.stringify(SignUPdata);
 
