@@ -34,6 +34,8 @@ export function calculation(ballX, ballY, ballSpeedX, ballSpeedY)
 			//ballSpeedY = -ballSpeedY;
 			ballX += ballSpeedX;
 			ballY += ballSpeedY;
+			if(ballX <= 10)
+				ballX = 11;
 		}
 		if (ballY - 10 <= 0 || ballY + 10 >= canvas.height)
 		{
