@@ -22,6 +22,7 @@ const SignUPdata = {
     updated_at: null,
     two_factor_auth: false,
     session_42: null,
+    
 }
 
 if (!email || !password || !username) {
