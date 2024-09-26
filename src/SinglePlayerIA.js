@@ -137,7 +137,7 @@ function drawCanva()
 	drawRect(0, player1Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
 	drawRect(canvas.width - PADDLE_WIDTH, player2Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
 	drawBall(ballX, ballY, BALL_SIZE, 'white');
-	drawIABall(ballIAX, ballIAY, BALL_SIZE, 'green');
+	//drawIABall(ballIAX, ballIAY, BALL_SIZE, 'green');
 }
 
 function updatePlayerAndBall()
