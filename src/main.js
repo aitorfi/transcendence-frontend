@@ -12,32 +12,29 @@ const ROUTES = {
 		description: "Page not found",
 	},
 	"/": {
-		template: "../templates/NoLogHome.html",
+		template: "../templates/home.html",
 		title: "Home | " + DEFAULT_PAGE_TITLE,
 		description: "This is the home page",
 	},
-	"/Logged": {
-		template: "../templates/home.html",
-		title: "Home logged | " + DEFAULT_PAGE_TITLE,
-		description: "This is the logged home page",
-	},
-	"/Profile": {
-		template: "../templates/Profile.html",
-		title: "Profile | " + DEFAULT_PAGE_TITLE,
-		description: "This is the Profile page",
-	},
-	"/SignOut": {
-		template: "../templates/SignOut.html",
-		title: "Sign Out | " + DEFAULT_PAGE_TITLE,
-		description: "This is the Sign Out page",
-	},
-	"/Login": {
-		template: "../templates/Login.html",
+    "/Profile": {
+        template: "../templates/Profile.html",
+        title: "Profile | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Profile page",
+        script: "./src/Profile.js"  // Añade esta línea
+    },
+    "/SignOut": {
+        template: "../templates/SignOut.html",
+        title: "Sign Out | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Sign Out page",
+        script: "./src/SignOut.js"
+    },
+	"/SignIn": {
+		template: "../templates/SignIn.html",
 		title: "Sign In | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Sign In page",
 	},
-	"/Register": {
-		template: "../templates/Register.html",
+	"/SignUp": {
+		template: "../templates/SignUp.html",
 		title: "Sign Up | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Sign Up page",
 	},
@@ -103,16 +100,52 @@ async function loadWindowLocation() {
 		if (locationPath === "/LocalMultiplayer") {
 			initializeGame();
 		}
-		if (locationPath === "/Register") {
+		if (locationPath === "/SignUp") {
             const script = document.createElement('script');
-            script.src = './src/Register.js'; // Ruta a tu archivo Register.js
+            script.src = './src/SignUp.js'; // Ruta a tu archivo signup.js
             document.body.appendChild(script);
         }
+
+        if (locationPath === "/SignIn") {
+            const script = document.createElement('script');
+            script.src = './src/SignIn.js';
+            document.body.appendChild(script);
+        }
+		
+		if (locationPath === "/SignOut") {
+			const script = document.createElement('script');
+			script.src = './src/SignOut.js';
+			script.onload = function() {
+				if (typeof window.initSignOut === 'function') {
+					window.initSignOut(loadWindowLocation);
+				}
+			};
+			document.body.appendChild(script);
+		}
+        // Cargar script específico si existe
+        if (route.script) {
+            const script = document.createElement('script');
+            script.src = route.script;
+            script.onload = function() {
+                if (typeof window.initProfile === 'function') {
+                    window.initProfile();
+                }
+                else if (typeof window[`init${route.title.split(' | ')[0]}`] === 'function') {
+                    window[`init${route.title.split(' | ')[0]}`]();
+                }
+
+            };
+            document.body.appendChild(script);
+        }
+
 		if (locationPath === "/SinglePlayerIA") {
 			initializeGameIA();
 			//añadido para arrancar la IA
-			//startAI();
+			startAI();
 		}
+
+
+		
 	} catch (error) {
 	  	console.error('Error fetching template:', error);
 	}
