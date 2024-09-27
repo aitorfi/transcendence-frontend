@@ -11,47 +11,33 @@ const ROUTES = {
 		title: "404 | " + DEFAULT_PAGE_TITLE,
 		description: "Page not found",
 	},
-
-	"/Login": {
-		template: "../templates/Login.html",
-		title: "Sign In | " + DEFAULT_PAGE_TITLE,
-		description: "This is the Sign In page",
+	"/": {
+		template: "../templates/NoLogHome.html",
+		title: "Home | " + DEFAULT_PAGE_TITLE,
+		description: "This is the home page",
 	},
 	"/Logged": {
 		template: "../templates/home.html",
 		title: "Home logged | " + DEFAULT_PAGE_TITLE,
 		description: "This is the logged home page",
 	},
-	"/Register": {
-		template: "../templates/Register.html",
-		title: "Sign Up | " + DEFAULT_PAGE_TITLE,
-		description: "This is the Sign Up page",
+	"/Profile": {
+		template: "../templates/Profile.html",
+		title: "Profile | " + DEFAULT_PAGE_TITLE,
+		description: "This is the Profile page",
 	},
-
-	"/": {
-		template: "../templates/home.html",
-		title: "Home | " + DEFAULT_PAGE_TITLE,
-		description: "This is the home page",
+	"/SignOut": {
+		template: "../templates/SignOut.html",
+		title: "Sign Out | " + DEFAULT_PAGE_TITLE,
+		description: "This is the Sign Out page",
 	},
-    "/Profile": {
-        template: "../templates/Profile.html",
-        title: "Profile | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Profile page",
-        script: "./src/Profile.js"  // Añade esta línea
-    },
-    "/SignOut": {
-        template: "../templates/SignOut.html",
-        title: "Sign Out | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Sign Out page",
-        script: "./src/SignOut.js"
-    },
-	"/SignIn": {
-		template: "../templates/SignIn.html",
+	"/Login": {
+		template: "../templates/Login.html",
 		title: "Sign In | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Sign In page",
 	},
-	"/SignUp": {
-		template: "../templates/SignUp.html",
+	"/Register": {
+		template: "../templates/Register.html",
 		title: "Sign Up | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Sign Up page",
 	},
@@ -122,52 +108,11 @@ async function loadWindowLocation() {
             script.src = './src/Register.js'; // Ruta a tu archivo Register.js
             document.body.appendChild(script);
         }
-		if (locationPath === "/SignUp") {
-            const script = document.createElement('script');
-            script.src = './src/Register.js'; // Ruta a tu archivo signup.js
-            document.body.appendChild(script);
-        }
-
-        if (locationPath === "/Login") {
-            const script = document.createElement('script');
-            script.src = './src/SignIn.js';
-            document.body.appendChild(script);
-        }
-		
-		if (locationPath === "/SignOut") {
-			const script = document.createElement('script');
-			script.src = './src/SignOut.js';
-			script.onload = function() {
-				if (typeof window.initSignOut === 'function') {
-					window.initSignOut(loadWindowLocation);
-				}
-			};
-			document.body.appendChild(script);
-		}
-        // Cargar script específico si existe
-        if (route.script) {
-            const script = document.createElement('script');
-            script.src = route.script;
-            script.onload = function() {
-                if (typeof window.initProfile === 'function') {
-                    window.initProfile();
-                }
-                else if (typeof window[`init${route.title.split(' | ')[0]}`] === 'function') {
-                    window[`init${route.title.split(' | ')[0]}`]();
-                }
-
-            };
-            document.body.appendChild(script);
-        }
-
 		if (locationPath === "/SinglePlayerIA") {
 			initializeGameIA();
 			//añadido para arrancar la IA
-			startAI();
+			//startAI();
 		}
-
-
-		
 	} catch (error) {
 	  	console.error('Error fetching template:', error);
 	}
