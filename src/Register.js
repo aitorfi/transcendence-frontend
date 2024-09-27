@@ -1,68 +1,88 @@
+function navigateToSignIn() {
+    const signInRoute = {
+        template: "../templates/Login.html",
+        title: "Sign In | JS SPA Router",
+        description: "This is the Sign In page",
+    };
 
-document.getElementById('RegisterForm').addEventListener('submit', async function(event) {
+    fetch(signInRoute.template)
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.text();
+        })
+        .then(html => {
+            document.getElementById("spa-template-content").innerHTML = html;
+            document.title = signInRoute.title;
+            document.querySelector('meta[name="description"]').setAttribute("content", signInRoute.description);
+            window.history.pushState({}, "", "/SignIn");
+        })
+        .catch(error => {
+            console.error('Error loading Sign In page:', error);
+        });
+}
+
+document.getElementById('signupForm').addEventListener('submit', async function(event) {
     event.preventDefault();
 
+    const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
-    const username = document.getElementById('username').value;
+    const first_name = document.getElementById('first_name').value;
+    const last_name = document.getElementById('last_name').value;
+    const age = document.getElementById('age').value;
+    const avatar = document.getElementById('avatar').value;
+    const status = document.getElementById('status').value;
+    const two_factor_auth = document.getElementById('two_factor_auth').checked;
+    const session_42 = document.getElementById('session_42').value;
 
     if (password !== confirmPassword) {
         alert('Passwords do not match');
-        return; // en vez de alert que mande de nuevo a la pagina de Register con aviso de que error en contraseña
+        return;
     }
 
-const Registerdata = {
-    email: email,
-    password: password,
-    username: username,
-    avatar: null,
-    status: 'offline',
-    created_at: null,
-    updated_at: null,
-    two_factor_auth: false,
-    session_42: null
-}
+    const signUpData = {
+        username: username,
+        email: email,
+        password: password,
+        first_name: first_name,
+        last_name: last_name,
+        age: age ? parseInt(age) : 0,
+        avatar: avatar || "default_avatar.png",
+        status: status,
+        two_factor_auth: two_factor_auth,
+        session_42: session_42 || 0
+    };
 
-if (!email || !password || !username) {
-    alert('Please fill in all required fields');
-    return;
-}
+    if (!username || !email || !password || !first_name || !last_name) {
+        alert('Please fill in all required fields');
+        return;
+    }
 
+    const dataJSON = JSON.stringify(signUpData);
 
-const dataJSON = JSON.stringify(Registerdata);
-
-try {
-    // Hacer el POST request usando fetch
-        const response = await fetch('http://localhost:50000/api/users/create/', 
-        {
-            method: 'POST', // Método POST
-            headers: 
-            {
+    try {
+        const response = await fetch('http://localhost:50000/api/users/create/', {
+            method: 'POST',
+            headers: {
                 'Content-Type': 'application/json',
             },
-            body: dataJSON, // El JSON generado del formulario
+            body: dataJSON,
         });
-        if (response.ok) 
-        {
+        
+        if (response.ok) {
             const result = await response.json();
-            alert('Sign up successful!'); // Manejo de éxito
+            alert('Sign up successful!');
             console.log(result);
-        }   
-        else 
-        {
-        // Si la respuesta no es OK, manejar el error
+            navigateToSignIn();
+            // Aquí puedes redirigir al usuario o actualizar la UI
+        } else {
             const error = await response.json();
-            alert('Error: ' + error.message);
+            alert('Error: ' + (error.message || 'Unknown error occurred'));
             console.error('Error response from API:', error);
         }
-    } 
-catch (error)
-{
-    console.error('Error sending data:', error);
-    alert('Error connecting to the server');
-}
-
+    } catch (error) {
+        console.error('Error sending data:', error);
+        alert('Error connecting to the server');
+    }
 });
-
-
