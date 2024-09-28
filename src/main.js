@@ -75,6 +75,11 @@ const ROUTES = {
 		title: "Single Game | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Single Game page for the Pong Game",
 	},
+	"/oauth/callback": {
+		template: "../templates/oauth_callback.html",
+		title: "OAuth Callback | " + DEFAULT_PAGE_TITLE,
+		description: "Processing OAuth callback",
+	},
 };
 
 window.onpopstate = loadWindowLocation; // Event listener for url changes
@@ -128,11 +133,16 @@ async function loadWindowLocation() {
             document.body.appendChild(script);
         }
 
-        if (locationPath === "/Login") {
-            const script = document.createElement('script');
-            script.src = './src/SignIn.js';
-            document.body.appendChild(script);
-        }
+		if (locationPath === "/Login") {
+			const script = document.createElement('script');
+			script.src = './src/SignIn.js';
+			script.onload = function() {
+				if (typeof window.initSignIn === 'function') {
+					window.initSignIn();
+				}
+			};
+			document.body.appendChild(script);
+		}
 		
 		if (locationPath === "/SignOut") {
 			const script = document.createElement('script');
