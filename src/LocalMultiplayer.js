@@ -65,6 +65,7 @@ export function initializeGame() {
 	  // Cambia el texto del h1
 	h1Element.textContent = 'Local Multiplayer';
 
+	wait = true;
 	deactivateKeydown();
 	updateScore();
     gameLoop();
