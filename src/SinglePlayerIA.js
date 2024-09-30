@@ -18,6 +18,8 @@ let timeoutId;
 let player1Score;
 let player2Score;
 let wait;
+let finish;
+
 
 //añadidos para IA
 let IAstartTime = Date.now();
@@ -50,6 +52,8 @@ export function initializeGameIA() {
 	player1Score = 0;
 	player2Score = 0;
 	wait = false;
+	finish = false;
+	
 
 
 	// calculo para encontrar el punto medio de una superficie disponible
@@ -64,20 +68,18 @@ export function initializeGameIA() {
     document.addEventListener('keydown', (event) => {
 		if (event.key === 'w') player1Up = true;
 		if (event.key === 's') player1Down = true;
-		if (event.key === 'ArrowUp') player2Up = true;
-		if (event.key === 'ArrowDown') player2Down = true;
+		//if (event.key === 'ArrowUp') player2Up = true;
+		//if (event.key === 'ArrowDown') player2Down = true;
     });
 
     document.addEventListener('keyup', (event) => {
 		if (event.key === 'w') player1Up = false;
 		if (event.key === 's') player1Down = false;
-		if (event.key === 'ArrowUp') player2Up = false;
-		if (event.key === 'ArrowDown') player2Down = false;
+		//if (event.key === 'ArrowUp') player2Up = false;
+		//if (event.key === 'ArrowDown') player2Down = false;
     });
 	
-	/* if (!window.aiInterval) {
-        window.aiInterval = setInterval(calculation, 1000); // Ejecutar exactamente cada 1 segundo
-    } */
+
 
 	if (!window.aiInterval) {
 		window.aiInterval = setInterval(() => {
@@ -88,7 +90,44 @@ export function initializeGameIA() {
 		}, 1000);
 	  }
 
+	const h1Element = document.querySelector('#pong-container h1');
+	  // Cambia el texto del h1
+	h1Element.textContent = 'Single Player against I.A.';
+	
+	// cleanCanva();
+	wait = true;
+	// cDownState = true;
+	deactivateKeydown();
+	updateScore();
     gameLoop();
+}
+
+
+
+async function otraFuncion() {
+    // Hacer algo asíncrono
+	showWinMessage("3");
+    await new Promise((resolve) => setTimeout(resolve, 800));
+	showWinMessage("2");
+	await new Promise((resolve) => setTimeout(resolve, 800));
+	showWinMessage("1");
+	await new Promise((resolve) => setTimeout(resolve, 800));
+}
+
+// Llamar a otraFuncion y luego ejecutar refresh
+async function ejecutar() {
+    await otraFuncion();
+    refresh();
+}
+
+function handleSpacePress(event) {
+    if (event.key === ' ') {
+        initializeGameIA();
+    }
+}
+
+function deactivateKeydown() {
+	document.removeEventListener('keydown', handleSpacePress);
 }
 
 function gameLoop() {
@@ -101,12 +140,29 @@ function gameLoop() {
 	moveAI();
 	if (wait == true)
 	{
-		timeoutId = setTimeout(refresh, 2000);
+		//timeoutId = setTimeout(refresh, 2000);
+		if (finish) {
+            terminateGameIA();
+            
+            // Añadimos el listener para la tecla 'space'
+            document.addEventListener('keydown', handleSpacePress);
+        }
+		else
+			ejecutar();
 		wait = false;
 	}
 	else
 		refresh();
 }
+
+
+function stopInterval() {
+	if (window.aiInterval) {
+	  clearInterval(window.aiInterval);
+	  window.aiInterval = null; // Limpiar la referencia para evitar múltiples intervalos
+	  console.log("Intervalo detenido.");
+	}
+  }
 
 function drawRect(x, y, w, h, color) {
 	ctx.fillStyle = color;
@@ -209,11 +265,15 @@ function leftCollision()
 		else
 		{
 			player2Score++;
+			if(player2Score == 3)
+			{
+				showWinMessage("You lose motherfucker!\nPush space to play again");
+				finish = true;
+			}
 			updateScore();
 			resetBall();
 			resetPlayerPositions();
 			wait = true;
-			showWinMessage("Player 2 wins");
 			return;
 		}
 		ballSpeedX += SPEED_INC;
@@ -272,11 +332,16 @@ function rightCollision()
 		else
 		{
 			player1Score++;
+			if(player1Score == 3)
+			{
+				showWinMessage("You win!\nPush space to play again");
+				finish = true;
+			}
 			updateScore();
 			resetBall();
 			resetPlayerPositions();
 			wait = true;
-			showWinMessage("Player 1 wins");
+			
 			return;
 		}
 		ballSpeedX -= SPEED_INC;
@@ -294,18 +359,38 @@ function checkLeftAndRightCollision()
 }
 
 export function terminateGameIA() {
+	
+	document.removeEventListener('keydown', gameLoop);
 	if (gameLoopId)
 		cancelAnimationFrame(gameLoopId);
 	if (timeoutId)
 		clearTimeout(timeoutId);
+
+	stopInterval();	
+
 }
 
-function showWinMessage(message) {
+/* function showWinMessage(message) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = 'white';
 	ctx.font = '30px Arial';
 	ctx.textAlign = 'center';
 	ctx.fillText(message, canvas.width / 2, canvas.height / 2);
+} */
+
+function showWinMessage(message) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.font = '30px Arial';
+    ctx.textAlign = 'center';
+
+    // Dividimos el mensaje en líneas, usando "\n" como separador
+    const lines = message.split('\n');
+    
+    // Para centrar cada línea verticalmente, ajustamos la posición Y para cada línea
+    lines.forEach((line, index) => {
+        ctx.fillText(line, canvas.width / 2, canvas.height / 2 + (index * 40)); // Ajusta el valor 40 para el espaciado entre líneas
+    });
 }
 
 function resetBall()
@@ -376,16 +461,23 @@ function moveAI()
 	} */
 
 	
-	if (player2Y < ballIAY - 80)
+	if (player2Y < ballIAY - 90)// - 80
 	{
 		player2Up = false;
 		player2Down = true;
 	}
-	if (player2Y > ballIAY -10)
+	if (player2Y > ballIAY )// - 10
 	{
 		player2Down = false;
 		player2Up = true;
 	}
+}
+
+function stopGame() {
+    if (window.aiInterval) {
+        clearInterval(window.aiInterval);
+        window.aiInterval = null; // Reinicia la referencia para que no se pueda detener nuevamente
+    }
 }
 
 // de aqui para abajo no se usa

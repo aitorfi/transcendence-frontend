@@ -26,14 +26,14 @@
 	/*z-index: 0; /* El canvas debe estar detrás del título */
 }
 
-.scoreboard {
+.scoreboard { /* El punto hace que se seleccione por clase*/
     display: flex;
     justify-content: space-between;  /* Asegura la separación máxima */
     width: 40%;  /* Ocupar todo el ancho del contenedor */
     padding: 10px;  /* Añadir espacio adicional si lo necesitas */
 }
 
-#player1-score, #player2-score  {
+#player1-score, #player2-score  { /*el '#' hace que se seleccione por ID */
 	background-color: white;
 	border-radius: 12px;
 	color: black;

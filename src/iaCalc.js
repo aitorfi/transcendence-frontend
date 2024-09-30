@@ -16,15 +16,15 @@ export function calculation(ballX, ballY, ballSpeedX, ballSpeedY)
 		{
 			ballX += ballSpeedX;
 			ballY += ballSpeedY;
-			console.log("ballX =", ballX.toFixed(3), " ballY", ballY.toFixed(3));
-			console.log("ballspeedX =", ballSpeedX.toFixed(3), " ballSpeedY", ballSpeedY.toFixed(3));
+			//console.log("ballX =", ballX.toFixed(3), " ballY", ballY.toFixed(3));
+			//console.log("ballspeedX =", ballSpeedX.toFixed(3), " ballSpeedY", ballSpeedY.toFixed(3));
 		}
-		console.log("----CAMBIO------------");
+		//console.log("----CAMBIO------------");
 		if (ballX >= canvas.width - 10)
 		{
 			//console.log("ballY =", ballY.toFixed(3));
-			console.log("FUERA------------");
-			console.log("ballYret", ballY.toFixed(3));
+			//console.log("FUERA------------");
+			//console.log("ballYret", ballY.toFixed(3));
 			coord = [ballX, ballY];
 			return coord;
 		}

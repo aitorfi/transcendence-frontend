@@ -13,6 +13,7 @@ let timeoutId;
 let player1Score;
 let player2Score;
 let wait;
+let finish;
 
 //constants  
 const BALL_SIZE = 10;
@@ -38,7 +39,7 @@ export function initializeGame() {
 	player1Score = 0;
 	player2Score = 0;
 	wait = false;
-
+	finish = false;
 
 	// calculo para encontrar el punto medio de una superficie disponible
     player1Y = (canvas.height - PADDLE_HEIGHT) / 2;
@@ -60,7 +61,39 @@ export function initializeGame() {
 		if (event.key === 'ArrowDown') player2Down = false;
     });
 
+	const h1Element = document.querySelector('#pong-container h1');
+	  // Cambia el texto del h1
+	h1Element.textContent = 'Local Multiplayer';
+
+	deactivateKeydown();
+	updateScore();
     gameLoop();
+}
+
+async function otraFuncion() {
+    // Hacer algo asíncrono
+	showWinMessage("3");
+    await new Promise((resolve) => setTimeout(resolve, 800));
+	showWinMessage("2");
+	await new Promise((resolve) => setTimeout(resolve, 800));
+	showWinMessage("1");
+	await new Promise((resolve) => setTimeout(resolve, 800));
+}
+
+// Llamar a otraFuncion y luego ejecutar refresh
+async function ejecutar() {
+    await otraFuncion();
+    refresh();
+}
+
+function handleSpacePress(event) {
+    if (event.key === ' ') {
+        initializeGame();
+    }
+}
+
+function deactivateKeydown() {
+	document.removeEventListener('keydown', handleSpacePress);
 }
 
 function gameLoop() {
@@ -72,7 +105,14 @@ function gameLoop() {
 	checkLeftAndRightCollision();
 	if (wait == true)
 	{
-		timeoutId = setTimeout(refresh, 2000);
+		if (finish) {
+            terminateGame();
+            
+            // Añadimos el listener para la tecla 'space'
+            document.addEventListener('keydown', handleSpacePress);
+        }
+		else
+			ejecutar();
 		wait = false;
 	}
 	else
@@ -173,11 +213,15 @@ function leftCollision()
 		else
 		{
 			player2Score++;
+			if(player2Score == 3)
+			{
+				showWinMessage("Player 2 wins!\nPush space to play again");
+				finish = true;
+			}
 			updateScore();
 			resetBall();
 			resetPlayerPositions();
 			wait = true;
-			showWinMessage("Player 2 wins");
 			return;
 		}
 		ballSpeedX += SPEED_INC;
@@ -236,11 +280,16 @@ function rightCollision()
 		else
 		{
 			player1Score++;
+			if(player1Score == 3)
+			{
+				showWinMessage("Player 1 wins!\nPush space to play again");
+				finish = true;
+			}
 			updateScore();
 			resetBall();
 			resetPlayerPositions();
 			wait = true;
-			showWinMessage("Player 1 wins");
+			//showWinMessage("Player 1 wins");
 			return;
 		}
 		ballSpeedX -= SPEED_INC;
@@ -258,6 +307,8 @@ function checkLeftAndRightCollision()
 }
 
 export function terminateGame() {
+	document.removeEventListener('keydown', gameLoop);
+
 	if (gameLoopId)
 		cancelAnimationFrame(gameLoopId);
 	if (timeoutId)
@@ -265,11 +316,18 @@ export function terminateGame() {
 }
 
 function showWinMessage(message) {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.fillStyle = 'white';
-	ctx.font = '30px Arial';
-	ctx.textAlign = 'center';
-	ctx.fillText(message, canvas.width / 2, canvas.height / 2);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.font = '30px Arial';
+    ctx.textAlign = 'center';
+
+    // Dividimos el mensaje en líneas, usando "\n" como separador
+    const lines = message.split('\n');
+    
+    // Para centrar cada línea verticalmente, ajustamos la posición Y para cada línea
+    lines.forEach((line, index) => {
+        ctx.fillText(line, canvas.width / 2, canvas.height / 2 + (index * 40)); // Ajusta el valor 40 para el espaciado entre líneas
+    });
 }
 
 function resetBall()
