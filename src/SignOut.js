@@ -1,11 +1,5 @@
 console.log('SignOUT.js loaded');
 
-const signInRoute = {
-    template: "index.html",
-    title: "Sign In | JS SPA Router",
-    description: "This is the Sign In page",
-};
-
 window.initSignOut = function(loadWindowLocationFunc) {
     const signOutButton = document.getElementById('signOutButton');
     if (signOutButton) {
@@ -39,7 +33,7 @@ async function handleSignOut(loadWindowLocationFunc) {
             localStorage.removeItem('authToken');
             localStorage.removeItem('userData');
             alert('You have been successfully logged out.');
-            window.history.pushState({}, "", "/");
+            window.history.pushState({}, "", "/SignIn");
             if (typeof loadWindowLocationFunc === 'function') {
                 loadWindowLocationFunc();
             } else {

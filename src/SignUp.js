@@ -1,6 +1,6 @@
 function navigateToSignIn() {
     const signInRoute = {
-        template: "../templates/Login.html",
+        template: "../templates/SignIn.html",
         title: "Sign In | JS SPA Router",
         description: "This is the Sign In page",
     };
