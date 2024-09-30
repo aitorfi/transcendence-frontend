@@ -56,7 +56,7 @@ const ROUTES = {
 		description: "This is the Sign Up page",
 	},
 	"/LocalMultiplayer": {
-		template: "../templates/pong2.html",
+		template: "../templates/localGame.html",
 		title: "Local Game | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Pong Local Multiplayer Game",
 	},
@@ -71,7 +71,7 @@ const ROUTES = {
 		description: "This is the Tournaments page for the Pong Game",
 	},
 	"/SinglePlayerIA": {
-		template: "../templates/pong.html",
+		template: "../templates/localGame.html",
 		title: "Single Game | " + DEFAULT_PAGE_TITLE,
 		description: "This is the Single Game page for the Pong Game",
 	},
@@ -114,6 +114,7 @@ async function loadWindowLocation() {
 		// Manejo de scripts
 
 		terminateGame();
+		terminateGameIA();
 		if (locationPath === "/LocalMultiplayer") {
 			initializeGame();
 		}
@@ -163,7 +164,7 @@ async function loadWindowLocation() {
 		if (locationPath === "/SinglePlayerIA") {
 			initializeGameIA();
 			//añadido para arrancar la IA
-			startAI();
+			//startAI();
 		}
 
 

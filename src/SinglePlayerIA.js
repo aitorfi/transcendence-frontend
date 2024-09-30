@@ -1,10 +1,15 @@
 'use strict'
 
+import { calculation } from "./iaCalc.js"
+
 //Game variables
 let canvas;
 let ctx;
 let player1Y, player2Y;
 let ballX, ballY;
+
+let ballIAX, ballIAY;
+
 let ballSpeedX, ballSpeedY;
 let player1Up, player1Down;
 let player2Up, player2Down;
@@ -13,12 +18,14 @@ let timeoutId;
 let player1Score;
 let player2Score;
 let wait;
+let finish;
+
 
 //añadidos para IA
 let IAstartTime = Date.now();
 let lastDirection = null; // null para el inicio, 0 para arriba, 1 para abajo
 let isAIRunning = false;
-let ballxIa, ballyIA;
+//let ballxIa, ballyIA;
 
 //constants  
 const BALL_SIZE = 10;
@@ -45,6 +52,8 @@ export function initializeGameIA() {
 	player1Score = 0;
 	player2Score = 0;
 	wait = false;
+	finish = false;
+	
 
 
 	// calculo para encontrar el punto medio de una superficie disponible
@@ -53,21 +62,72 @@ export function initializeGameIA() {
     ballX = canvas.width / 2 /*- BALL_SIZE / 2;*/
     ballY = canvas.height / 2 /*- BALL_SIZE / 2;*/
 
+	ballIAX = ballX;
+	ballIAY = ballY;
+
     document.addEventListener('keydown', (event) => {
 		if (event.key === 'w') player1Up = true;
 		if (event.key === 's') player1Down = true;
-		if (event.key === 'ArrowUp') player2Up = true;
-		if (event.key === 'ArrowDown') player2Down = true;
+		//if (event.key === 'ArrowUp') player2Up = true;
+		//if (event.key === 'ArrowDown') player2Down = true;
     });
 
     document.addEventListener('keyup', (event) => {
 		if (event.key === 'w') player1Up = false;
 		if (event.key === 's') player1Down = false;
-		if (event.key === 'ArrowUp') player2Up = false;
-		if (event.key === 'ArrowDown') player2Down = false;
+		//if (event.key === 'ArrowUp') player2Up = false;
+		//if (event.key === 'ArrowDown') player2Down = false;
     });
+	
 
+
+	if (!window.aiInterval) {
+		window.aiInterval = setInterval(() => {
+		  let coor = calculation(ballX, ballY, ballSpeedX, ballSpeedY);
+		  ballIAX = coor[0];
+		  ballIAY = coor[1];
+		  //console.log("Posición actualizada de la pelota:");
+		}, 1000);
+	  }
+
+	const h1Element = document.querySelector('#pong-container h1');
+	  // Cambia el texto del h1
+	h1Element.textContent = 'Single Player against I.A.';
+	
+	// cleanCanva();
+	wait = true;
+	// cDownState = true;
+	deactivateKeydown();
+	updateScore();
     gameLoop();
+}
+
+
+
+async function otraFuncion() {
+    // Hacer algo asíncrono
+	showWinMessage("3");
+    await new Promise((resolve) => setTimeout(resolve, 800));
+	showWinMessage("2");
+	await new Promise((resolve) => setTimeout(resolve, 800));
+	showWinMessage("1");
+	await new Promise((resolve) => setTimeout(resolve, 800));
+}
+
+// Llamar a otraFuncion y luego ejecutar refresh
+async function ejecutar() {
+    await otraFuncion();
+    refresh();
+}
+
+function handleSpacePress(event) {
+    if (event.key === ' ') {
+        initializeGameIA();
+    }
+}
+
+function deactivateKeydown() {
+	document.removeEventListener('keydown', handleSpacePress);
 }
 
 function gameLoop() {
@@ -80,12 +140,29 @@ function gameLoop() {
 	moveAI();
 	if (wait == true)
 	{
-		timeoutId = setTimeout(refresh, 2000);
+		//timeoutId = setTimeout(refresh, 2000);
+		if (finish) {
+            terminateGameIA();
+            
+            // Añadimos el listener para la tecla 'space'
+            document.addEventListener('keydown', handleSpacePress);
+        }
+		else
+			ejecutar();
 		wait = false;
 	}
 	else
 		refresh();
 }
+
+
+function stopInterval() {
+	if (window.aiInterval) {
+	  clearInterval(window.aiInterval);
+	  window.aiInterval = null; // Limpiar la referencia para evitar múltiples intervalos
+	  console.log("Intervalo detenido.");
+	}
+  }
 
 function drawRect(x, y, w, h, color) {
 	ctx.fillStyle = color;
@@ -93,6 +170,13 @@ function drawRect(x, y, w, h, color) {
 }
 
 function drawBall(x, y, size, color) {
+	ctx.fillStyle = color;
+	ctx.beginPath();
+	ctx.arc(x, y, size, 0, Math.PI * 2);
+	ctx.fill();
+}
+
+function drawIABall(x, y, size, color) {
 	ctx.fillStyle = color;
 	ctx.beginPath();
 	ctx.arc(x, y, size, 0, Math.PI * 2);
@@ -109,6 +193,7 @@ function drawCanva()
 	drawRect(0, player1Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
 	drawRect(canvas.width - PADDLE_WIDTH, player2Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
 	drawBall(ballX, ballY, BALL_SIZE, 'white');
+	//drawIABall(ballIAX, ballIAY, BALL_SIZE, 'green');
 }
 
 function updatePlayerAndBall()
@@ -163,7 +248,6 @@ function leftCollision()
 		{
 			ballSpeedX = -ballSpeedX;
 			ballX += 0.5;
-			console.log("y = ",  Math.abs(ballSpeedY).toFixed(3), " x = ",  Math.abs(ballSpeedX).toFixed(3));
 			if (ballSpeedY <= 0)
 			{
 				ballSpeedY = ballSpeedY + ANGLE_INC;
@@ -181,11 +265,15 @@ function leftCollision()
 		else
 		{
 			player2Score++;
+			if(player2Score == 3)
+			{
+				showWinMessage("You lose motherfucker!\nPush space to play again");
+				finish = true;
+			}
 			updateScore();
 			resetBall();
 			resetPlayerPositions();
 			wait = true;
-			showWinMessage("Player 2 wins");
 			return;
 		}
 		ballSpeedX += SPEED_INC;
@@ -244,11 +332,16 @@ function rightCollision()
 		else
 		{
 			player1Score++;
+			if(player1Score == 3)
+			{
+				showWinMessage("You win!\nPush space to play again");
+				finish = true;
+			}
 			updateScore();
 			resetBall();
 			resetPlayerPositions();
 			wait = true;
-			showWinMessage("Player 1 wins");
+			
 			return;
 		}
 		ballSpeedX -= SPEED_INC;
@@ -266,18 +359,38 @@ function checkLeftAndRightCollision()
 }
 
 export function terminateGameIA() {
+	
+	document.removeEventListener('keydown', gameLoop);
 	if (gameLoopId)
 		cancelAnimationFrame(gameLoopId);
 	if (timeoutId)
 		clearTimeout(timeoutId);
+
+	stopInterval();	
+
 }
 
-function showWinMessage(message) {
+/* function showWinMessage(message) {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = 'white';
 	ctx.font = '30px Arial';
 	ctx.textAlign = 'center';
 	ctx.fillText(message, canvas.width / 2, canvas.height / 2);
+} */
+
+function showWinMessage(message) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.font = '30px Arial';
+    ctx.textAlign = 'center';
+
+    // Dividimos el mensaje en líneas, usando "\n" como separador
+    const lines = message.split('\n');
+    
+    // Para centrar cada línea verticalmente, ajustamos la posición Y para cada línea
+    lines.forEach((line, index) => {
+        ctx.fillText(line, canvas.width / 2, canvas.height / 2 + (index * 40)); // Ajusta el valor 40 para el espaciado entre líneas
+    });
 }
 
 function resetBall()
@@ -291,6 +404,8 @@ function resetPlayerPositions()
 {
 	player1Y = (canvas.height - PADDLE_HEIGHT) / 2;
     player2Y = (canvas.height - PADDLE_HEIGHT) / 2;
+	player2Down = false;
+	player2Up = false;
 }
 
 function updateScore()
@@ -327,16 +442,45 @@ function setBallSpeed()
 
 //añadido para IA
 
-/* function simulateKeyPress(key, isPressed) {
-    const secondsElapsed = Math.floor((Date.now() - IAstartTime) / 1000);
-    console.log(`[${secondsElapsed}s] Simulando ${isPressed ? 'presión' : 'liberación'} de tecla: ${key}`);
-    const event = new KeyboardEvent(isPressed ? 'keydown' : 'keyup', {
-        bubbles: true,
-        cancelable: true,
-        key: key
-    });
-    document.dispatchEvent(event);
-} */
+function moveAI()
+{
+	/* if(player2Y >= ballIAY - 90  && player2Y <= ballIAY)
+	{
+		player2Up = false;
+		player2Down = false;
+	}
+	if (player2Y < ballIAY - 90)
+	{
+		//player2Up = false;
+		player2Down = true;
+	}
+	if (player2Y > ballIAY)
+	{
+		//player2Down = false;
+		player2Up = true;
+	} */
+
+	
+	if (player2Y < ballIAY - 90)// - 80
+	{
+		player2Up = false;
+		player2Down = true;
+	}
+	if (player2Y > ballIAY )// - 10
+	{
+		player2Down = false;
+		player2Up = true;
+	}
+}
+
+function stopGame() {
+    if (window.aiInterval) {
+        clearInterval(window.aiInterval);
+        window.aiInterval = null; // Reinicia la referencia para que no se pueda detener nuevamente
+    }
+}
+
+// de aqui para abajo no se usa
 
 function setBallForIA(){
 
@@ -345,7 +489,7 @@ function setBallForIA(){
 	ballyIA = ballY;
 }
 
-function moveAI() {
+function moveAIviejo() {
     console.log("Moviendo IA");
 	//player2Up = false;
 	//player2Down = false;
