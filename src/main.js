@@ -29,7 +29,7 @@ const ROUTES = {
 	},
 
 	"/": {
-		template: "../templates/home.html",
+		template: "../templates/NoLogHome.html",
 		title: "Home | " + DEFAULT_PAGE_TITLE,
 		description: "This is the home page",
 	},
