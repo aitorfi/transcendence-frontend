@@ -45,16 +45,6 @@ const ROUTES = {
         description: "This is the Sign Out page",
         script: "./src/SignOut.js"
     },
-	"/SignIn": {
-		template: "../templates/SignIn.html",
-		title: "Sign In | " + DEFAULT_PAGE_TITLE,
-		description: "This is the Sign In page",
-	},
-	"/SignUp": {
-		template: "../templates/SignUp.html",
-		title: "Sign Up | " + DEFAULT_PAGE_TITLE,
-		description: "This is the Sign Up page",
-	},
 	"/LocalMultiplayer": {
 		template: "../templates/localGame.html",
 		title: "Local Game | " + DEFAULT_PAGE_TITLE,
