@@ -57,9 +57,11 @@ function initProfile() {
                 if (joinedField) {
                     const dateJoined = profileData.date_joined; // Obtén la fecha
                     if (dateJoined) {
+                        // Convierte la fecha a un objeto Date
+                        const date = new Date(dateJoined);
                         
                         // Formatea la fecha en año-mes-día
-                        const formattedDate = dateJoined.getFullYear() + '-' +
+                        const formattedDate = date.getFullYear() + '-' +
                                               String(date.getMonth() + 1).padStart(2, '0') + '-' + // Mes +1 ya que es 0-indexado
                                               String(date.getDate()).padStart(2, '0');
                         
@@ -70,7 +72,6 @@ function initProfile() {
                 } else {
                     console.error('date_joined field not found');
                 }
-  
 
                 const friendField = document.getElementById('friends');
                 if (friendField) {
