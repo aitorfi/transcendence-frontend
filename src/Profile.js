@@ -39,11 +39,26 @@ function initProfile() {
 
 
                 const joinedField = document.getElementById('date_joined');
+
                 if (joinedField) {
-                    joinedField.textContent = profileData.date_joined || ''; // Usa '' si age es null o undefined
+                    const dateJoined = profileData.date_joined; // Obtén la fecha
+                    if (dateJoined) {
+                        // Convierte la fecha a un objeto Date
+                        const date = new Date(dateJoined);
+                        
+                        // Formatea la fecha en año-mes-día
+                        const formattedDate = date.getFullYear() + '-' +
+                                              String(date.getMonth() + 1).padStart(2, '0') + '-' + // Mes +1 ya que es 0-indexado
+                                              String(date.getDate()).padStart(2, '0');
+                        
+                        joinedField.textContent = formattedDate;
+                    } else {
+                        joinedField.textContent = ''; // Usa '' si date_joined es null o undefined
+                    }
                 } else {
                     console.error('date_joined field not found');
                 }
+                
 
                 const friendField = document.getElementById('friends');
                 if (friendField) {
