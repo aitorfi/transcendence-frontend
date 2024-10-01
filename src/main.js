@@ -1,7 +1,8 @@
-'use strict'
+'use strict';
 
-import { initializeGame, terminateGame } from "./LocalMultiplayer.js"
-import { initializeGameIA, terminateGameIA } from "./SinglePlayerIA.js"
+import { initializeGame, terminateGame } from "./LocalMultiplayer.js";
+import { initializeGameIA, terminateGameIA } from "./SinglePlayerIA.js";
+
 
 function isUserLoggedIn() {
     return localStorage.getItem('authToken') !== null;
@@ -10,33 +11,31 @@ function isUserLoggedIn() {
 const DEFAULT_PAGE_TITLE = "JS SPA Router";
 
 const ROUTES = {
-	404: {
-		template: "../templates/404.html",
-		title: "404 | " + DEFAULT_PAGE_TITLE,
-		description: "Page not found",
-	},
-
-	"/Login": {
-		template: "../templates/Login.html",
-		title: "Sign In | " + DEFAULT_PAGE_TITLE,
-		description: "This is the Sign In page",
-	},
-	"/Logged": {
-		template: "../templates/home.html",
-		title: "Home logged | " + DEFAULT_PAGE_TITLE,
-		description: "This is the logged home page",
-	},
-	"/Register": {
-		template: "../templates/Register.html",
-		title: "Sign Up | " + DEFAULT_PAGE_TITLE,
-		description: "This is the Sign Up page",
-	},
-
-	"/": {
-		template: "../templates/NoLogHome.html",
-		title: "Home | " + DEFAULT_PAGE_TITLE,
-		description: "This is the home page",
-	},
+    404: {
+        template: "../templates/404.html",
+        title: "404 | " + DEFAULT_PAGE_TITLE,
+        description: "Page not found",
+    },
+    "/Login": {
+        template: "../templates/Login.html",
+        title: "Sign In | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Sign In page",
+    },
+    "/Logged": {
+        template: "../templates/home.html",
+        title: "Home logged | " + DEFAULT_PAGE_TITLE,
+        description: "This is the logged home page",
+    },
+    "/Register": {
+        template: "../templates/Register.html",
+        title: "Sign Up | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Sign Up page",
+    },
+    "/": {
+        template: "../templates/NoLogHome.html",
+        title: "Home | " + DEFAULT_PAGE_TITLE,
+        description: "This is the home page",
+    },
     "/Profile": {
         template: "../templates/Profile.html",
         title: "Profile | " + DEFAULT_PAGE_TITLE,
@@ -49,26 +48,26 @@ const ROUTES = {
         description: "This is the Sign Out page",
         script: "./src/SignOut.js"
     },
-	"/LocalMultiplayer": {
-		template: "../templates/localGame.html",
-		title: "Local Game | " + DEFAULT_PAGE_TITLE,
-		description: "This is the Pong Local Multiplayer Game",
-	},
-	"/Tournament": {
-		template: "../templates/Tournament.html",
-		title: "Tournament | " + DEFAULT_PAGE_TITLE,
-		description: "This is the Tournament page for the Pong Game",
-	},
-	"/TournamentInterface": {
-		template: "../templates/TournamentInterface.html",
-		title: "Tournaments | " + DEFAULT_PAGE_TITLE,
-		description: "This is the Tournaments page for the Pong Game",
-	},
-	"/SinglePlayerIA": {
-		template: "../templates/localGame.html",
-		title: "Single Game | " + DEFAULT_PAGE_TITLE,
-		description: "This is the Single Game page for the Pong Game",
-	},
+    "/LocalMultiplayer": {
+        template: "../templates/localGame.html",
+        title: "Local Game | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Pong Local Multiplayer Game",
+    },
+    "/Tournament": {
+        template: "../templates/Tournament.html",
+        title: "Tournament | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Tournament page for the Pong Game",
+    },
+    "/TournamentInterface": {
+        template: "../templates/TournamentInterface.html",
+        title: "Tournaments | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Tournaments page for the Pong Game",
+    },
+    "/SinglePlayerIA": {
+        template: "../templates/localGame.html",
+        title: "Single Game | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Single Game page for the Pong Game",
+    },
 };
 
 window.onpopstate = loadWindowLocation; // Event listener for url changes
@@ -76,69 +75,57 @@ window.onload = loadWindowLocation; // Handle the initial url
 
 // Custom navigation event for links with the class spa-route
 document.addEventListener("click", (event) => {
-	if (!event.target.matches(".spa-route"))
-		return;
-	navigationEventHandler(event);
+    if (!event.target.matches(".spa-route"))
+        return;
+    navigationEventHandler(event);
 });
-
 
 // Handles navigation events by setting the new window location and calling loadWindowLocation
 function navigationEventHandler(event) {
-	event.preventDefault();
-	const path = event.target.dataset.path || event.target.href;
-	window.history.pushState({}, "", /*event.target.href*/ path); // Set window location
-	loadWindowLocation();
+    event.preventDefault();
+    const path = event.target.dataset.path || event.target.href;
+    window.history.pushState({}, "", path); // Set window location
+    loadWindowLocation();
 }
 
 // Load the template html for the current window location
 async function loadWindowLocation() {
-	const location = window.location;
-	const locationPath = (location.length === 0) ? "/" : location.pathname;
-	const route = ROUTES[locationPath] || ROUTES["404"];
-	
-	try {
-		const response = await fetch(route.template);
-		if (!response.ok) throw new Error('Network response was not ok');
-		const html = await response.text();
-	
-		document.getElementById("spa-template-content").innerHTML = html;
-		document.title = route.title;
-		document.querySelector('meta[name="description"]').setAttribute("content", route.description);
-	
-		// Manejo de scripts
+    const location = window.location;
+    const locationPath = (location.length === 0) ? "/" : location.pathname;
+    const route = ROUTES[locationPath] || ROUTES["404"];
+    
+    try {
+        const response = await fetch(route.template);
+        if (!response.ok) throw new Error('Network response was not ok');
+        const html = await response.text();
 
-		terminateGame();
-		terminateGameIA();
-		if (locationPath === "/LocalMultiplayer") {
-			initializeGame();
-		}
+        document.getElementById("spa-template-content").innerHTML = html;
+        document.title = route.title;
+        document.querySelector('meta[name="description"]').setAttribute("content", route.description);
 
- 		if (locationPath === "/") {
-			if (isUserLoggedIn()) {
-				window.history.replaceState({}, "", "/Logged");
-				loadWindowLocation();
-				return; // Importante: salir de la función después de la redirección
-			} else {
-				// No es necesario hacer nada si el usuario no está logueado,
-				// ya que ya estamos en la página correcta ("/")
-			}
-		} 
+        // Manejo de scripts
+        terminateGame();
+        terminateGameIA();
+        if (locationPath === "/LocalMultiplayer") {
+            initializeGame();
+        }
 
+        if (locationPath === "/") {
+            if (isUserLoggedIn()) {
+                window.history.replaceState({}, "", "/Logged");
+                loadWindowLocation();
+                return; // Importante: salir de la función después de la redirección
+            } 
+        }
+        if (locationPath === "/Profile") {
+            const script = document.createElement('script');
+            script.src = './src/Profile.js';
+            document.body.appendChild(script);
+        }        
 
-		if (locationPath === "/Profile") {
-			const script = document.createElement('script');
-			script.src = './src/Profile.js';
-			document.body.appendChild(script);
-		}		
-
-		if (locationPath === "/Register") {
+        if (locationPath === "/Register") {
             const script = document.createElement('script');
             script.src = './src/Register.js'; // Ruta a tu archivo Register.js
-            document.body.appendChild(script);
-        }
-		if (locationPath === "/SignUp") {
-            const script = document.createElement('script');
-            script.src = './src/Register.js'; // Ruta a tu archivo signup.js
             document.body.appendChild(script);
         }
 
@@ -148,16 +135,17 @@ async function loadWindowLocation() {
             document.body.appendChild(script);
         }
 
-		if (locationPath === "/SignOut") {
-			const script = document.createElement('script');
-			script.src = './src/SignOut.js';
-			script.onload = function() {
-				if (typeof window.initSignOut === 'function') {
-					window.initSignOut(loadWindowLocation);
-				}
-			};
-			document.body.appendChild(script);
-		}
+        if (locationPath === "/SignOut") {
+            const script = document.createElement('script');
+            script.src = './src/SignOut.js';
+            script.onload = function() {
+                if (typeof window.initSignOut === 'function') {
+                    window.initSignOut(loadWindowLocation);
+                }
+            };
+            document.body.appendChild(script);
+        }
+
         // Cargar script específico si existe
         if (route.script) {
             const script = document.createElement('script');
@@ -169,20 +157,43 @@ async function loadWindowLocation() {
                 else if (typeof window[`init${route.title.split(' | ')[0]}`] === 'function') {
                     window[`init${route.title.split(' | ')[0]}`]();
                 }
-
             };
             document.body.appendChild(script);
         }
-
+		
 		if (locationPath === "/SinglePlayerIA") {
 			initializeGameIA();
-			//añadido para arrancar la IA
-			//startAI();
 		}
+        // Ocultar/mostrar enlaces en el menú según el estado de Navbar
+        const loginLink = document.getElementById("login-link");
+        const registerLink = document.getElementById("register-link");
+        const profileLink = document.getElementById("profile-link");
+        const signoutLink = document.getElementById("signout-link");
 
+		const retrievedToken = localStorage.getItem("authToken");
+        // Lógica para mostrar u ocultar elementos del menú
+        if (/*Navbar === 1*/ retrievedToken) {
+            // Mostrar Login y Register, ocultar Profile y Sign Out
+            if (loginLink) loginLink.parentElement.style.display = 'none';
+            if (registerLink) registerLink.parentElement.style.display = 'none';
+            if (profileLink) profileLink.parentElement.style.display = '';
+            if (signoutLink) signoutLink.parentElement.style.display = '';
+        } else if (/*Navbar === 0*/!retrievedToken) {
+            // Mostrar Profile y Sign Out, ocultar Login y Register
+            if (loginLink) loginLink.parentElement.style.display = '';
+            if (registerLink) registerLink.parentElement.style.display = '';
+            if (profileLink) profileLink.parentElement.style.display = 'none';
+            if (signoutLink) signoutLink.parentElement.style.display = 'none';
+        }
 
-		
-	} catch (error) {
-	  	console.error('Error fetching template:', error);
-	}
+    } catch (error) {
+        console.error('Error fetching template:', error);
+    }
 }
+
+
+
+
+
+
+

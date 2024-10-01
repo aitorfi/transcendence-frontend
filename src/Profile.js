@@ -60,10 +60,13 @@ function initProfile() {
                         // Convierte la fecha a un objeto Date
                         const date = new Date(dateJoined);
                         
-                        // Formatea la fecha en año-mes-día
+                        // Formatea la fecha y hora en año-mes-día horas:minutos:segundos
                         const formattedDate = date.getFullYear() + '-' +
                                               String(date.getMonth() + 1).padStart(2, '0') + '-' + // Mes +1 ya que es 0-indexado
-                                              String(date.getDate()).padStart(2, '0');
+                                              String(date.getDate()).padStart(2, '0') + ' ' + // Día
+                                              String(date.getHours()).padStart(2, '0') + ':' + // Horas
+                                              String(date.getMinutes()).padStart(2, '0') + ':' + // Minutos
+                                              String(date.getSeconds()).padStart(2, '0'); // Segundos
                         
                         joinedField.textContent = formattedDate;
                     } else {
@@ -72,6 +75,7 @@ function initProfile() {
                 } else {
                     console.error('date_joined field not found');
                 }
+                
 
                 const friendField = document.getElementById('friends');
                 if (friendField) {
