@@ -1,7 +1,11 @@
+
 function initProfile() {
+
     async function loadProfileData() {
         const token = localStorage.getItem('authToken');
         const userData = JSON.parse(localStorage.getItem('userData'));
+
+
 
         if (!token || !userData) {
             console.error('No token or user data found');
@@ -9,13 +13,18 @@ function initProfile() {
         }
 
         try {
+
             const response = await fetch(`http://localhost:50000/api/users/profile/${userData.user_id}/`, {
                 headers: {
                     'Authorization': `Token ${token}`
                 }
             });
+            
+            console.log('Response status:', response.status);
+            console.log('Response OK:', response.ok);
 
             if (response.ok) {
+                console.log(response);
                 const profileData = await response.json();
                 console.log('Profile data:', profileData);
 
@@ -35,6 +44,29 @@ function initProfile() {
                 } else {
                     console.error('date_joined field not found');
                 }
+
+                const friendField = document.getElementById('friends');
+                if (friendField) {
+                    friendField.value = profileData.friends || 0; // Usa '' si age es null o undefined
+                } else {
+                    console.error('Friend field not found');
+                }
+
+                const first_nameField = document.getElementById('first_name');
+                if (first_nameField) {
+                    first_nameField.value = profileData.first_name || 0; // Usa '' si age es null o undefined
+                } else {
+                    console.error('first_name field not found');
+                }
+                
+
+                const last_name_nameField = document.getElementById('last_name');
+                if (last_name_nameField) {
+                    last_name_nameField.value = profileData.last_name || 0; // Usa '' si age es null o undefined
+                } else {
+                    console.error('last_name field not found');
+                }
+
 
 
                 /*              const ageField = document.getElementById('age');
@@ -111,47 +143,135 @@ function initProfile() {
 
     // Manejadores para mostrar/ocultar formularios de cambio de contraseña y correo electrónico
     document.getElementById('changePasswordBtn').addEventListener('click', function() {
+        const changeProfileForm = document.getElementById('changeProfileForm');
         const changePasswordForm = document.getElementById('changePasswordForm');
-        changePasswordForm.classList.toggle('collapse');
+        const changeProfileBtn = document.getElementById('changeProfilelBtn');
+        
+        // Si el formulario de contraseña ya está visible, lo ocultamos
+        if (!changePasswordForm.classList.contains('collapse')) {
+            changePasswordForm.classList.add('collapse');
+            this.classList.remove('active');
+        } else {
+            // Si no, ocultamos el otro formulario y mostramos este
+            changeProfileForm.classList.add('collapse');
+            changePasswordForm.classList.remove('collapse');
+            this.classList.add('active');
+            changeProfileBtn.classList.remove('active');
+        }
     });
-
-    document.getElementById('changeEmailBtn').addEventListener('click', function() {
-        const changeEmailForm = document.getElementById('changeEmailForm');
-        changeEmailForm.classList.toggle('collapse');
+    
+    document.getElementById('changeProfilelBtn').addEventListener('click', function() {
+        const changePasswordForm = document.getElementById('changePasswordForm');
+        const changeProfileForm = document.getElementById('changeProfileForm');
+        const changePasswordBtn = document.getElementById('changePasswordBtn');
+        
+        // Si el formulario de perfil ya está visible, lo ocultamos
+        if (!changeProfileForm.classList.contains('collapse')) {
+            changeProfileForm.classList.add('collapse');
+            this.classList.remove('active');
+        } else {
+            // Si no, ocultamos el otro formulario y mostramos este
+            changePasswordForm.classList.add('collapse');
+            changeProfileForm.classList.remove('collapse');
+            this.classList.add('active');
+            changePasswordBtn.classList.remove('active');
+        }
     });
 
     // Manejar el evento de envío del formulario de cambio de contraseña
-    document.getElementById('submitPasswordChange').addEventListener('click', function() {
+    document.getElementById('submitPasswordChange').addEventListener('click', async function(event) {
+        event.preventDefault();
         const currentPassword = document.getElementById('currentPassword').value;
         const newPassword = document.getElementById('newPassword').value;
         const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-
+    
         // Validar contraseñas
         if (newPassword !== confirmNewPassword) {
             alert('New passwords do not match!');
             return;
         }
-
-        alert('Password changed successfully!'); // Simular un cambio exitoso
-        // Aquí puedes agregar la lógica para enviar los datos al servidor si es necesario
+    
+        const token = localStorage.getItem('authToken');
+        const userData = JSON.parse(localStorage.getItem('userData'));
+    
+        if (!token || !userData) {
+            console.error('No token or user data found');
+            return;
+        }
+    
+        try {
+            const response = await fetch(`http://localhost:50000/api/users/change-password/${userData.user_id}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`
+                },
+                body: JSON.stringify({
+                    current_password: currentPassword,
+                    new_password: newPassword
+                })
+            });
+    
+            if (response.ok) {
+                alert('Password changed successfully!');
+                // Limpiar los campos de contraseña
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmNewPassword').value = '';
+            } else {
+                const errorData = await response.json();
+                alert(`Failed to change password: ${errorData.error}`);
+            }
+        } catch (error) {
+            console.error('Error changing password:', error);
+            alert('An error occurred while changing the password.');
+        }
     });
 
     // Manejar el evento de envío del formulario de cambio de correo electrónico
-    document.getElementById('submitEmailChange').addEventListener('click', function() {
-        const currentEmail = document.getElementById('currentEmail').value;
-        const newEmail = document.getElementById('newEmail').value;
-        const confirmNewEmail = document.getElementById('confirmNewEmail').value;
-
-        // Validar correos electrónicos
-        if (newEmail !== confirmNewEmail) {
-            alert('New emails do not match!');
+    document.getElementById('submitProfileChange').addEventListener('click', async function(event) {
+        event.preventDefault();
+        const first_name = document.getElementById('first_name').value;
+        const last_name = document.getElementById('last_name').value;
+        const friends = document.getElementById('friends').value;
+    
+        const token = localStorage.getItem('authToken');
+        const userData = JSON.parse(localStorage.getItem('userData'));
+    
+        if (!token || !userData) {
+            console.error('No token or user data found');
             return;
         }
-
-        alert('Email changed successfully!'); // Simular un cambio exitoso
-        // Aquí puedes agregar la lógica para enviar los datos al servidor si es necesario
+    
+        try {
+            const response = await fetch(`http://localhost:50000/api/users/update/${userData.user_id}/`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`
+                },
+                body: JSON.stringify({
+                    first_name,
+                    last_name,
+                    friends
+                })
+            });
+    
+            if (response.ok) {
+                const updatedData = await response.json();
+                console.log('Profile updated successfully:', updatedData);
+                alert('Profile updated successfully!');
+                // Actualizar los campos del formulario con los nuevos datos
+                loadProfileData();
+            } else {
+                console.error('Failed to update profile');
+                alert('Failed to update profile. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            alert('An error occurred while updating the profile.');
+        }
     });
-
     // También añadir el listener por si acaso
     document.addEventListener('DOMContentLoaded', loadProfileData);
 }
@@ -159,4 +279,3 @@ function initProfile() {
 // Exponer la función de inicialización globalmente
 window.initProfile = initProfile;
 
-console.log('Profile script loaded');
