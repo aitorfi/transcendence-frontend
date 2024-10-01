@@ -1,6 +1,20 @@
-
+function loadAvatar(userId) {
+    const avatarImage = document.getElementById('avatarImage');
+    const avatarUrl = `http://localhost:50000/api/users/avatar/${userId}/?${new Date().getTime()}`;
+    console.log('Loading avatar from:', avatarUrl);
+    
+    avatarImage.src = avatarUrl;
+    avatarImage.onerror = function() {
+        console.error('Error loading avatar, using default');
+        this.src = 'img/avatar.jpg';
+        this.onerror = null;  // Previene bucle infinito si la imagen por defecto también falla
+    };
+}
 function initProfile() {
-
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    if (userData && userData.user_id) {
+        loadAvatar(userData.user_id);
+    }
     async function loadProfileData() {
         const token = localStorage.getItem('authToken');
         const userData = JSON.parse(localStorage.getItem('userData'));
@@ -58,7 +72,6 @@ function initProfile() {
                 } else {
                     console.error('date_joined field not found');
                 }
-                
 
                 const friendField = document.getElementById('friends');
                 if (friendField) {
@@ -114,17 +127,36 @@ function initProfile() {
     });
 
     // Agregar un listener al input de archivo para cargar la imagen
-    avatarInput.addEventListener('change', function () {
+    avatarInput.addEventListener('change', async function () {
         const file = avatarInput.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                avatarImage.src = e.target.result; // Cambiar la imagen del avatar
-            };
-            reader.readAsDataURL(file);
+            const formData = new FormData();
+            formData.append('avatar_image', file);
+    
+            const token = localStorage.getItem('authToken');
+            const userData = JSON.parse(localStorage.getItem('userData'));
+    
+            try {
+                const response = await fetch('http://localhost:50000/api/users/upload-avatar/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Token ${token}`
+                    },
+                    body: formData
+                });
+    
+                if (response.ok) {
+                    console.log('Avatar uploaded successfully');
+                    // Actualizar la imagen del avatar en la interfaz
+                    loadAvatar(userData.user_id);
+                } else {
+                    console.error('Failed to upload avatar');
+                }
+            } catch (error) {
+                console.error('Error uploading avatar:', error);
+            }
         }
     });
-
     // Toggle color picker
     const toggleColorPicker = document.getElementById('toggleColorPicker');
     const colorPickerContainer = document.getElementById('colorPickerContainer');
