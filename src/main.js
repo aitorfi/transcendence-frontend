@@ -3,6 +3,10 @@
 import { initializeGame, terminateGame } from "./LocalMultiplayer.js"
 import { initializeGameIA, terminateGameIA } from "./SinglePlayerIA.js"
 
+function isUserLoggedIn() {
+    return localStorage.getItem('authToken') !== null;
+}
+
 const DEFAULT_PAGE_TITLE = "JS SPA Router";
 
 const ROUTES = {
@@ -108,6 +112,25 @@ async function loadWindowLocation() {
 		if (locationPath === "/LocalMultiplayer") {
 			initializeGame();
 		}
+
+ 		if (locationPath === "/") {
+			if (isUserLoggedIn()) {
+				window.history.replaceState({}, "", "/Logged");
+				loadWindowLocation();
+				return; // Importante: salir de la función después de la redirección
+			} else {
+				// No es necesario hacer nada si el usuario no está logueado,
+				// ya que ya estamos en la página correcta ("/")
+			}
+		} 
+
+
+		if (locationPath === "/Profile") {
+			const script = document.createElement('script');
+			script.src = './src/Profile.js';
+			document.body.appendChild(script);
+		}		
+
 		if (locationPath === "/Register") {
             const script = document.createElement('script');
             script.src = './src/Register.js'; // Ruta a tu archivo Register.js
@@ -124,7 +147,7 @@ async function loadWindowLocation() {
             script.src = './src/SignIn.js';
             document.body.appendChild(script);
         }
-		
+
 		if (locationPath === "/SignOut") {
 			const script = document.createElement('script');
 			script.src = './src/SignOut.js';

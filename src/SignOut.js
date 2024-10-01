@@ -33,7 +33,7 @@ async function handleSignOut(loadWindowLocationFunc) {
             localStorage.removeItem('authToken');
             localStorage.removeItem('userData');
             alert('You have been successfully logged out.');
-            window.history.pushState({}, "", "/SignIn");
+            window.history.pushState({}, "", "/");
             if (typeof loadWindowLocationFunc === 'function') {
                 loadWindowLocationFunc();
             } else {
