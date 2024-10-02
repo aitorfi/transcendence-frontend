@@ -44,6 +44,18 @@
 		<main id="spa-template-content"></main>
 		<footer>
 		 	Pong Transcendence Game
+		 <a href="https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-e59be17633af5d3818953e6314ebf3284657caef2c6580fe5273e86d207ba627&redirect_uri=http://localhost:50000/api/oauth/callback/&response_type=code">Login con 42</a>
+<script>
+		fetch('http://localhost:50000/api/protected/', {
+	method: 'GET',
+	headers: {
+		'Authorization': `Bearer ${accessToken}`
+	}
+	})
+	.then(response => response.json())
+	.then(data => console.log(data))
+	.catch(error => console.error('Error:', error));
+</script>
 		</footer>
 	</body>
 </html>
