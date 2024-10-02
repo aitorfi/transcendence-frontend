@@ -161,31 +161,6 @@ function initProfile() {
             }
         }
     });
-    // Toggle color picker
-    const toggleColorPicker = document.getElementById('toggleColorPicker');
-    const colorPickerContainer = document.getElementById('colorPickerContainer');
-    const colorPickerCanvas = document.getElementById('colorPicker');
-
-    toggleColorPicker.addEventListener('click', function () {
-        colorPickerContainer.style.display = colorPickerContainer.style.display === 'none' ? 'block' : 'none';
-    });
-
-    // Setup color picker
-    const ctx = colorPickerCanvas.getContext('2d');
-    const gradient = ctx.createLinearGradient(0, 0, 300, 150);
-    gradient.addColorStop(0, 'red');
-    gradient.addColorStop(0.5, 'green');
-    gradient.addColorStop(1, 'blue');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 300, 150);
-
-    colorPickerCanvas.addEventListener('click', function (event) {
-        const rect = colorPickerCanvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        const pixel = ctx.getImageData(x, y, 1, 1).data;
-        document.body.style.backgroundColor = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
-    });
 
     // Function to simulate a match
     function playMatch(opponent) {
