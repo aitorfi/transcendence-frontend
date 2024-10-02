@@ -3,30 +3,24 @@
     <div class="container mt-4 text-center">
         <div class="position-relative">
             <!-- Imagen que actúa como botón -->
-            <img id="avatarImage" src="img/avatar.jpg" alt="Avatar" class="rounded-circle" style="width: 100px; height: 100px;">
+            <img id="avatarImage" src="img/avatar.jpg" alt="Avatar" class="rounded-circle" style="width: 100px; height: 100px; border: 2px solid black;">
 
             <!-- Campo de entrada de archivo oculto -->
             <input type="file" id="imageInput" style="display: none;" accept="image/*">
             
             <!-- Badge o etiqueta que puedes mantener si lo deseas -->
         </div>
-        <h4>Username: <span id="username">usuario</span></h4>
+        <h4><b>Username: </b><span id="username">usuario</span></h4>
+        <div class="mt-3 d-flex justify-content-center">
+            <button class="btn btn-secondary btn_profile1 btn-dark mx-1" id="changePasswordBtn">Change Password</button>
+            <button class="btn btn-secondary btn_profile1 btn-dark mx-1" id="changeProfilelBtn">Change Info</button>
+            <button class="btn btn-secondary btn_profile1 btn-dark mx-1" id="changeAvatarBtn">Change Avatar</button>
+        </div>
     </div>
 
-    <div class="row">
+    <div class="row justify-content-center">
         <!-- Columna para el avatar y la información del usuario -->
-        <div class="col-lg-8 col-md-12">
-            <!-- Avatar, ID, Username and Status -->
-            <div class="text-center">
-
-                <!-- Change password, email, and avatar -->
-                <div class="mt-3">
-                    <button class="btn btn-secondary" id="changePasswordBtn">Change Password</button>
-                    <button class="btn btn-secondary" id="changeProfilelBtn">Change Info</button>
-                    <button class="btn btn-secondary" id="changeAvatarBtn">Change Avatar</button>
-                </div>
-
-                <!-- Campo de entrada de archivo oculto para el cambio de avatar -->
+        <div class="col-lg-8 col-md-12 mx-auto text-center">
                 <input type="file" id="avatarInput" style="display: none;" accept="image/*">
 
                 <!-- Password Change Form -->
@@ -65,9 +59,8 @@
 
                 <!-- Creation and Update dates -->
                 <div class="mt-4">
-                    <p>Created At: <span id="date_joined">2023-09-01</span></p>
+                    <p><b>Created at:  </b><span id="date_joined">2023-09-01</span></p>
                 </div>
-            </div>
         </div>
     </div>
 
