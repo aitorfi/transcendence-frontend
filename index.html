@@ -3,13 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Pong Transcendence</title>
     <meta name="description" content="">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="css/styles.css"/>
     <link rel="stylesheet" href="css/style_pong.css">
     <script type="module" src="./src/main.js"></script>
+    <style>
+        /* Añadir aquí CSS adicional para el dropdown */
+        .dropdown-menu {
+            max-width: 100%; /* Que el dropdown no supere el ancho del contenedor */
+            word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+        }
+
+        /* Asegurar que los botones no se salgan del contenedor */
+        .dropdown-item {
+            white-space: nowrap; /* Evitar que el texto largo colapse fuera del botón */
+        }
+
+        /* Para pantallas pequeñas */
+        @media (max-width: 576px) {
+            .dropdown-menu {
+                width: 100vw; /* Asegura que el dropdown use el ancho de la pantalla completa */
+                left: 0; /* Mantener el menú alineado con el borde de la pantalla */
+                right: 0; /* Mantener el menú alineado con el borde de la pantalla */
+            }
+        }
+    </style>
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -32,6 +53,51 @@
                     <li class="nav-item">
                         <a class="nav-link active spa-route" aria-current="page" href="/Login" id="login-link">Login</a>
                     </li>
+                    
+                    <!-- Botón Social Modificado para ser responsive -->
+                    <li class="nav-item dropdown" id="social-link"> 
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Social
+                        </a>
+                        <ul class="dropdown-menu p-3">
+                            <li>
+                                <form id="search-user-form" class="mb-3">
+                                    <div class="mb-3">
+                                        <label for="search-username" class="form-label">Search User</label>
+                                        <input type="text" class="form-control" id="search-username" placeholder="Username">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </form>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Friends Online</h6></li>
+                            <li id="friends-online-list">
+                                <div class="row">
+                                    <div class="col-12 d-flex justify-content-between align-items-center">
+                                        <span>goiko <span class="badge bg-success">online</span></span>
+                                        <div>
+                                            <button class="btn btn-sm btn-primary">Match</button>
+                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-between align-items-center">
+                                        <span>alejandro <span class="badge bg-success">online</span></span>
+                                        <div>
+                                            <button class="btn btn-sm btn-primary">Match</button>
+                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-between align-items-center">
+                                        <span>auskola <span class="badge bg-secondary">offline</span></span>
+                                        <div>
+                                            <button class="btn btn-sm btn-danger">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+    
                     <li class="nav-item">
                         <a class="nav-link active spa-route" aria-current="page" href="/Profile" id="profile-link">Profile</a>
                     </li>

@@ -169,6 +169,7 @@ async function loadWindowLocation() {
         const registerLink = document.getElementById("register-link");
         const profileLink = document.getElementById("profile-link");
         const signoutLink = document.getElementById("signout-link");
+        const socialLink = document.getElementById("social-link"); // Añadido
 
 		const retrievedToken = localStorage.getItem("authToken");
         // Lógica para mostrar u ocultar elementos del menú
@@ -178,12 +179,102 @@ async function loadWindowLocation() {
             if (registerLink) registerLink.parentElement.style.display = 'none';
             if (profileLink) profileLink.parentElement.style.display = '';
             if (signoutLink) signoutLink.parentElement.style.display = '';
+            if (socialLink) socialLink.style.display = ''; // Añadido
+/*                         // Manejar la búsqueda de usuarios // Añadido
+                        const searchUserForm = document.getElementById("search-user-form");
+                        searchUserForm.addEventListener("submit", async (e) => {
+                            e.preventDefault();
+                            const username = document.getElementById("search-username").value;
+                    
+                            try {
+                                const response = await fetch(`/api/searchUser?username=${encodeURIComponent(username)}`, {
+                                    method: 'GET',
+                                    headers: {
+                                        'Authorization': `Bearer ${retrievedToken}`
+                                    }
+                                });
+                                const data = await response.json();
+                                
+                                if (data.success) {
+                                    alert(`User found: ${data.user.username}`);
+                                } else {
+                                    alert('User not found');
+                                }
+                            } catch (error) {
+                                console.error('Error searching user:', error);
+                            }
+                        });
+            
+                        // Cargar la lista de amigos online // Añadido
+                        async function loadFriendsOnline() {
+                            try {
+                                const response = await fetch(`/api/getFriendsOnline`, {
+                                    method: 'GET',
+                                    headers: {
+                                        'Authorization': `Bearer ${retrievedToken}`
+                                    }
+                                });
+                                const friends = await response.json();
+                                
+                                const friendsList = document.getElementById("friends-online-list");
+                                friendsList.innerHTML = '';
+            
+                                if (friends.length > 0) {
+                                    friends.forEach(friend => {
+                                        const friendItem = document.createElement("li");
+                                        friendItem.classList.add("dropdown-item");
+                                        friendItem.innerHTML = `
+                                            ${friend.username}
+                                            <button class="btn btn-sm btn-success" onclick="startMatch('${friend.id}')">Match</button>
+                                            <button class="btn btn-sm btn-danger" onclick="deleteFriend('${friend.id}')">Delete</button>
+                                        `;
+                                        friendsList.appendChild(friendItem);
+                                    });
+                                } else {
+                                    friendsList.innerHTML = '<li class="dropdown-item">No friends online</li>';
+                                }
+                            } catch (error) {
+                                console.error('Error loading friends online:', error);
+                            }
+                        }
+            
+                        loadFriendsOnline(); // Llamar a la función para cargar amigos online // Añadido
+            
+                        // Función para iniciar una partida // Añadido
+                        function startMatch(friendId) {
+                            alert(`Starting match with friend ID: ${friendId}`);
+                        }
+            
+                        // Función para eliminar a un amigo // Añadido
+                        async function deleteFriend(friendId) {
+                            try {
+                                const response = await fetch(`/api/deleteFriend`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${retrievedToken}`
+                                    },
+                                    body: JSON.stringify({ friendId })
+                                });
+                                const result = await response.json();
+            
+                                if (result.success) {
+                                    alert('Friend deleted successfully');
+                                    loadFriendsOnline();
+                                } else {
+                                    alert('Error deleting friend');
+                                }
+                            } catch (error) {
+                                console.error('Error deleting friend:', error);
+                            }
+                        } */
         } else if (/*Navbar === 0*/!retrievedToken) {
             // Mostrar Profile y Sign Out, ocultar Login y Register
             if (loginLink) loginLink.parentElement.style.display = '';
             if (registerLink) registerLink.parentElement.style.display = '';
             if (profileLink) profileLink.parentElement.style.display = 'none';
             if (signoutLink) signoutLink.parentElement.style.display = 'none';
+            if (socialLink) socialLink.style.display = 'none'; // Añadido
         }
 
     } catch (error) {
