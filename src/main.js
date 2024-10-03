@@ -77,6 +77,21 @@ const ROUTES = {
         template: "../templates/Delete.html",
         title: "Delete Friends | " + DEFAULT_PAGE_TITLE,
         description: "This is the Delete Friends page for the Pong Game",
+    },
+    "/FriendRequest": {
+        template: "../templates/FriendRequest.html",
+        title: "FriendRequest | " + DEFAULT_PAGE_TITLE,
+        description: "This is the FriendRequest page for the Pong Game",
+    },
+    "/ListSearch": {
+        template: "../templates/ListSearch.html",
+        title: "ListSearch | " + DEFAULT_PAGE_TITLE,
+        description: "This is the ListSearch page for the Pong Game",
+    },
+    "/Chat": {
+        template: "../templates/Chat.html",
+        title: "Chat | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Chat page for the Pong Game",
     }
 };
 
@@ -180,6 +195,7 @@ async function loadWindowLocation() {
         const profileLink = document.getElementById("profile-link");
         const signoutLink = document.getElementById("signout-link");
         const friendsLink = document.getElementById("friends-link"); // Añadido
+        const ListSearchLink = document.getElementById("ListSearch-link"); // Añadido
 
 		const retrievedToken = localStorage.getItem("authToken");
         // Lógica para mostrar u ocultar elementos del menú
@@ -190,6 +206,7 @@ async function loadWindowLocation() {
             if (profileLink) profileLink.parentElement.style.display = '';
             if (signoutLink) signoutLink.parentElement.style.display = '';
             if (friendsLink) friendsLink.style.display = ''; // Añadido
+            if (ListSearchLink) ListSearchLink.style.display = ''; // Añadido
 /*                         // Manejar la búsqueda de usuarios // Añadido
                         const searchUserForm = document.getElementById("search-user-form");
                         searchUserForm.addEventListener("submit", async (e) => {
@@ -285,6 +302,7 @@ async function loadWindowLocation() {
             if (profileLink) profileLink.parentElement.style.display = 'none';
             if (signoutLink) signoutLink.parentElement.style.display = 'none';
             if (friendsLink) friendsLink.style.display = 'none'; // Añadido
+            if (ListSearchLink) ListSearchLink.style.display = 'none'; // Añadido
         }
 
     } catch (error) {
