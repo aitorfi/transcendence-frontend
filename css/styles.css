@@ -81,3 +81,13 @@ canvas {
 .form-control_profile {
 	border: solid black;
 }
+
+#search-user-form .form-control {
+    height: 35px; /* Ajusta la altura para que sea similar a la altura del navbar */
+    padding: 5px; /* Ajusta el padding si es necesario */
+}
+
+#search-user-form button {
+    height: 35px; /* Asegura que el botón tenga la misma altura que el campo de texto */
+}
+
