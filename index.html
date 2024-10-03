@@ -46,13 +46,16 @@
                         <a class="nav-link active spa-route" aria-current="page" href="/TournamentInterface">Tournaments</a>
                     </li>
                 </ul>
-                <form id="search-user-form" class="d-flex align-items-center mb-0">
+<!--                 <form id="search-user-form" class="d-flex align-items-center mb-0">
                     <div class="mb-0 me-2">
                         <input type="text" class="form-control" id="search-username" placeholder="Username">
                     </div>
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </form>                
+                    <button type="submit" class="btn btn-primary spa-route" data-path="/ListSearch">Search</button>
+                </form>   -->              
                 <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active spa-route" aria-current="page" href="/ListSearch" id="ListSearch-link">Find User</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link active spa-route" aria-current="page" href="/Register" id="register-link">Register</a>
                     </li>
