@@ -46,6 +46,12 @@
                         <a class="nav-link active spa-route" aria-current="page" href="/TournamentInterface">Tournaments</a>
                     </li>
                 </ul>
+                <form id="search-user-form" class="d-flex align-items-center mb-0">
+                    <div class="mb-0 me-2">
+                        <input type="text" class="form-control" id="search-username" placeholder="Username">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>                
                 <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
                     <li class="nav-item">
                         <a class="nav-link active spa-route" aria-current="page" href="/Register" id="register-link">Register</a>
@@ -53,53 +59,11 @@
                     <li class="nav-item">
                         <a class="nav-link active spa-route" aria-current="page" href="/Login" id="login-link">Login</a>
                     </li>
-                    
-                    <!-- Botón Social Modificado para ser responsive -->
-                    <li class="nav-item dropdown" id="social-link"> 
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Social
-                        </a>
-                        <ul class="dropdown-menu p-3">
-                            <li>
-                                <form id="search-user-form" class="mb-3">
-                                    <div class="mb-3">
-                                        <label for="search-username" class="form-label">Search User</label>
-                                        <input type="text" class="form-control" id="search-username" placeholder="Username">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Search</button>
-                                </form>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><h6 class="dropdown-header">Friends Online</h6></li>
-                            <li id="friends-online-list">
-                                <div class="row">
-                                    <div class="col-12 d-flex justify-content-between align-items-center">
-                                        <span>goiko <span class="badge bg-success">online</span></span>
-                                        <div>
-                                            <button class="btn btn-sm btn-primary">Match</button>
-                                            <button class="btn btn-sm btn-danger">Delete</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 d-flex justify-content-between align-items-center">
-                                        <span>alejandro <span class="badge bg-success">online</span></span>
-                                        <div>
-                                            <button class="btn btn-sm btn-primary">Match</button>
-                                            <button class="btn btn-sm btn-danger">Delete</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 d-flex justify-content-between align-items-center">
-                                        <span>auskola <span class="badge bg-secondary">offline</span></span>
-                                        <div>
-                                            <button class="btn btn-sm btn-danger">Delete</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-    
                     <li class="nav-item">
                         <a class="nav-link active spa-route" aria-current="page" href="/Profile" id="profile-link">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active spa-route" aria-current="page" href="/Friends" id="friends-link">Friends</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active spa-route" aria-current="page" href="/SignOut" id="signout-link">Sign out</a>
