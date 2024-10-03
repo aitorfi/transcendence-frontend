@@ -92,7 +92,13 @@ const ROUTES = {
         template: "../templates/Chat.html",
         title: "Chat | " + DEFAULT_PAGE_TITLE,
         description: "This is the Chat page for the Pong Game",
+    },
+    "/MatchHistory": {
+        template: "../templates/MatchHistory.html",
+        title: "Match History | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Match History page for the Pong Game",
     }
+
 };
 
 window.onpopstate = loadWindowLocation; // Event listener for url changes
