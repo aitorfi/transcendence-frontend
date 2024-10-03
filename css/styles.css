@@ -3,9 +3,19 @@ body, main {
 	padding: 0;
 }
 
-nav, footer { padding: 10px; }
-
-nav, footer { background-color: rgb(173, 172, 170); }
+nav, footer {
+    padding: 10px;
+    background-color: #bdbaba; /* Establece el color de fondo */
+    color: #333;               /* Define el color del texto */
+    font-size: 16px;           /* Ajusta el tamaño de la fuente */
+    text-align: center;        /* Centra el contenido horizontalmente */
+    border-top: 1px solid #ccc;/* Añade un borde superior */
+    border-bottom: 1px solid #ccc; /* Añade un borde inferior */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Aplica una sombra */
+    position: absolute;       /* Controla el posicionamiento */
+    width: 100%;               /* Establece el ancho completo */
+    /* Puedes añadir más propiedades según tus necesidades */
+}
 
 nav {
 	display: flex;
@@ -66,4 +76,8 @@ canvas {
 .btn_profile1 {
 	width: 200px;
 	height: 45px;
-}  
+} 
+ 
+.form-control_profile {
+	border: solid black;
+}
