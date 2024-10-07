@@ -1,4 +1,5 @@
 const searchInput = document.getElementById('search-username');
+const buttonInput = document.getElementById('search-user-form');
 const resultsContainer = document.getElementById('results-list');
 
 async function fetchMatches2(query) {
@@ -43,15 +44,8 @@ async function fetchMatches2(query) {
 
 async function fetchMatches(query) {
 
-
     const simulatedResponse = [
         { username: 'pepe19' },
-        { username: 'elpepe' },
-        { username: 'pepegrande' }
-    ];
-
-    const pepe = [
-        { username: 'PAPA19' },
         { username: 'elpepe' },
         { username: 'pepegrande' }
     ];
@@ -87,8 +81,6 @@ async function fetchMatches(query) {
     }
 }
 
-
-
 // Función para mostrar los resultados en el HTML
 function displayResults(matches) {
     // Limpia el contenedor de resultados
@@ -112,7 +104,7 @@ function displayResults(matches) {
 }
 
 // Añade un listener para el evento 'submit' en el formulario
-document.getElementById('search-user-form').addEventListener('submit', (event) => {
+buttonInput.addEventListener('submit', (event) => {
     event.preventDefault(); // Evita que la página se recargue
     
     const query = searchInput.value.trim();
