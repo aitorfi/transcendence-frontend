@@ -10,6 +10,7 @@
 		<link rel="stylesheet" type="text/css" href="css/styles.css"/>
 		<link rel="stylesheet" href="css/style_pong.css">
 		<script type="module" src="./src/main.js"></script>
+		<script src="./src/Security.js"></script>
 	</head>
 	<body>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -43,47 +44,10 @@
 		  </nav>
 		<main id="spa-template-content"></main>
 		<footer>
-		 	Pong Transcendence Game <button onclick="logout()">Logout</button> 
-		 <a href="https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-e59be17633af5d3818953e6314ebf3284657caef2c6580fe5273e86d207ba627&redirect_uri=http://localhost:50000/api/oauth/callback/&response_type=code">Login con 42</a>
-		 <script>
-			function handleLoginCallback() {
-				const urlParams = new URLSearchParams(window.location.search);
-				const token = urlParams.get('token');
-				if (token) {
-					localStorage.setItem('accessToken', token);
-					console.log('Login successful');
-				
-				}
+		 	Pong Transcendence Game
 
-			}
-			window.onload = handleLoginCallback;
-			function logout() {
-				const token = localStorage.getItem('accessToken');
-				if (!token) {
-					console.log('No token found, already logged out');
-					return;
-				}
 
-				fetch('http://localhost:50000/api/logout/', {
-					method: 'POST',
-					headers: {
-						'Authorization': `Bearer ${token}`
-					}
-				})
-				.then(response => response.json())
-				.then(data => {
-					console.log(data.message);
-					localStorage.removeItem('accessToken');
-					// Redirige al usuario a la página de login o inicio
-					window.location.href = '/login';
-				})
-				.catch(error => console.error('Error:', error));
-			}
-			console.log('imprimiendo cosas \n\n');
-			console.log(localStorage.getItem('accessToken'));
-// o
-			console.log(sessionStorage.getItem('accessToken'));
-		</script>
+
 		</footer>
 	</body>
 </html>

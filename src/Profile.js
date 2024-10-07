@@ -1,49 +1,26 @@
-function initProfile() {
-    async function loadProfileData() {
-        const token = localStorage.getItem('authToken');
-        const userData = JSON.parse(localStorage.getItem('userData'));
 
-        if (!token || !userData) {
-            console.error('No token or user data found');
+
+function initProfile() {
+    console.log('Initializing Profile');
+    loadProfileData();
+
+    async function loadProfileData() {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            console.error('No access token found');
             return;
         }
-
+    
         try {
-            const response = await fetch(`http://localhost:50000/api/users/profile/${userData.user_id}/`, {
+            // Asegúrate de que esta URL apunte a tu backend, no al frontend
+            const response = await fetch('http://localhost:50000/api/users/profile/', {
                 headers: {
-                    'Authorization': `Token ${token}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
-
             if (response.ok) {
                 const profileData = await response.json();
-                console.log('Profile data:', profileData);
-
-                // Rellenar los campos del formulario
-                const usernameField = document.getElementById('username');
-
-                if (usernameField) {
-                    usernameField.textContent = profileData.username;
-                } else {
-                    console.error('Username field not found');
-                }
-
-
-                const joinedField = document.getElementById('date_joined');
-                if (joinedField) {
-                    joinedField.textContent = profileData.date_joined || ''; // Usa '' si age es null o undefined
-                } else {
-                    console.error('date_joined field not found');
-                }
-
-
-                /*              const ageField = document.getElementById('age');
-                if (ageField) {
-                    ageField.value = profileData.age || ''; // Usa '' si age es null o undefined
-                } else {
-                    console.error('Age field not found');
-                } */
-                // Añade más campos aquí según tu formulario
+                updateProfileUI(profileData);
             } else {
                 console.error('Failed to fetch profile data');
             }
@@ -52,111 +29,283 @@ function initProfile() {
         }
     }
 
-    // Intentar cargar los datos inmediatamente
-    loadProfileData();
+    function updateTwoFAStatus(isEnabled) {
+        const statusElement = document.getElementById('twoFAStatus');
+        const toggleButton = document.getElementById('toggle2FA');
+        
+        statusElement.textContent = isEnabled ? '2FA is currently enabled.' : '2FA is currently disabled.';
+        toggleButton.textContent = isEnabled ? 'Disable 2FA' : 'Enable 2FA';
+    }
+
+function setup2FAHandlers() {
+    const toggleButton = document.getElementById('toggle2FA');
+    toggleButton.addEventListener('click', async () => {
+        const isCurrentlyEnabled = toggleButton.textContent === 'Disable 2FA';
+        
+        try {
+            const response = await fetch('http://localhost:50000/api/' + (isCurrentlyEnabled ? 'disable-2fa/' : 'enable-2fa/'), {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (!isCurrentlyEnabled && result.qr_code) {
+                    // Mostrar el código QR
+                    const qrCodeContainer = document.getElementById('qrCodeContainer');
+                    qrCodeContainer.innerHTML = `
+                        <img src="data:image/png;base64,${result.qr_code}" alt="2FA QR Code">
+                        <p>Scan this QR code with Google Authenticator app</p>
+                        <input type="text" id="verificationCode" placeholder="Enter verification code">
+                        <button id="verifyCode">Verify</button>
+                    `;
+                    qrCodeContainer.style.display = 'block';
+
+                    // Configurar el manejador para verificar el código
+                    document.getElementById('verifyCode').addEventListener('click', async () => {
+                        const code = document.getElementById('verificationCode').value;
+                        const verifyResponse = await fetch('http://localhost:50000/api/verify-2fa/', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ code })
+                        });
+
+                        if (verifyResponse.ok) {
+                            alert('2FA verified successfully!');
+                            updateTwoFAStatus(true);
+                            qrCodeContainer.style.display = 'none';
+                        } else {
+                            alert('Invalid verification code. Please try again.');
+                        }
+                    });
+                } else {
+                    // Ocultar el código QR si se está desactivando
+                    document.getElementById('qrCodeContainer').style.display = 'none';
+                    updateTwoFAStatus(false);
+                }
+            } else {
+                throw new Error('Failed to toggle 2FA');
+            }
+        } catch (error) {
+            console.error('Error toggling 2FA:', error);
+            alert('There was an error toggling 2FA. Please try again.');
+        }
+    });
+}
+    // Llamar a setup2FAHandlers al final de initProfile
+    setup2FAHandlers();
+}
 
 
-    // Cambia el avatar cuando se selecciona una imagen
+    function updateProfileUI(profileData) {
+        const usernameField = document.getElementById('username');
+        if (usernameField) {
+            usernameField.textContent = profileData.username;
+        } else {
+            console.error('Username field not found');
+        }
+    
+        const joinedField = document.getElementById('date_joined');
+        if (joinedField) {
+            joinedField.textContent = profileData.date_joined || '';
+        } else {
+            console.error('date_joined field not found');
+        }
+    
+        // Añadir botones para 2FA
+        const twoFAContainer = document.createElement('div');
+        twoFAContainer.id = 'two-fa-container';
+        
+        const enable2FABtn = document.createElement('button');
+        enable2FABtn.textContent = 'Enable 2FA';
+        enable2FABtn.classList.add('btn', 'btn-primary', 'mr-2');
+        enable2FABtn.addEventListener('click', enable2FA);
+        
+        const disable2FABtn = document.createElement('button');
+        disable2FABtn.textContent = 'Disable 2FA';
+        disable2FABtn.classList.add('btn', 'btn-danger');
+        disable2FABtn.addEventListener('click', disable2FA);
+
+        
+        const profileContainer = document.querySelector('#profile-container');
+        if (profileContainer) {
+            profileContainer.appendChild(twoFAContainer);
+        } else {
+            console.error('Profile container not found');
+        }
+    }
+
+    // Cambiar el avatar cuando se selecciona una imagen
     const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+
     const avatarInput = document.getElementById('avatarInput');
     const avatarImage = document.getElementById('avatarImage');
 
-    // Agregar un listener al botón para abrir el input de archivo
-    changeAvatarBtn.addEventListener('click', function () {
-        avatarInput.click();
-    });
+    if (changeAvatarBtn && avatarInput && avatarImage) {
+        changeAvatarBtn.addEventListener('click', function () {
+            avatarInput.click();
+        });
 
-    // Agregar un listener al input de archivo para cargar la imagen
-    avatarInput.addEventListener('change', function () {
-        const file = avatarInput.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                avatarImage.src = e.target.result; // Cambiar la imagen del avatar
-            };
-            reader.readAsDataURL(file);
-        }
-    });
+        avatarInput.addEventListener('change', function () {
+            const file = avatarInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    avatarImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
 
     // Toggle color picker
     const toggleColorPicker = document.getElementById('toggleColorPicker');
     const colorPickerContainer = document.getElementById('colorPickerContainer');
     const colorPickerCanvas = document.getElementById('colorPicker');
 
-    toggleColorPicker.addEventListener('click', function () {
-        colorPickerContainer.style.display = colorPickerContainer.style.display === 'none' ? 'block' : 'none';
-    });
+    if (toggleColorPicker && colorPickerContainer && colorPickerCanvas) {
+        toggleColorPicker.addEventListener('click', function () {
+            colorPickerContainer.style.display = colorPickerContainer.style.display === 'none' ? 'block' : 'none';
+        });
 
-    // Setup color picker
-    const ctx = colorPickerCanvas.getContext('2d');
-    const gradient = ctx.createLinearGradient(0, 0, 300, 150);
-    gradient.addColorStop(0, 'red');
-    gradient.addColorStop(0.5, 'green');
-    gradient.addColorStop(1, 'blue');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, 300, 150);
+        // Setup color picker
+        const ctx = colorPickerCanvas.getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 300, 150);
+        gradient.addColorStop(0, 'red');
+        gradient.addColorStop(0.5, 'green');
+        gradient.addColorStop(1, 'blue');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 300, 150);
 
-    colorPickerCanvas.addEventListener('click', function (event) {
-        const rect = colorPickerCanvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        const pixel = ctx.getImageData(x, y, 1, 1).data;
-        document.body.style.backgroundColor = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
-    });
-
-    // Function to simulate a match
-    function playMatch(opponent) {
-        alert(`Starting a match against ${opponent}`);
+        colorPickerCanvas.addEventListener('click', function (event) {
+            const rect = colorPickerCanvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const pixel = ctx.getImageData(x, y, 1, 1).data;
+            document.body.style.backgroundColor = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
+        });
     }
 
     // Manejadores para mostrar/ocultar formularios de cambio de contraseña y correo electrónico
-    document.getElementById('changePasswordBtn').addEventListener('click', function() {
-        const changePasswordForm = document.getElementById('changePasswordForm');
-        changePasswordForm.classList.toggle('collapse');
-    });
+    const changePasswordBtn = document.getElementById('changePasswordBtn');
+    const changePasswordForm = document.getElementById('changePasswordForm');
+    const changeEmailBtn = document.getElementById('changeEmailBtn');
+    const changeEmailForm = document.getElementById('changeEmailForm');
 
-    document.getElementById('changeEmailBtn').addEventListener('click', function() {
-        const changeEmailForm = document.getElementById('changeEmailForm');
-        changeEmailForm.classList.toggle('collapse');
-    });
+    if (changePasswordBtn && changePasswordForm) {
+        changePasswordBtn.addEventListener('click', function() {
+            changePasswordForm.classList.toggle('collapse');
+        });
+    }
+
+    if (changeEmailBtn && changeEmailForm) {
+        changeEmailBtn.addEventListener('click', function() {
+            changeEmailForm.classList.toggle('collapse');
+        });
+    }
 
     // Manejar el evento de envío del formulario de cambio de contraseña
-    document.getElementById('submitPasswordChange').addEventListener('click', function() {
-        const currentPassword = document.getElementById('currentPassword').value;
-        const newPassword = document.getElementById('newPassword').value;
-        const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+    const submitPasswordChange = document.getElementById('submitPasswordChange');
+    if (submitPasswordChange) {
+        submitPasswordChange.addEventListener('click', function() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
 
-        // Validar contraseñas
-        if (newPassword !== confirmNewPassword) {
-            alert('New passwords do not match!');
-            return;
-        }
+            if (newPassword !== confirmNewPassword) {
+                alert('New passwords do not match!');
+                return;
+            }
 
-        alert('Password changed successfully!'); // Simular un cambio exitoso
-        // Aquí puedes agregar la lógica para enviar los datos al servidor si es necesario
-    });
+            // Aquí deberías implementar la lógica para cambiar la contraseña
+            alert('Password changed successfully!');
+        });
+    }
 
     // Manejar el evento de envío del formulario de cambio de correo electrónico
-    document.getElementById('submitEmailChange').addEventListener('click', function() {
-        const currentEmail = document.getElementById('currentEmail').value;
-        const newEmail = document.getElementById('newEmail').value;
-        const confirmNewEmail = document.getElementById('confirmNewEmail').value;
+    const submitEmailChange = document.getElementById('submitEmailChange');
+    if (submitEmailChange) {
+        submitEmailChange.addEventListener('click', function() {
+            const currentEmail = document.getElementById('currentEmail').value;
+            const newEmail = document.getElementById('newEmail').value;
+            const confirmNewEmail = document.getElementById('confirmNewEmail').value;
 
-        // Validar correos electrónicos
-        if (newEmail !== confirmNewEmail) {
-            alert('New emails do not match!');
-            return;
+            if (newEmail !== confirmNewEmail) {
+                alert('New emails do not match!');
+                return;
+            }
+
+            // Aquí deberías implementar la lógica para cambiar el correo electrónico
+            alert('Email changed successfully!');
+        });
+    }
+
+    async function enable2FA() {
+        try {
+            const response = await fetch('http://localhost:50000/api/enable-2fa/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                // Muestra el código QR al usuario
+                const qrCode = document.createElement('img');
+                qrCode.src = `data:image/png;base64,${data.qr_code}`;
+                const twoFAContainer = document.getElementById('two-fa-container');
+                if (twoFAContainer) {
+                    twoFAContainer.appendChild(qrCode);
+                }
+                alert('Scan the QR code with your authenticator app');
+            } else {
+                alert('Failed to enable 2FA');
+            }
+        } catch (error) {
+            console.error('Error enabling 2FA:', error);
+            alert('An error occurred while enabling 2FA');
         }
+    }
 
-        alert('Email changed successfully!'); // Simular un cambio exitoso
-        // Aquí puedes agregar la lógica para enviar los datos al servidor si es necesario
-    });
+    async function disable2FA() {
+        try {
+            const response = await fetch('http://localhost:50000/api/disable-2fa/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                    'Content-Type': 'application/json'
+                }
+            });
 
-    // También añadir el listener por si acaso
-    document.addEventListener('DOMContentLoaded', loadProfileData);
-}
+            if (response.ok) {
+                alert('2FA has been disabled');
+                const twoFAContainer = document.getElementById('two-fa-container');
+                if (twoFAContainer) {
+                    const qrCode = twoFAContainer.querySelector('img');
+                    if (qrCode) {
+                        qrCode.remove();
+                    }
+                }
+            } else {
+                alert('Failed to disable 2FA');
+            }
+        } catch (error) {
+            console.error('Error disabling 2FA:', error);
+            alert('An error occurred while disabling 2FA');
+        }
+    }
+
 
 // Exponer la función de inicialización globalmente
 window.initProfile = initProfile;
 
 console.log('Profile script loaded');
+

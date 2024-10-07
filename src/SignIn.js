@@ -1,7 +1,6 @@
 console.log('SignIn.js loaded');
 
-// Función de inicialización
-function initSignIn() {
+export function initSignIn() {
     console.log('Initializing SignIn');
     const signInForm = document.getElementById('signInForm');
     if (signInForm) {
@@ -14,21 +13,8 @@ function initSignIn() {
 
 async function handleSignIn(event) {
     event.preventDefault();
-    
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-
-    const signInData = {
-        username: username,
-        password: password
-    };
-
-    if (!username || !password) {
-        alert('Please fill in all fields');
-        return;
-    }
-
-
 
     try {
         const response = await fetch('http://localhost:50000/api/users/login/', {
@@ -36,35 +22,48 @@ async function handleSignIn(event) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(signInData),
+            body: JSON.stringify({ username, password }),
         });
-        
-        if (response.ok) {
-            const result = await response.json();
-            console.log('Sign in successful:', result);
-            
-            // Guardar el token de autenticación en el almacenamiento local
-            localStorage.setItem('authToken', result.token);
-            localStorage.setItem('userToken', result.token);
-            localStorage.setItem('userData', JSON.stringify(result));
 
-            // Usar el sistema de enrutamiento SPA para navegar al perfil
-            window.history.pushState({}, "", "/Profile");
-            window.dispatchEvent(new PopStateEvent('popstate'));
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+            const data = await response.json();
+
+            if (data.require_2fa) {
+                const twoFactorCode = prompt('Enter your 2FA code:');
+                if (twoFactorCode) {
+                    const twoFactorResponse = await fetch('http://localhost:50000/api/users/login/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username, password, two_factor_code: twoFactorCode }),
+                    });
+
+                    if (twoFactorResponse.ok) {
+                        const twoFactorData = await twoFactorResponse.json();
+                        localStorage.setItem('accessToken', twoFactorData.access);
+                        localStorage.setItem('refreshToken', twoFactorData.refresh);
+                //        window.location.href = '/profile';
+                    } else {
+                        alert('Invalid 2FA code');
+                    }
+                }
+            } else {
+                localStorage.setItem('accessToken', data.access);
+                localStorage.setItem('refreshToken', data.refresh);
+//                window.location.href = '/profile';
+            }
         } else {
-            const error = await response.json();
-            alert('Error: ' + (error.message || 'Invalid credentials'));
-            console.error('Error response from API:', error);
+            console.log("Received non-JSON response");
+            alert('Login failed: Unexpected response from server');
         }
     } catch (error) {
-        console.error('Error sending data:', error);
-        alert('Error connecting to the server');
+        console.error('Error:', error);
+        alert('An error occurred during login: ' + error.message);
     }
-
-
-
-    
 }
-
-// Ejecutar la inicialización inmediatamente
-initSignIn();

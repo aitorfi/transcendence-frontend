@@ -77,17 +77,22 @@
 
             </div>
         </div>
-
-        <!-- Background Color Button -->
-        <div class="mt-4 text-center">
-            <button class="btn btn-primary" id="toggleColorPicker">Change Background Color</button>
+        <div class="mt-4">
+            <h4>Two-Factor Authentication</h4>
+            <div id="twoFAStatus">
+                <!-- El estado se llenará dinámicamente con JavaScript -->
+            </div>
+            <button id="toggle2FA" class="btn btn-primary mt-2">
+                Enable 2FA
+            </button>
+            <div id="qrCodeContainer" class="mt-3" style="display: none;">
+                <!-- El código QR se insertará aquí -->
+            </div>
         </div>
+    </div>
 
-        <!-- Background Color Canvas Picker (invisible inicialmente) -->
-        <div id="colorPickerContainer" class="mt-3 text-center">
-            <p>Select a color from the canvas by clicking on it.</p>
-            <canvas id="colorPicker" width="300" height="150"></canvas>
-        </div>
+    <div id="profile-container">
+        <!-- Contenido del perfil aquí -->
     </div>
 
     <!-- Columna para la lista de amigos -->
@@ -182,14 +187,7 @@
         }
     });
 
-    // Toggle color picker
-    const toggleColorPicker = document.getElementById('toggleColorPicker');
-    const colorPickerContainer = document.getElementById('colorPickerContainer');
-    const colorPickerCanvas = document.getElementById('colorPicker');
 
-    toggleColorPicker.addEventListener('click', function () {
-        colorPickerContainer.style.display = colorPickerContainer.style.display === 'none' ? 'block' : 'none';
-    });
 
     // Setup color picker
     const ctx = colorPickerCanvas.getContext('2d');
