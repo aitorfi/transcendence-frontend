@@ -5,7 +5,7 @@ import { initializeGameIA, terminateGameIA } from "./SinglePlayerIA.js";
 
 
 function isUserLoggedIn() {
-    return localStorage.getItem('authToken') !== null;
+    return localStorage.getItem('accessToken') !== null;
 }
 
 const DEFAULT_PAGE_TITLE = "JS SPA Router";
@@ -209,7 +209,7 @@ async function loadWindowLocation() {
         const friendsLink = document.getElementById("friends-link"); // Añadido
         const ListSearchLink = document.getElementById("ListSearch-link"); // Añadido
 
-		const retrievedToken = localStorage.getItem("authToken");
+		const retrievedToken = localStorage.getItem("accessToken");
         // Lógica para mostrar u ocultar elementos del menú
         if (/*Navbar === 1*/ retrievedToken) {
             // Mostrar Login y Register, ocultar Profile y Sign Out

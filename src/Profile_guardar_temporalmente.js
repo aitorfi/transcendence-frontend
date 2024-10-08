@@ -1,6 +1,6 @@
 function initProfile() {
     async function loadProfileData() {
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem('accessToken');
         const userData = JSON.parse(localStorage.getItem('userData'));
 
         if (!token || !userData) {

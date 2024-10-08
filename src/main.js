@@ -4,8 +4,36 @@ import { initializeGame, terminateGame } from "./LocalMultiplayer.js"
 import { initializeGameIA, terminateGameIA } from "./SinglePlayerIA.js"
 import { initSignIn } from './SignIn.js';
 
+
 function isUserLoggedIn() {
-    return localStorage.getItem('authToken') !== null;
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+        return false;
+    }
+
+    // Decodificar el token
+    const tokenParts = token.split('.');
+    if (tokenParts.length !== 3) {
+        return false; // Token inválido
+    }
+
+    try {
+        const payload = JSON.parse(atob(tokenParts[1]));
+        const expirationTime = payload.exp * 1000; // Convertir a milisegundos
+        const currentTime = Date.now();
+
+        if (currentTime >= expirationTime) {
+            // Token expirado
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            return false;
+        }
+
+        return true; // Token válido y no expirado
+    } catch (error) {
+        console.error('Error al decodificar el token:', error);
+        return false;
+    }
 }
 
 const DEFAULT_PAGE_TITLE = "JS SPA Router";
@@ -72,6 +100,8 @@ const ROUTES = {
         template: "../templates/Friends.html",
         title: "Friends | " + DEFAULT_PAGE_TITLE,
         description: "This is the Friends page for the Pong Game",
+        script: "./src/Friends.js"  // Añade esta línea
+
     },
     "/Delete": {
         template: "../templates/Delete.html",
@@ -97,8 +127,12 @@ const ROUTES = {
         template: "../templates/MatchHistory.html",
         title: "Match History | " + DEFAULT_PAGE_TITLE,
         description: "This is the Match History page for the Pong Game",
+    },
+    "/RequestPending": {
+        template: "../templates/RequestPending.html",
+        title: "Request Pending | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Request Pending page for the Pong Game",
     }
-
 };
 
 window.onpopstate = () => {
@@ -208,12 +242,10 @@ window.onload = function() {
 };
 
 
-
 async function makeAuthenticatedRequest(url, method = 'GET', body = null) {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-        // Redirigir al login si no hay token
-//        window.location.href = '/login';
+        window.location.href = '/login';
         return;
     }
 
@@ -232,8 +264,7 @@ async function makeAuthenticatedRequest(url, method = 'GET', body = null) {
         if (refreshed) {
             return makeAuthenticatedRequest(url, method, body);
         } else {
-            // Si no se puede refrescar, redirigir al login
-//            window.location.href = '/login';
+            window.location.href = '/login';
         }
     }
 
@@ -260,7 +291,6 @@ async function refreshToken() {
 
     return false;
 }
-
 
 function handleQueryParams() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -345,8 +375,32 @@ async function loadWindowLocation() {
         if (locationPath === "/ListSearch") {
             const script = document.createElement('script');
             script.src = './src/ListSearch.js';
+            script.onload = function() {
+                if (typeof window.initListSearch === 'function') {
+                    window.initListSearch();
+                }
+            };
             document.body.appendChild(script);
         }
+        
+        if (locationPath === "/Friends") {
+            const script = document.createElement('script');
+            script.src = './src/Friends.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initFriends === 'function') {
+                    window.initFriends();
+                }
+            };
+            document.body.appendChild(script);
+        }
+
+
+        if (locationPath === "/RequestPending") {
+            const script = document.createElement('script');
+            script.src = './src/RequestPending.js';
+            document.body.appendChild(script);
+        }        
 
         if (locationPath === "/SignOut") {
             const script = document.createElement('script');
@@ -381,7 +435,7 @@ async function loadWindowLocation() {
         const friendsLink = document.getElementById("friends-link"); // Añadido
         const ListSearchLink = document.getElementById("ListSearch-link"); // Añadido
 
-		const retrievedToken = localStorage.getItem("authToken");
+		const retrievedToken = localStorage.getItem("accessToken");
         // Lógica para mostrar u ocultar elementos del menú
         if (/*Navbar === 1*/ retrievedToken) {
             // Mostrar Login y Register, ocultar Profile y Sign Out

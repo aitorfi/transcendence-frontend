@@ -1,7 +1,22 @@
-
+function loadAvatar(userId) {
+    const avatarImage = document.getElementById('avatarImage');
+    const avatarUrl = `http://localhost:50000/api/users/avatar/${userId}/?${new Date().getTime()}`;
+    console.log('Loading avatar from:', avatarUrl);
+    
+    avatarImage.src = avatarUrl;
+    avatarImage.onerror = function() {
+        console.error('Error loading avatar, using default');
+        this.src = 'img/avatar.jpg';
+        this.onerror = null;
+    };
+}
 
 function initProfile() {
     console.log('Initializing Profile');
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    if (userData && userData.user_id) {
+        loadAvatar(userData.user_id);
+    }
     loadProfileData();
 
     async function loadProfileData() {
@@ -12,7 +27,6 @@ function initProfile() {
         }
     
         try {
-            // Asegúrate de que esta URL apunte a tu backend, no al frontend
             const response = await fetch('http://localhost:50000/api/users/profile/', {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -22,290 +36,277 @@ function initProfile() {
                 const profileData = await response.json();
                 updateProfileUI(profileData);
             } else {
-                console.error('Failed to fetch profile data');
+                const errorData = await response.json();
+                console.error('Failed to fetch profile data:', errorData);
             }
         } catch (error) {
             console.error('Error fetching profile data:', error);
         }
+    }
+    
+    function updateProfileUI(profileData) {
+        const usernameField = document.getElementById('username');
+        if (usernameField) {
+            usernameField.textContent = profileData.username;
+        }
+
+        const joinedField = document.getElementById('date_joined');
+        if (joinedField) {
+            const date = new Date(profileData.date_joined);
+            const formattedDate = date.toLocaleString();
+            joinedField.textContent = formattedDate;
+        }
+
+        const friendField = document.getElementById('friends');
+        if (friendField) {
+            friendField.value = profileData.friends || '';
+        }
+
+        const firstNameField = document.getElementById('first_name');
+        if (firstNameField) {
+            firstNameField.value = profileData.first_name || '';
+        }
+
+        const lastNameField = document.getElementById('last_name');
+        if (lastNameField) {
+            lastNameField.value = profileData.last_name || '';
+        }
+
+        updateTwoFAStatus(profileData.two_factor_enabled);
     }
 
     function updateTwoFAStatus(isEnabled) {
         const statusElement = document.getElementById('twoFAStatus');
         const toggleButton = document.getElementById('toggle2FA');
         
-        statusElement.textContent = isEnabled ? '2FA is currently enabled.' : '2FA is currently disabled.';
-        toggleButton.textContent = isEnabled ? 'Disable 2FA' : 'Enable 2FA';
+        if (statusElement) {
+            statusElement.textContent = isEnabled ? '2FA is currently enabled.' : '2FA is currently disabled.';
+        }
+        if (toggleButton) {
+            toggleButton.textContent = isEnabled ? 'Disable 2FA' : 'Enable 2FA';
+        }
     }
+
+    // Configurar manejadores de eventos
+    setup2FAHandlers();
+    setupAvatarHandlers();
+    setupFormHandlers();
+}
 
 function setup2FAHandlers() {
     const toggleButton = document.getElementById('toggle2FA');
-    toggleButton.addEventListener('click', async () => {
-        const isCurrentlyEnabled = toggleButton.textContent === 'Disable 2FA';
-        
-        try {
-            const response = await fetch('http://localhost:50000/api/' + (isCurrentlyEnabled ? 'disable-2fa/' : 'enable-2fa/'), {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                if (!isCurrentlyEnabled && result.qr_code) {
-                    // Mostrar el código QR
-                    const qrCodeContainer = document.getElementById('qrCodeContainer');
-                    qrCodeContainer.innerHTML = `
-                        <img src="data:image/png;base64,${result.qr_code}" alt="2FA QR Code">
-                        <p>Scan this QR code with Google Authenticator app</p>
-                        <input type="text" id="verificationCode" placeholder="Enter verification code">
-                        <button id="verifyCode">Verify</button>
-                    `;
-                    qrCodeContainer.style.display = 'block';
-
-                    // Configurar el manejador para verificar el código
-                    document.getElementById('verifyCode').addEventListener('click', async () => {
-                        const code = document.getElementById('verificationCode').value;
-                        const verifyResponse = await fetch('http://localhost:50000/api/verify-2fa/', {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ code })
-                        });
-
-                        if (verifyResponse.ok) {
-                            alert('2FA verified successfully!');
-                            updateTwoFAStatus(true);
-                            qrCodeContainer.style.display = 'none';
-                        } else {
-                            alert('Invalid verification code. Please try again.');
-                        }
-                    });
-                } else {
-                    // Ocultar el código QR si se está desactivando
-                    document.getElementById('qrCodeContainer').style.display = 'none';
-                    updateTwoFAStatus(false);
-                }
-            } else {
-                throw new Error('Failed to toggle 2FA');
-            }
-        } catch (error) {
-            console.error('Error toggling 2FA:', error);
-            alert('There was an error toggling 2FA. Please try again.');
-        }
-    });
-}
-    // Llamar a setup2FAHandlers al final de initProfile
-    setup2FAHandlers();
-}
-
-
-    function updateProfileUI(profileData) {
-        const usernameField = document.getElementById('username');
-        if (usernameField) {
-            usernameField.textContent = profileData.username;
-        } else {
-            console.error('Username field not found');
-        }
-    
-        const joinedField = document.getElementById('date_joined');
-        if (joinedField) {
-            joinedField.textContent = profileData.date_joined || '';
-        } else {
-            console.error('date_joined field not found');
-        }
-    
-        // Añadir botones para 2FA
-        const twoFAContainer = document.createElement('div');
-        twoFAContainer.id = 'two-fa-container';
-        
-        const enable2FABtn = document.createElement('button');
-        enable2FABtn.textContent = 'Enable 2FA';
-        enable2FABtn.classList.add('btn', 'btn-primary', 'mr-2');
-        enable2FABtn.addEventListener('click', enable2FA);
-        
-        const disable2FABtn = document.createElement('button');
-        disable2FABtn.textContent = 'Disable 2FA';
-        disable2FABtn.classList.add('btn', 'btn-danger');
-        disable2FABtn.addEventListener('click', disable2FA);
-
-        
-        const profileContainer = document.querySelector('#profile-container');
-        if (profileContainer) {
-            profileContainer.appendChild(twoFAContainer);
-        } else {
-            console.error('Profile container not found');
-        }
-    }
-
-    // Cambiar el avatar cuando se selecciona una imagen
-    const changeAvatarBtn = document.getElementById('changeAvatarBtn');
-
-    const avatarInput = document.getElementById('avatarInput');
-    const avatarImage = document.getElementById('avatarImage');
-
-    if (changeAvatarBtn && avatarInput && avatarImage) {
-        changeAvatarBtn.addEventListener('click', function () {
-            avatarInput.click();
-        });
-
-        avatarInput.addEventListener('change', function () {
-            const file = avatarInput.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    avatarImage.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-
-    // Toggle color picker
-    const toggleColorPicker = document.getElementById('toggleColorPicker');
-    const colorPickerContainer = document.getElementById('colorPickerContainer');
-    const colorPickerCanvas = document.getElementById('colorPicker');
-
-    if (toggleColorPicker && colorPickerContainer && colorPickerCanvas) {
-        toggleColorPicker.addEventListener('click', function () {
-            colorPickerContainer.style.display = colorPickerContainer.style.display === 'none' ? 'block' : 'none';
-        });
-
-        // Setup color picker
-        const ctx = colorPickerCanvas.getContext('2d');
-        const gradient = ctx.createLinearGradient(0, 0, 300, 150);
-        gradient.addColorStop(0, 'red');
-        gradient.addColorStop(0.5, 'green');
-        gradient.addColorStop(1, 'blue');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 300, 150);
-
-        colorPickerCanvas.addEventListener('click', function (event) {
-            const rect = colorPickerCanvas.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            const pixel = ctx.getImageData(x, y, 1, 1).data;
-            document.body.style.backgroundColor = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;
-        });
-    }
-
-    // Manejadores para mostrar/ocultar formularios de cambio de contraseña y correo electrónico
-    const changePasswordBtn = document.getElementById('changePasswordBtn');
-    const changePasswordForm = document.getElementById('changePasswordForm');
-    const changeEmailBtn = document.getElementById('changeEmailBtn');
-    const changeEmailForm = document.getElementById('changeEmailForm');
-
-    if (changePasswordBtn && changePasswordForm) {
-        changePasswordBtn.addEventListener('click', function() {
-            changePasswordForm.classList.toggle('collapse');
-        });
-    }
-
-    if (changeEmailBtn && changeEmailForm) {
-        changeEmailBtn.addEventListener('click', function() {
-            changeEmailForm.classList.toggle('collapse');
-        });
-    }
-
-    // Manejar el evento de envío del formulario de cambio de contraseña
-    const submitPasswordChange = document.getElementById('submitPasswordChange');
-    if (submitPasswordChange) {
-        submitPasswordChange.addEventListener('click', function() {
-            const currentPassword = document.getElementById('currentPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-
-            if (newPassword !== confirmNewPassword) {
-                alert('New passwords do not match!');
-                return;
-            }
-
-            // Aquí deberías implementar la lógica para cambiar la contraseña
-            alert('Password changed successfully!');
-        });
-    }
-
-    // Manejar el evento de envío del formulario de cambio de correo electrónico
-    const submitEmailChange = document.getElementById('submitEmailChange');
-    if (submitEmailChange) {
-        submitEmailChange.addEventListener('click', function() {
-            const currentEmail = document.getElementById('currentEmail').value;
-            const newEmail = document.getElementById('newEmail').value;
-            const confirmNewEmail = document.getElementById('confirmNewEmail').value;
-
-            if (newEmail !== confirmNewEmail) {
-                alert('New emails do not match!');
-                return;
-            }
-
-            // Aquí deberías implementar la lógica para cambiar el correo electrónico
-            alert('Email changed successfully!');
-        });
-    }
-
-    async function enable2FA() {
-        try {
-            const response = await fetch('http://localhost:50000/api/enable-2fa/', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-    
-            if (response.ok) {
-                const data = await response.json();
-                // Muestra el código QR al usuario
-                const qrCode = document.createElement('img');
-                qrCode.src = `data:image/png;base64,${data.qr_code}`;
-                const twoFAContainer = document.getElementById('two-fa-container');
-                if (twoFAContainer) {
-                    twoFAContainer.appendChild(qrCode);
-                }
-                alert('Scan the QR code with your authenticator app');
-            } else {
-                alert('Failed to enable 2FA');
-            }
-        } catch (error) {
-            console.error('Error enabling 2FA:', error);
-            alert('An error occurred while enabling 2FA');
-        }
-    }
-
-    async function disable2FA() {
-        try {
-            const response = await fetch('http://localhost:50000/api/disable-2fa/', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (response.ok) {
-                alert('2FA has been disabled');
-                const twoFAContainer = document.getElementById('two-fa-container');
-                if (twoFAContainer) {
-                    const qrCode = twoFAContainer.querySelector('img');
-                    if (qrCode) {
-                        qrCode.remove();
+    if (toggleButton) {
+        toggleButton.addEventListener('click', async () => {
+            const isCurrentlyEnabled = toggleButton.textContent === 'Disable 2FA';
+            const url = isCurrentlyEnabled ? 'disable-2fa/' : 'enable-2fa/';
+            
+            try {
+                const response = await fetch(`http://localhost:50000/api/${url}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                        'Content-Type': 'application/json'
                     }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (!isCurrentlyEnabled && result.qr_code) {
+                        showQRCode(result.qr_code);
+                    } else {
+                        updateTwoFAStatus(!isCurrentlyEnabled);
+                        document.getElementById('qrCodeContainer').style.display = 'none';
+                    }
+                } else {
+                    throw new Error('Failed to toggle 2FA');
                 }
+            } catch (error) {
+                console.error('Error toggling 2FA:', error);
+                alert('There was an error toggling 2FA. Please try again.');
+            }
+        });
+    }
+}
+
+function showQRCode(qrCode) {
+    const qrCodeContainer = document.getElementById('qrCodeContainer');
+    qrCodeContainer.innerHTML = `
+        <img src="data:image/png;base64,${qrCode}" alt="2FA QR Code">
+        <p>Scan this QR code with Google Authenticator app</p>
+        <input type="text" id="verificationCode" placeholder="Enter verification code">
+        <button id="verifyCode">Verify</button>
+    `;
+    qrCodeContainer.style.display = 'block';
+
+    document.getElementById('verifyCode').addEventListener('click', verify2FA);
+}
+
+async function verify2FA() {
+    const code = document.getElementById('verificationCode').value;
+    try {
+        const response = await fetch('http://localhost:50000/api/verify-2fa/', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ code })
+        });
+
+        if (response.ok) {
+            alert('2FA verified successfully!');
+            updateTwoFAStatus(true);
+            document.getElementById('qrCodeContainer').style.display = 'none';
+        } else {
+            alert('Invalid verification code. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error verifying 2FA:', error);
+        alert('An error occurred while verifying 2FA. Please try again.');
+    }
+}
+
+function setupAvatarHandlers() {
+    const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+    const avatarInput = document.getElementById('avatarInput');
+
+    if (changeAvatarBtn && avatarInput) {
+        changeAvatarBtn.addEventListener('click', () => avatarInput.click());
+        avatarInput.addEventListener('change', uploadAvatar);
+    }
+}
+
+async function uploadAvatar() {
+    const file = this.files[0];
+    if (file) {
+        const formData = new FormData();
+        formData.append('avatar_image', file);
+
+        try {
+            const response = await fetch('http://localhost:50000/api/users/upload-avatar/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                console.log('Avatar uploaded successfully');
+                // ... resto del código
             } else {
-                alert('Failed to disable 2FA');
+                console.error('Failed to upload avatar:', await response.text());
             }
         } catch (error) {
-            console.error('Error disabling 2FA:', error);
-            alert('An error occurred while disabling 2FA');
+            console.error('Error uploading avatar:', error);
         }
     }
+}
 
+function setupFormHandlers() {
+    const changePasswordBtn = document.getElementById('changePasswordBtn');
+    const changeProfileBtn = document.getElementById('changeProfilelBtn');
+    const submitPasswordChange = document.getElementById('submitPasswordChange');
+    const submitProfileChange = document.getElementById('submitProfileChange');
+
+    if (changePasswordBtn) {
+        changePasswordBtn.addEventListener('click', toggleForm);
+    }
+    if (changeProfileBtn) {
+        changeProfileBtn.addEventListener('click', toggleForm);
+    }
+    if (submitPasswordChange) {
+        submitPasswordChange.addEventListener('click', changePassword);
+    }
+    if (submitProfileChange) {
+        submitProfileChange.addEventListener('click', updateProfile);
+    }
+}
+
+function toggleForm(event) {
+    const passwordForm = document.getElementById('changePasswordForm');
+    const profileForm = document.getElementById('changeProfileForm');
+    const isPasswordBtn = event.target.id === 'changePasswordBtn';
+
+    passwordForm.classList.toggle('collapse', !isPasswordBtn);
+    profileForm.classList.toggle('collapse', isPasswordBtn);
+    event.target.classList.toggle('active');
+    document.getElementById(isPasswordBtn ? 'changeProfilelBtn' : 'changePasswordBtn').classList.remove('active');
+}
+
+async function changePassword(event) {
+    event.preventDefault();
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+    if (newPassword !== confirmNewPassword) {
+        alert('New passwords do not match!');
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:50000/api/users/change-password/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            body: JSON.stringify({
+                current_password: currentPassword,
+                new_password: newPassword
+            })
+        });
+
+        if (response.ok) {
+            alert('Password changed successfully!');
+            document.getElementById('changePasswordForm').reset();
+        } else {
+            const errorData = await response.json();
+            alert(`Failed to change password: ${errorData.error}`);
+        }
+    } catch (error) {
+        console.error('Error changing password:', error);
+        alert('An error occurred while changing the password.');
+    }
+}
+
+async function updateProfile(event) {
+    event.preventDefault();
+    const first_name = document.getElementById('first_name').value;
+    const last_name = document.getElementById('last_name').value;
+    const friends = document.getElementById('friends').value;
+
+    try {
+        const response = await fetch('http://localhost:50000/api/users/update-profile/', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            body: JSON.stringify({
+                first_name,
+                last_name,
+                friends
+            })
+        });
+
+        if (response.ok) {
+            const updatedData = await response.json();
+            console.log('Profile updated successfully:', updatedData);
+            alert('Profile updated successfully!');
+            loadProfileData();
+        } else {
+            console.error('Failed to update profile:', await response.text());
+            alert('Failed to update profile. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        alert('An error occurred while updating the profile.');
+    }
+}
 
 // Exponer la función de inicialización globalmente
 window.initProfile = initProfile;
 
 console.log('Profile script loaded');
-
