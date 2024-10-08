@@ -97,8 +97,12 @@ const ROUTES = {
         template: "../templates/MatchHistory.html",
         title: "Match History | " + DEFAULT_PAGE_TITLE,
         description: "This is the Match History page for the Pong Game",
+    },
+    "/RequestPending": {
+        template: "../templates/RequestPending.html",
+        title: "Request Pending | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Request Pending page for the Pong Game",
     }
-
 };
 
 window.onpopstate = loadWindowLocation; // Event listener for url changes

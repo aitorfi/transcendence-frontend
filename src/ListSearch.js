@@ -96,6 +96,8 @@ function displayResults(matches) {
         const addButton = document.createElement('button');
         addButton.classList.add('btn', 'btn-success', 'btn-sm', 'spa-route');
         addButton.setAttribute('data-path', '/FriendRequest');
+        addButton.style.border = '2px solid black'; 
+        addButton.style.fontWeight = 'bold';  
         addButton.textContent = 'ADD';
         
         item.appendChild(addButton);
