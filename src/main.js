@@ -176,6 +176,12 @@ async function loadWindowLocation() {
             document.body.appendChild(script);
         }
 
+        if (locationPath === "/RequestPending") {
+            const script = document.createElement('script');
+            script.src = './src/RequestPending.js';
+            document.body.appendChild(script);
+        }
+
         if (locationPath === "/SignOut") {
             const script = document.createElement('script');
             script.src = './src/SignOut.js';
