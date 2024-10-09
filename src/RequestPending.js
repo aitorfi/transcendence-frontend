@@ -8,6 +8,7 @@ async function fetchMatches() {
         { username: 'Juan' },
         { username: 'JoseMari' }
     ];
+    
 
     // Muestra los resultados simulados en el contenedor
     displayResults(simulatedResponse);
