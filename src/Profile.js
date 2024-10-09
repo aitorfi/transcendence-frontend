@@ -33,6 +33,7 @@ function initProfile() {
                 }
             });
             if (response.ok) {
+                console.log(response);
                 const profileData = await response.json();
                 updateProfileUI(profileData);
             } else {
@@ -314,4 +315,3 @@ async function updateProfile(event) {
 // Exponer la función de inicialización globalmente
 window.initProfile = initProfile;
 
-console.log('Profile script loaded');

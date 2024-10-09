@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 import { initializeGame, terminateGame } from "./LocalMultiplayer.js"
 import { initializeGameIA, terminateGameIA } from "./SinglePlayerIA.js"
@@ -183,8 +183,10 @@ document.addEventListener("click", (event) => {
     if (!event.target.matches(".spa-route"))
         return;
     navigationEventHandler(event);
+    if (!event.target.matches(".spa-route"))
+        return;
+    navigationEventHandler(event);
 });
-
 
 function navigationEventHandler(event) {
     event.preventDefault();
@@ -502,38 +504,16 @@ async function loadWindowLocation() {
             };
             document.body.appendChild(script);
         }
-        if (locationPath === "/SinglePlayerIA") {
-            initializeGameIA();
-        }
-        const loginLink = document.getElementById("login-link");
-        const registerLink = document.getElementById("register-link");
-        const profileLink = document.getElementById("profile-link");
-        const signoutLink = document.getElementById("signout-link");
-        const friendsLink = document.getElementById("friends-link"); // Añadido
-        const ListSearchLink = document.getElementById("ListSearch-link"); // Añadido
 
-		const retrievedToken = localStorage.getItem("accessToken");
-        // Lógica para mostrar u ocultar elementos del menú
-        if (/*Navbar === 1*/ retrievedToken) {
-            // Mostrar Login y Register, ocultar Profile y Sign Out
-            if (loginLink) loginLink.parentElement.style.display = 'none';
-            if (registerLink) registerLink.parentElement.style.display = 'none';
-            if (profileLink) profileLink.parentElement.style.display = '';
-            if (signoutLink) signoutLink.parentElement.style.display = '';
-            if (friendsLink) friendsLink.style.display = ''; // Añadido
-            if (ListSearchLink) ListSearchLink.style.display = ''; // Añadido
+		if (locationPath === "/SinglePlayerIA") {
+			initializeGameIA();
+			//añadido para arrancar la IA
+			//startAI();
+		}
 
-        } else if (/*Navbar === 0*/!retrievedToken) {
-            // Mostrar Profile y Sign Out, ocultar Login y Register
-            if (loginLink) loginLink.parentElement.style.display = '';
-            if (registerLink) registerLink.parentElement.style.display = '';
-            if (profileLink) profileLink.parentElement.style.display = 'none';
-            if (signoutLink) signoutLink.parentElement.style.display = 'none';
-            if (friendsLink) friendsLink.style.display = 'none'; // Añadido
-            if (ListSearchLink) ListSearchLink.style.display = 'none'; // Añadido
-        }
 
-    } catch (error) {
-        console.error('Error fetching template:', error);
-    }
+		
+	} catch (error) {
+	  	console.error('Error fetching template:', error);
+	}
 }

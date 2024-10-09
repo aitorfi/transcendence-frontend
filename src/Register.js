@@ -1,6 +1,6 @@
 function navigateToSignIn() {
     const signInRoute = {
-        template: "../templates/SignIn.html",
+        template: "../templates/Login.html",
         title: "Sign In | JS SPA Router",
         description: "This is the Sign In page",
     };
@@ -14,7 +14,7 @@ function navigateToSignIn() {
             document.getElementById("spa-template-content").innerHTML = html;
             document.title = signInRoute.title;
             document.querySelector('meta[name="description"]').setAttribute("content", signInRoute.description);
-            window.history.pushState({}, "", "/SignIn");
+            window.history.pushState({}, "", "/Login");
         })
         .catch(error => {
             console.error('Error loading Sign In page:', error);
@@ -30,11 +30,6 @@ document.getElementById('signupForm').addEventListener('submit', async function(
     const confirmPassword = document.getElementById('confirmPassword').value;
     const first_name = document.getElementById('first_name').value;
     const last_name = document.getElementById('last_name').value;
-    const age = document.getElementById('age').value;
-    const avatar = document.getElementById('avatar').value;
-    const status = document.getElementById('status').value;
-    const two_factor_auth = document.getElementById('two_factor_auth').checked;
-    const session_42 = document.getElementById('session_42').value;
 
     if (password !== confirmPassword) {
         alert('Passwords do not match');
@@ -47,11 +42,6 @@ document.getElementById('signupForm').addEventListener('submit', async function(
         password: password,
         first_name: first_name,
         last_name: last_name,
-        age: age ? parseInt(age) : 0,
-        avatar: avatar || "default_avatar.png",
-        status: status,
-        two_factor_auth: two_factor_auth,
-        session_42: session_42 || 0
     };
 
     if (!username || !email || !password || !first_name || !last_name) {
