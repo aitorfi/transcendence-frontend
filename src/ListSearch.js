@@ -35,29 +35,10 @@ function initListSearch() {
     }
 
 
-    async function addFriend(userId) {
-        const token = localStorage.getItem("accessToken");
-        try {
-            const response = await fetch('http://localhost:50000/api/friends/add_friends_wait/', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ friend_id: userId })
-            });
+   function setFriend(userId, user__username) {
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const result = await response.json();
-//            alert(result.message);
-
-        } catch (error) {
-            console.error('Error al añadir amigo:', error);
-            alert('No se pudo añadir el amigo');
-        }
+        localStorage.setItem('selectedUser', user__username);
+        localStorage.setItem('selectedID', userId);
     }
 
 
@@ -76,7 +57,8 @@ function initListSearch() {
             addButton.style.fontWeight = 'bold';  
             addButton.textContent = 'ADD';
  
-            addButton.addEventListener('click', () => addFriend(match.user__id));
+            addButton.addEventListener('click', () => setFriend(match.user__id, match.user__username));
+
              
             item.appendChild(addButton);
             resultsContainer.appendChild(item);
