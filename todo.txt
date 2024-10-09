@@ -4,4 +4,5 @@ en find user.
 en Friend Request.
 .- opcion de añadir user desde las opciones.
 
-
+ver la lista de usuarios
+http://localhost:50000/api/users/
