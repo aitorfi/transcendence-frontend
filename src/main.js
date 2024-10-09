@@ -123,6 +123,11 @@ const ROUTES = {
         script: "./src/FriendsRequest.js"  // Añade esta línea
 
     },    
+    "/FriendRequest": {
+        template: "../templates/FriendRequest.html",
+        title: "FriendRequest | " + DEFAULT_PAGE_TITLE,
+        description: "This is the FriendRequest page for the Pong Game",
+    },
     "/DeleteFriend": {
         template: "../templates/DeleteFriend.html",
         title: "Delete Friends | " + DEFAULT_PAGE_TITLE,
@@ -142,11 +147,6 @@ const ROUTES = {
         template: "../templates/DeleteFriendRequest.html",
         title: "Delete Friends | " + DEFAULT_PAGE_TITLE,
         description: "This is the Delete Friends Waiting page for the Pong Game",
-    },
-    "/FriendRequest": {
-        template: "../templates/FriendRequest.html",
-        title: "FriendRequest | " + DEFAULT_PAGE_TITLE,
-        description: "This is the FriendRequest page for the Pong Game",
     },
     "/ListSearch": {
         template: "../templates/ListSearch.html",
@@ -469,6 +469,17 @@ async function loadWindowLocation() {
                 // Asegurarse de que la función de inicialización de friends se ejecuta
                 if (typeof window.initFriendsRequest === 'function') {
                     window.initFriendsRequest();
+                }
+            };
+            document.body.appendChild(script);
+        }
+        if (locationPath === "/FriendRequest") {
+            const script = document.createElement('script');
+            script.src = './src/ScriptFriendRequest.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initScriptFriendRequest === 'function') {
+                    window.initScriptFriendRequest();
                 }
             };
             document.body.appendChild(script);
