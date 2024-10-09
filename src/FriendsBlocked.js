@@ -71,33 +71,10 @@ function initFriendsBlocked() {
             const leftDiv = document.createElement('div');
             leftDiv.classList.add('d-flex', 'align-items-center');
 
-            const removeButton = document.createElement('button');
-            removeButton.classList.add('btn', 'btn-danger', 'spa-route', 'me-2');
-            removeButton.setAttribute('aria-label', 'Remove');
-            removeButton.setAttribute('data-path', '/DeleteFriendBlocked');
-            removeButton.style.padding = '2px 6px';
-            removeButton.style.border = '1px solid black';
-            removeButton.style.borderRadius = '50%';
-            removeButton.style.fontSize = '0.875rem';
-
-            const removeIcon = document.createElement('i');
-            removeIcon.classList.add('bi', 'bi-x', 'text-white', 'spa-route');
-            removeIcon.setAttribute('data-path', '/DeletefriendBlocked');
-            removeButton.appendChild(removeIcon);
-
-            removeButton.addEventListener('click', async () => {
-                if (await removeFriendBlocked(friend.id)) {
-                    listItem.remove();
-                } else {
-                    alert('Failed to remove friend');
-                }
-            });
-
             const friendName = document.createElement('p');
             friendName.classList.add('mb-0');
             friendName.textContent = friend.username;
 
-            leftDiv.appendChild(removeButton);
             leftDiv.appendChild(friendName);
 
             // Parte derecha con los botones de "Chat" y "Match"
@@ -109,14 +86,14 @@ function initFriendsBlocked() {
             chatButton.setAttribute('data-path', '/Chat');
             chatButton.style.border = 'solid black';
             chatButton.style.width = '60px';
-            chatButton.innerHTML = '<b class="spa-route" data-path="/Chat">Chat</b>';
+            chatButton.innerHTML = '<b class="spa-route" data-path="/Chat">Yes</b>';
 
             const matchButton = document.createElement('button');
-            matchButton.classList.add('btn', 'btn-warning', 'btn-sm', 'text-white', 'spa-route');
+            matchButton.classList.add('btn', 'btn-danger', 'btn-sm', 'text-white', 'spa-route');
             matchButton.setAttribute('data-path', '/LocalMultiplayer');
             matchButton.style.border = 'solid black';
             matchButton.style.width = '60px';
-            matchButton.innerHTML = '<b class="spa-route" data-path="/Chat">Match</b>';
+            matchButton.innerHTML = '<b class="spa-route" data-path="/Chat">No</b>';
 
             rightDiv.appendChild(chatButton);
             rightDiv.appendChild(matchButton);
