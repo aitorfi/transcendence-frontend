@@ -123,10 +123,25 @@ const ROUTES = {
         script: "./src/FriendsRequest.js"  // Añade esta línea
 
     },    
-    "/Delete": {
-        template: "../templates/Delete.html",
+    "/DeleteFriend": {
+        template: "../templates/DeleteFriend.html",
         title: "Delete Friends | " + DEFAULT_PAGE_TITLE,
         description: "This is the Delete Friends page for the Pong Game",
+    },
+    "/DeleteFriendBlocked": {
+        template: "../templates/DeleteFriendBlocked.html",
+        title: "Delete Friends | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Delete Friends Blocked page for the Pong Game",
+    },
+    "/DeleteFriendRequest": {
+        template: "../templates/DeleteFriendRequest.html",
+        title: "Delete Friends | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Delete Friends Request page for the Pong Game",
+    },
+    "/DeleteFriendWaiting": {
+        template: "../templates/DeleteFriendRequest.html",
+        title: "Delete Friends | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Delete Friends Waiting page for the Pong Game",
     },
     "/FriendRequest": {
         template: "../templates/FriendRequest.html",

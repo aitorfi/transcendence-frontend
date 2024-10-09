@@ -143,6 +143,7 @@ function showQRCode(qrCode) {
 
 async function verify2FA() {
     const code = document.getElementById('verificationCode').value;
+    console.log('Attempting to verify 2FA code:', code);  // Añade este log
     try {
         const response = await fetch('http://localhost:50000/api/verify-2fa/', {
             method: 'POST',
@@ -153,11 +154,15 @@ async function verify2FA() {
             body: JSON.stringify({ code })
         });
 
+        console.log('2FA verification response status:', response.status);  // Añade este log
+
         if (response.ok) {
             alert('2FA verified successfully!');
             updateTwoFAStatus(true);
             document.getElementById('qrCodeContainer').style.display = 'none';
         } else {
+            const errorData = await response.json();
+            console.error('2FA verification failed:', errorData);  // Añade este log
             alert('Invalid verification code. Please try again.');
         }
     } catch (error) {

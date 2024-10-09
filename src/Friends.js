@@ -74,7 +74,7 @@ function initFriends() {
             const removeButton = document.createElement('button');
             removeButton.classList.add('btn', 'btn-danger', 'spa-route', 'me-2');
             removeButton.setAttribute('aria-label', 'Remove');
-            removeButton.setAttribute('data-path', '/Delete');
+            removeButton.setAttribute('data-path', '/DeleteFriend');
             removeButton.style.padding = '2px 6px';
             removeButton.style.border = '1px solid black';
             removeButton.style.borderRadius = '50%';
@@ -82,7 +82,7 @@ function initFriends() {
 
             const removeIcon = document.createElement('i');
             removeIcon.classList.add('bi', 'bi-x', 'text-white', 'spa-route');
-            removeIcon.setAttribute('data-path', '/Delete');
+            removeIcon.setAttribute('data-path', '/DeleteFriend');
             removeButton.appendChild(removeIcon);
 
             removeButton.addEventListener('click', async () => {

@@ -34,6 +34,29 @@ function initFriendsWait() {
         }
     }
 
+    async function removeFriendWait(friendId) {
+        const token = localStorage.getItem("accessToken");
+        try {
+            const response = await fetch(`http://localhost:50000/api/friends/remove-wait/${friendId}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Error al eliminar amigo:', error);
+            return false;
+        }
+    }
+
+
     function displayResults(friends) {
         if (!resultsContainer) {
             console.error("Results container not found");
@@ -52,7 +75,7 @@ function initFriendsWait() {
             const removeButton = document.createElement('button');
             removeButton.classList.add('btn', 'btn-danger', 'spa-route', 'me-2');
             removeButton.setAttribute('aria-label', 'Remove');
-            removeButton.setAttribute('data-path', '/Delete');
+            removeButton.setAttribute('data-path', '/DeleteWait');
             removeButton.style.padding = '2px 6px';
             removeButton.style.border = '1px solid black';
             removeButton.style.borderRadius = '50%';
@@ -60,8 +83,17 @@ function initFriendsWait() {
 
             const removeIcon = document.createElement('i');
             removeIcon.classList.add('bi', 'bi-x', 'text-white', 'spa-route');
-            removeIcon.setAttribute('data-path', '/Delete');
+            removeIcon.setAttribute('data-path', '/DeleteWait');
             removeButton.appendChild(removeIcon);
+
+            removeButton.addEventListener('click', async () => {
+                if (await removeFriendWait(friend.id)) {
+                    listItem.remove();
+                } else {
+                    alert('Failed to remove wait friend');
+                }
+            });
+
 
             const friendName = document.createElement('p');
             friendName.classList.add('mb-0');

@@ -38,7 +38,7 @@ function initListSearch() {
     async function addFriend(userId) {
         const token = localStorage.getItem("accessToken");
         try {
-            const response = await fetch('http://localhost:50000/api/friends/add/', {
+            const response = await fetch('http://localhost:50000/api/friends/add_friends_wait/', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -52,8 +52,8 @@ function initListSearch() {
             }
 
             const result = await response.json();
-            alert(result.message);
-            // Opcionalmente, actualiza la UI para reflejar el cambio
+//            alert(result.message);
+
         } catch (error) {
             console.error('Error al añadir amigo:', error);
             alert('No se pudo añadir el amigo');
