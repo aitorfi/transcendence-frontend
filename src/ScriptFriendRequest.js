@@ -3,13 +3,20 @@ function initScriptFriendRequest() {
     console.log("Initializing script Friends requests");
 
     const selectedUser = localStorage.getItem('selectedUser');
-    const selectedId = localStorage.getItem('selectedId');
+    const selectedId = localStorage.getItem('selectedID');
+    console.log(selectedId);
     console.log(selectedUser);
     document.getElementById('friend-name').textContent = selectedUser;
+    const boton = document.getElementById('yes-botton');
+
+    boton.addEventListener('click', function() {
+        addFriend(selectedId);
+    });
     
     async function addFriend(selectedId) {
 
         const token = localStorage.getItem("accessToken");
+        console.log(token);
         try {
             const response = await fetch('http://localhost:50000/api/friends/add_friends_wait/', {
                 method: 'POST',
@@ -32,12 +39,7 @@ function initScriptFriendRequest() {
             alert('No se pudo añadir el amigo');
         }
     }
-    const boton = document.getElementById('yes-botton');
-
-        boton.addEventListener('click', function() {
-            addFriend(selectedId);
-        });
-    
+ 
 }
 
 window.initScriptFriendRequest = initScriptFriendRequest;
