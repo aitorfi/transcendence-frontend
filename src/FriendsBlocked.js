@@ -1,7 +1,7 @@
 // Friends.js
 
-function initFriends() {
-    console.log("Initializing Friends page");
+function initFriendsBlocked() {
+    console.log("Initializing Friends Wait page");
 
     // Usar let en lugar de const para permitir reasignación
     let resultsContainer = document.getElementById('results-list');
@@ -11,7 +11,7 @@ function initFriends() {
         console.log("Access Token:", token); // Log the token
         
         try {
-            const response = await fetch('http://localhost:50000/api/friends/get_user_friends/', {
+            const response = await fetch('http://localhost:50000/api/friends/get_friends_blocked/', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -34,10 +34,10 @@ function initFriends() {
         }
     }
 
-    async function removeFriend(friendId) {
+    async function removeFriendBlocked(friendId) {
         const token = localStorage.getItem("accessToken");
         try {
-            const response = await fetch(`http://localhost:50000/api/friends/remove/${friendId}/`, {
+            const response = await fetch(`http://localhost:50000/api/friends/remove-blocked/${friendId}/`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -86,7 +86,7 @@ function initFriends() {
             removeButton.appendChild(removeIcon);
 
             removeButton.addEventListener('click', async () => {
-                if (await removeFriend(friend.id)) {
+                if (await removeFriendBlocked(friend.id)) {
                     listItem.remove();
                 } else {
                     alert('Failed to remove friend');
@@ -138,4 +138,4 @@ function initFriends() {
 }
 
 // Exponer la función de inicialización globalmente
-window.initFriends = initFriends;
+window.initFriendsBlocked = initFriendsBlocked;

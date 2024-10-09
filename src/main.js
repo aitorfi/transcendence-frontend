@@ -101,8 +101,28 @@ const ROUTES = {
         title: "Friends | " + DEFAULT_PAGE_TITLE,
         description: "This is the Friends page for the Pong Game",
         script: "./src/Friends.js"  // Añade esta línea
-
     },
+    "/FriendsWait": {
+        template: "../templates/FriendsWait.html",
+        title: "Friends Waiting | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Friends Waiting page for the Pong Game",
+        script: "./src/FriendsWait.js"  // Añade esta línea
+
+    },    
+    "/FriendsBlocked": {
+        template: "../templates/FriendsBlocked.html",
+        title: "Friends Blocked | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Friends Blocked page for the Pong Game",
+        script: "./src/FriendsBlocked.js"  // Añade esta línea
+
+    },    
+    "/FriendsRequest": {
+        template: "../templates/FriendsRequest.html",
+        title: "Friends Request | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Friends request for the Pong Game",
+        script: "./src/FriendsRequest.js"  // Añade esta línea
+
+    },    
     "/Delete": {
         template: "../templates/Delete.html",
         title: "Delete Friends | " + DEFAULT_PAGE_TITLE,
@@ -382,7 +402,7 @@ async function loadWindowLocation() {
             };
             document.body.appendChild(script);
         }
-        
+
         if (locationPath === "/Friends") {
             const script = document.createElement('script');
             script.src = './src/Friends.js';
@@ -394,8 +414,50 @@ async function loadWindowLocation() {
             };
             document.body.appendChild(script);
         }
-
-
+        if (locationPath === "/FriendsWait") {
+            const script = document.createElement('script');
+            script.src = './src/FriendsWait.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initFriendsWait === 'function') {
+                    window.initFriendsWait();
+                }
+            };
+            document.body.appendChild(script);
+        }
+        if (locationPath === "/FriendsWait") {
+            const script = document.createElement('script');
+            script.src = './src/FriendsWait.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initFriendsWait === 'function') {
+                    window.initFriendsWait();
+                }
+            };
+            document.body.appendChild(script);
+        }
+        if (locationPath === "/FriendsBlocked") {
+            const script = document.createElement('script');
+            script.src = './src/FriendsBlocked.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initFriendsBlocked === 'function') {
+                    window.initFriendsBlocked();
+                }
+            };
+            document.body.appendChild(script);
+        }
+        if (locationPath === "/FriendsRequest") {
+            const script = document.createElement('script');
+            script.src = './src/FriendsRequest.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initFriendsRequest === 'function') {
+                    window.initFriendsRequest();
+                }
+            };
+            document.body.appendChild(script);
+        }
         if (locationPath === "/RequestPending") {
             const script = document.createElement('script');
             script.src = './src/RequestPending.js';

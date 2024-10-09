@@ -1,7 +1,7 @@
 // Friends.js
 
-function initFriends() {
-    console.log("Initializing Friends page");
+function initFriendsRequest() {
+    console.log("Initializing Friends Wait page");
 
     // Usar let en lugar de const para permitir reasignación
     let resultsContainer = document.getElementById('results-list');
@@ -11,7 +11,7 @@ function initFriends() {
         console.log("Access Token:", token); // Log the token
         
         try {
-            const response = await fetch('http://localhost:50000/api/friends/get_user_friends/', {
+            const response = await fetch('http://localhost:50000/api/friends/get_friends_request/', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -31,28 +31,6 @@ function initFriends() {
         } catch (error) {
             console.error('Error al obtener amigos:', error);
             return [];
-        }
-    }
-
-    async function removeFriend(friendId) {
-        const token = localStorage.getItem("accessToken");
-        try {
-            const response = await fetch(`http://localhost:50000/api/friends/remove/${friendId}/`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            return true;
-        } catch (error) {
-            console.error('Error al eliminar amigo:', error);
-            return false;
         }
     }
 
@@ -84,14 +62,6 @@ function initFriends() {
             removeIcon.classList.add('bi', 'bi-x', 'text-white', 'spa-route');
             removeIcon.setAttribute('data-path', '/Delete');
             removeButton.appendChild(removeIcon);
-
-            removeButton.addEventListener('click', async () => {
-                if (await removeFriend(friend.id)) {
-                    listItem.remove();
-                } else {
-                    alert('Failed to remove friend');
-                }
-            });
 
             const friendName = document.createElement('p');
             friendName.classList.add('mb-0');
@@ -138,4 +108,4 @@ function initFriends() {
 }
 
 // Exponer la función de inicialización globalmente
-window.initFriends = initFriends;
+window.initFriendsRequest = initFriendsRequest;

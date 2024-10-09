@@ -34,6 +34,33 @@ function initListSearch() {
         displayResults(matches);
     }
 
+
+    async function addFriend(userId) {
+        const token = localStorage.getItem("accessToken");
+        try {
+            const response = await fetch('http://localhost:50000/api/friends/add/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ friend_id: userId })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            alert(result.message);
+            // Opcionalmente, actualiza la UI para reflejar el cambio
+        } catch (error) {
+            console.error('Error al añadir amigo:', error);
+            alert('No se pudo añadir el amigo');
+        }
+    }
+
+
     function displayResults(matches) {
         resultsContainer.innerHTML = '';
 
@@ -48,7 +75,9 @@ function initListSearch() {
             addButton.style.border = '2px solid black'; 
             addButton.style.fontWeight = 'bold';  
             addButton.textContent = 'ADD';
-            
+ 
+            addButton.addEventListener('click', () => addFriend(match.user__id));
+             
             item.appendChild(addButton);
             resultsContainer.appendChild(item);
         });
