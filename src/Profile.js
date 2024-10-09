@@ -7,299 +7,309 @@ function loadAvatar(userId) {
     avatarImage.onerror = function() {
         console.error('Error loading avatar, using default');
         this.src = 'img/avatar.jpg';
-        this.onerror = null;  // Previene bucle infinito si la imagen por defecto también falla
+        this.onerror = null;
     };
 }
+
 function initProfile() {
+    console.log('Initializing Profile');
     const userData = JSON.parse(localStorage.getItem('userData'));
     if (userData && userData.user_id) {
         loadAvatar(userData.user_id);
     }
+    loadProfileData();
+
     async function loadProfileData() {
-        const token = localStorage.getItem('authToken');
-        const userData = JSON.parse(localStorage.getItem('userData'));
-
-
-
-        if (!token || !userData) {
-            console.error('No token or user data found');
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            console.error('No access token found');
             return;
         }
-
+    
         try {
-
-            const response = await fetch(`http://localhost:50000/api/users/profile/${userData.user_id}/`, {
+            const response = await fetch('http://localhost:50000/api/users/profile/', {
                 headers: {
-                    'Authorization': `Token ${token}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
-            
-            console.log('Response status:', response.status);
-            console.log('Response OK:', response.ok);
-
             if (response.ok) {
                 console.log(response);
                 const profileData = await response.json();
-                console.log('Profile data:', profileData);
-
-                // Rellenar los campos del formulario
-                const usernameField = document.getElementById('username');
-
-                if (usernameField) {
-                    usernameField.textContent = profileData.username;
-                } else {
-                    console.error('Username field not found');
-                }
-
-
-                const joinedField = document.getElementById('date_joined');
-
-                if (joinedField) {
-                    const dateJoined = profileData.date_joined; // Obtén la fecha
-                    if (dateJoined) {
-                        // Convierte la fecha a un objeto Date
-                        const date = new Date(dateJoined);
-                        
-                        // Formatea la fecha y hora en año-mes-día horas:minutos:segundos
-                        const formattedDate = date.getFullYear() + '-' +
-                                              String(date.getMonth() + 1).padStart(2, '0') + '-' + // Mes +1 ya que es 0-indexado
-                                              String(date.getDate()).padStart(2, '0') + ' ' + // Día
-                                              String(date.getHours()).padStart(2, '0') + ':' + // Horas
-                                              String(date.getMinutes()).padStart(2, '0') + ':' + // Minutos
-                                              String(date.getSeconds()).padStart(2, '0'); // Segundos
-                        
-                        joinedField.textContent = formattedDate;
-                    } else {
-                        joinedField.textContent = ''; // Usa '' si date_joined es null o undefined
-                    }
-                } else {
-                    console.error('date_joined field not found');
-                }
-                
-
-                const friendField = document.getElementById('friends');
-                if (friendField) {
-                    friendField.value = profileData.friends || 0; // Usa '' si age es null o undefined
-                } else {
-                    console.error('Friend field not found');
-                }
-
-                const first_nameField = document.getElementById('first_name');
-                if (first_nameField) {
-                    first_nameField.value = profileData.first_name || 0; // Usa '' si age es null o undefined
-                } else {
-                    console.error('first_name field not found');
-                }
-                
-
-                const last_name_nameField = document.getElementById('last_name');
-                if (last_name_nameField) {
-                    last_name_nameField.value = profileData.last_name || 0; // Usa '' si age es null o undefined
-                } else {
-                    console.error('last_name field not found');
-                }
-
-
-
-                /*              const ageField = document.getElementById('age');
-                if (ageField) {
-                    ageField.value = profileData.age || ''; // Usa '' si age es null o undefined
-                } else {
-                    console.error('Age field not found');
-                } */
-                // Añade más campos aquí según tu formulario
+                updateProfileUI(profileData);
             } else {
-                console.error('Failed to fetch profile data');
+                const errorData = await response.json();
+                console.error('Failed to fetch profile data:', errorData);
             }
         } catch (error) {
             console.error('Error fetching profile data:', error);
         }
     }
-
-    // Intentar cargar los datos inmediatamente
-    loadProfileData();
-
-
-    // Cambia el avatar cuando se selecciona una imagen
-    const changeAvatarBtn = document.getElementById('changeAvatarBtn');
-    const avatarInput = document.getElementById('avatarInput');
-    const avatarImage = document.getElementById('avatarImage');
-
-    // Agregar un listener al botón para abrir el input de archivo
-    changeAvatarBtn.addEventListener('click', function () {
-        avatarInput.click();
-    });
-
-    // Agregar un listener al input de archivo para cargar la imagen
-    avatarInput.addEventListener('change', async function () {
-        const file = avatarInput.files[0];
-        if (file) {
-            const formData = new FormData();
-            formData.append('avatar_image', file);
     
-            const token = localStorage.getItem('authToken');
-            const userData = JSON.parse(localStorage.getItem('userData'));
-    
-            try {
-                const response = await fetch('http://localhost:50000/api/users/upload-avatar/', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Token ${token}`
-                    },
-                    body: formData
-                });
-    
-                if (response.ok) {
-                    console.log('Avatar uploaded successfully');
-                    // Actualizar la imagen del avatar en la interfaz
-                    loadAvatar(userData.user_id);
-                } else {
-                    console.error('Failed to upload avatar');
-                }
-            } catch (error) {
-                console.error('Error uploading avatar:', error);
-            }
+    function updateProfileUI(profileData) {
+        const usernameField = document.getElementById('username');
+        if (usernameField) {
+            usernameField.textContent = profileData.username;
         }
-    });
 
-    // Function to simulate a match
-    function playMatch(opponent) {
-        alert(`Starting a match against ${opponent}`);
+        const joinedField = document.getElementById('date_joined');
+        if (joinedField) {
+            const date = new Date(profileData.date_joined);
+            const formattedDate = date.toLocaleString();
+            joinedField.textContent = formattedDate;
+        }
+
+        const friendField = document.getElementById('friends');
+        if (friendField) {
+            friendField.value = profileData.friends || '';
+        }
+
+        const firstNameField = document.getElementById('first_name');
+        if (firstNameField) {
+            firstNameField.value = profileData.first_name || '';
+        }
+
+        const lastNameField = document.getElementById('last_name');
+        if (lastNameField) {
+            lastNameField.value = profileData.last_name || '';
+        }
+
+        updateTwoFAStatus(profileData.two_factor_enabled);
     }
 
-    // Manejadores para mostrar/ocultar formularios de cambio de contraseña y correo electrónico
-    document.getElementById('changePasswordBtn').addEventListener('click', function() {
-        const changeProfileForm = document.getElementById('changeProfileForm');
-        const changePasswordForm = document.getElementById('changePasswordForm');
-        const changeProfileBtn = document.getElementById('changeProfilelBtn');
+    function updateTwoFAStatus(isEnabled) {
+        const statusElement = document.getElementById('twoFAStatus');
+        const toggleButton = document.getElementById('toggle2FA');
         
-        // Si el formulario de contraseña ya está visible, lo ocultamos
-        if (!changePasswordForm.classList.contains('collapse')) {
-            changePasswordForm.classList.add('collapse');
-            this.classList.remove('active');
-        } else {
-            // Si no, ocultamos el otro formulario y mostramos este
-            changeProfileForm.classList.add('collapse');
-            changePasswordForm.classList.remove('collapse');
-            this.classList.add('active');
-            changeProfileBtn.classList.remove('active');
+        if (statusElement) {
+            statusElement.textContent = isEnabled ? '2FA is currently enabled.' : '2FA is currently disabled.';
         }
-    });
-    
-    document.getElementById('changeProfilelBtn').addEventListener('click', function() {
-        const changePasswordForm = document.getElementById('changePasswordForm');
-        const changeProfileForm = document.getElementById('changeProfileForm');
-        const changePasswordBtn = document.getElementById('changePasswordBtn');
-        
-        // Si el formulario de perfil ya está visible, lo ocultamos
-        if (!changeProfileForm.classList.contains('collapse')) {
-            changeProfileForm.classList.add('collapse');
-            this.classList.remove('active');
-        } else {
-            // Si no, ocultamos el otro formulario y mostramos este
-            changePasswordForm.classList.add('collapse');
-            changeProfileForm.classList.remove('collapse');
-            this.classList.add('active');
-            changePasswordBtn.classList.remove('active');
+        if (toggleButton) {
+            toggleButton.textContent = isEnabled ? 'Disable 2FA' : 'Enable 2FA';
         }
-    });
+    }
 
-    // Manejar el evento de envío del formulario de cambio de contraseña
-    document.getElementById('submitPasswordChange').addEventListener('click', async function(event) {
-        event.preventDefault();
-        const currentPassword = document.getElementById('currentPassword').value;
-        const newPassword = document.getElementById('newPassword').value;
-        const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-    
-        // Validar contraseñas
-        if (newPassword !== confirmNewPassword) {
-            alert('New passwords do not match!');
-            return;
+    // Configurar manejadores de eventos
+    setup2FAHandlers();
+    setupAvatarHandlers();
+    setupFormHandlers();
+}
+
+function setup2FAHandlers() {
+    const toggleButton = document.getElementById('toggle2FA');
+    if (toggleButton) {
+        toggleButton.addEventListener('click', async () => {
+            const isCurrentlyEnabled = toggleButton.textContent === 'Disable 2FA';
+            const url = isCurrentlyEnabled ? 'disable-2fa/' : 'enable-2fa/';
+            
+            try {
+                const response = await fetch(`http://localhost:50000/api/${url}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (!isCurrentlyEnabled && result.qr_code) {
+                        showQRCode(result.qr_code);
+                    } else {
+                        updateTwoFAStatus(!isCurrentlyEnabled);
+                        document.getElementById('qrCodeContainer').style.display = 'none';
+                    }
+                } else {
+                    throw new Error('Failed to toggle 2FA');
+                }
+            } catch (error) {
+                console.error('Error toggling 2FA:', error);
+                alert('There was an error toggling 2FA. Please try again.');
+            }
+        });
+    }
+}
+
+function showQRCode(qrCode) {
+    const qrCodeContainer = document.getElementById('qrCodeContainer');
+    qrCodeContainer.innerHTML = `
+        <img src="data:image/png;base64,${qrCode}" alt="2FA QR Code">
+        <p>Scan this QR code with Google Authenticator app</p>
+        <input type="text" id="verificationCode" placeholder="Enter verification code">
+        <button id="verifyCode">Verify</button>
+    `;
+    qrCodeContainer.style.display = 'block';
+
+    document.getElementById('verifyCode').addEventListener('click', verify2FA);
+}
+
+async function verify2FA() {
+    const code = document.getElementById('verificationCode').value;
+    console.log('Attempting to verify 2FA code:', code);  // Añade este log
+    try {
+        const response = await fetch('http://localhost:50000/api/verify-2fa/', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ code })
+        });
+
+        console.log('2FA verification response status:', response.status);  // Añade este log
+
+        if (response.ok) {
+            alert('2FA verified successfully!');
+            updateTwoFAStatus(true);
+            document.getElementById('qrCodeContainer').style.display = 'none';
+        } else {
+            const errorData = await response.json();
+            console.error('2FA verification failed:', errorData);  // Añade este log
+            alert('Invalid verification code. Please try again.');
         }
-    
-        const token = localStorage.getItem('authToken');
-        const userData = JSON.parse(localStorage.getItem('userData'));
-    
-        if (!token || !userData) {
-            console.error('No token or user data found');
-            return;
-        }
-    
+    } catch (error) {
+        console.error('Error verifying 2FA:', error);
+        alert('An error occurred while verifying 2FA. Please try again.');
+    }
+}
+
+function setupAvatarHandlers() {
+    const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+    const avatarInput = document.getElementById('avatarInput');
+
+    if (changeAvatarBtn && avatarInput) {
+        changeAvatarBtn.addEventListener('click', () => avatarInput.click());
+        avatarInput.addEventListener('change', uploadAvatar);
+    }
+}
+
+async function uploadAvatar() {
+    const file = this.files[0];
+    if (file) {
+        const formData = new FormData();
+        formData.append('avatar_image', file);
+
         try {
-            const response = await fetch(`http://localhost:50000/api/users/change-password/${userData.user_id}/`, {
+            const response = await fetch('http://localhost:50000/api/users/upload-avatar/', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${token}`
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
                 },
-                body: JSON.stringify({
-                    current_password: currentPassword,
-                    new_password: newPassword
-                })
+                body: formData
             });
-    
-            if (response.ok) {
-                alert('Password changed successfully!');
-                // Limpiar los campos de contraseña
-                document.getElementById('currentPassword').value = '';
-                document.getElementById('newPassword').value = '';
-                document.getElementById('confirmNewPassword').value = '';
-            } else {
-                const errorData = await response.json();
-                alert(`Failed to change password: ${errorData.error}`);
-            }
-        } catch (error) {
-            console.error('Error changing password:', error);
-            alert('An error occurred while changing the password.');
-        }
-    });
 
-    // Manejar el evento de envío del formulario de cambio de correo electrónico
-    document.getElementById('submitProfileChange').addEventListener('click', async function(event) {
-        event.preventDefault();
-        const first_name = document.getElementById('first_name').value;
-        const last_name = document.getElementById('last_name').value;
-        const friends = document.getElementById('friends').value;
-    
-        const token = localStorage.getItem('authToken');
-        const userData = JSON.parse(localStorage.getItem('userData'));
-    
-        if (!token || !userData) {
-            console.error('No token or user data found');
-            return;
-        }
-    
-        try {
-            const response = await fetch(`http://localhost:50000/api/users/update/${userData.user_id}/`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${token}`
-                },
-                body: JSON.stringify({
-                    first_name,
-                    last_name,
-                    friends
-                })
-            });
-    
             if (response.ok) {
-                const updatedData = await response.json();
-                console.log('Profile updated successfully:', updatedData);
-                alert('Profile updated successfully!');
-                // Actualizar los campos del formulario con los nuevos datos
-                loadProfileData();
+                console.log('Avatar uploaded successfully');
+                // ... resto del código
             } else {
-                console.error('Failed to update profile');
-                alert('Failed to update profile. Please try again.');
+                console.error('Failed to upload avatar:', await response.text());
             }
         } catch (error) {
-            console.error('Error updating profile:', error);
-            alert('An error occurred while updating the profile.');
+            console.error('Error uploading avatar:', error);
         }
-    });
-    // También añadir el listener por si acaso
-    document.addEventListener('DOMContentLoaded', loadProfileData);
+    }
+}
+
+function setupFormHandlers() {
+    const changePasswordBtn = document.getElementById('changePasswordBtn');
+    const changeProfileBtn = document.getElementById('changeProfilelBtn');
+    const submitPasswordChange = document.getElementById('submitPasswordChange');
+    const submitProfileChange = document.getElementById('submitProfileChange');
+
+    if (changePasswordBtn) {
+        changePasswordBtn.addEventListener('click', toggleForm);
+    }
+    if (changeProfileBtn) {
+        changeProfileBtn.addEventListener('click', toggleForm);
+    }
+    if (submitPasswordChange) {
+        submitPasswordChange.addEventListener('click', changePassword);
+    }
+    if (submitProfileChange) {
+        submitProfileChange.addEventListener('click', updateProfile);
+    }
+}
+
+function toggleForm(event) {
+    const passwordForm = document.getElementById('changePasswordForm');
+    const profileForm = document.getElementById('changeProfileForm');
+    const isPasswordBtn = event.target.id === 'changePasswordBtn';
+
+    passwordForm.classList.toggle('collapse', !isPasswordBtn);
+    profileForm.classList.toggle('collapse', isPasswordBtn);
+    event.target.classList.toggle('active');
+    document.getElementById(isPasswordBtn ? 'changeProfilelBtn' : 'changePasswordBtn').classList.remove('active');
+}
+
+async function changePassword(event) {
+    event.preventDefault();
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+    if (newPassword !== confirmNewPassword) {
+        alert('New passwords do not match!');
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:50000/api/users/change-password/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            body: JSON.stringify({
+                current_password: currentPassword,
+                new_password: newPassword
+            })
+        });
+
+        if (response.ok) {
+            alert('Password changed successfully!');
+            document.getElementById('changePasswordForm').reset();
+        } else {
+            const errorData = await response.json();
+            alert(`Failed to change password: ${errorData.error}`);
+        }
+    } catch (error) {
+        console.error('Error changing password:', error);
+        alert('An error occurred while changing the password.');
+    }
+}
+
+async function updateProfile(event) {
+    event.preventDefault();
+    const first_name = document.getElementById('first_name').value;
+    const last_name = document.getElementById('last_name').value;
+    const friends = document.getElementById('friends').value;
+
+    try {
+        const response = await fetch('http://localhost:50000/api/users/update-profile/', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            body: JSON.stringify({
+                first_name,
+                last_name,
+                friends
+            })
+        });
+
+        if (response.ok) {
+            const updatedData = await response.json();
+            console.log('Profile updated successfully:', updatedData);
+            alert('Profile updated successfully!');
+            loadProfileData();
+        } else {
+            console.error('Failed to update profile:', await response.text());
+            alert('Failed to update profile. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        alert('An error occurred while updating the profile.');
+    }
 }
 
 // Exponer la función de inicialización globalmente

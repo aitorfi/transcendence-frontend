@@ -13,32 +13,32 @@ window.initSignOut = function(loadWindowLocationFunc) {
 }
 
 async function handleSignOut(loadWindowLocationFunc) {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-        console.error('No token found, user might already be logged out');
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) {
+        console.error('No refresh token found');
         alert('You are not logged in.');
         return;
     }
 
     try {
-        const response = await fetch('http://localhost:50000/api/users/signout/', {
+        const response = await fetch('http://localhost:50000/api/logout/', {
             method: 'POST',
             headers: {
-                'Authorization': `Token ${token}`,
-                'Content-Type': 'application/json'
-            }
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            },
+            body: JSON.stringify({ refresh_token: refreshToken })
         });
 
         if (response.ok) {
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('userData');
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
             alert('You have been successfully logged out.');
-            window.history.pushState({}, "", "/");
+            window.history.pushState({}, "", "/Login");
             if (typeof loadWindowLocationFunc === 'function') {
                 loadWindowLocationFunc();
             } else {
-                console.error('loadWindowLocation function not available');
-                window.location.reload(); // Fallback if loadWindowLocation is not available
+                window.location.reload();
             }
         } else {
             const errorData = await response.json();
