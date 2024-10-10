@@ -520,28 +520,26 @@ async function loadWindowLocation() {
         const registerLink = document.getElementById("register-link");
         const profileLink = document.getElementById("profile-link");
         const signoutLink = document.getElementById("signout-link");
-        const friendsLink = document.getElementById("friends-link"); // Añadido
-        const ListSearchLink = document.getElementById("ListSearch-link"); // Añadido
+        const ListSearchLink = document.getElementById("ListSearch-link");
+        const FriendMenu = document.getElementById("Friends-Menu");
 
 		const retrievedToken = localStorage.getItem("accessToken");
         // Lógica para mostrar u ocultar elementos del menú
-        if (/*Navbar === 1*/ retrievedToken) {
-            // Mostrar Login y Register, ocultar Profile y Sign Out
+        if (retrievedToken) {
             if (loginLink) loginLink.parentElement.style.display = 'none';
             if (registerLink) registerLink.parentElement.style.display = 'none';
             if (profileLink) profileLink.parentElement.style.display = '';
             if (signoutLink) signoutLink.parentElement.style.display = '';
-            if (friendsLink) friendsLink.style.display = ''; // Añadido
-            if (ListSearchLink) ListSearchLink.style.display = ''; // Añadido
-
-        } else if (/*Navbar === 0*/!retrievedToken) {
-            // Mostrar Profile y Sign Out, ocultar Login y Register
+            if (ListSearchLink) ListSearchLink.style.display = ''; 
+            if (FriendMenu) FriendMenu.style.display = '';
+        } else if (!retrievedToken) {
+            
             if (loginLink) loginLink.parentElement.style.display = '';
             if (registerLink) registerLink.parentElement.style.display = '';
             if (profileLink) profileLink.parentElement.style.display = 'none';
             if (signoutLink) signoutLink.parentElement.style.display = 'none';
-            if (friendsLink) friendsLink.style.display = 'none'; // Añadido
-            if (ListSearchLink) ListSearchLink.style.display = 'none'; // Añadido
+            if (ListSearchLink) ListSearchLink.style.display = 'none'; 
+            if (FriendMenu) FriendMenu.style.display = 'none';
         }
 
     } catch (error) {
