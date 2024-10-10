@@ -11,87 +11,102 @@ function loadAvatar(userId) {
     };
 }
 
+async function loadProfileData() {
+    console.log('loadProfileData called');
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+        console.error('No access token found');
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:50000/api/users/profile/', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (response.ok) {
+            const profileData = await response.json();
+            console.log('Profile data fetched successfully');
+            updateProfileUI(profileData);
+        } else {
+            const errorData = await response.json();
+            console.error('Failed to fetch profile data:', errorData);
+        }
+    } catch (error) {
+        console.error('Error fetching profile data:', error);
+    } finally {
+        console.log('loadProfileData finished');
+    }
+}
+
+function updateProfileUI(profileData) {
+
+    const avatarImage = document.getElementById('avatarImage');
+    if (avatarImage && profileData.avatar_image) {
+        avatarImage.src = `http://localhost:50000${profileData.avatar_image}`;
+    }
+
+    const usernameField = document.getElementById('username');
+    if (usernameField) {
+        usernameField.textContent = profileData.username;
+    }
+
+    const joinedField = document.getElementById('date_joined');
+    if (joinedField) {
+        const date = new Date(profileData.date_joined);
+        const formattedDate = date.toLocaleString();
+        joinedField.textContent = formattedDate;
+    }
+
+    const friendField = document.getElementById('friends');
+    if (friendField) {
+        friendField.value = profileData.friends || '';
+    }
+
+    const firstNameField = document.getElementById('first_name');
+    if (firstNameField) {
+        firstNameField.value = profileData.first_name || '';
+    }
+
+    const lastNameField = document.getElementById('last_name');
+    if (lastNameField) {
+        lastNameField.value = profileData.last_name || '';
+    }
+
+    updateTwoFAStatus(profileData.two_factor_enabled);
+}
+
+function updateTwoFAStatus(isEnabled) {
+    const statusElement = document.getElementById('twoFAStatus');
+    const toggleButton = document.getElementById('toggle2FA');
+    
+    if (statusElement) {
+        statusElement.textContent = isEnabled ? '2FA is currently enabled.' : '2FA is currently disabled.';
+    }
+    if (toggleButton) {
+        toggleButton.textContent = isEnabled ? 'Disable 2FA' : 'Enable 2FA';
+    }
+}
+
 function initProfile() {
     console.log('Initializing Profile');
     const userData = JSON.parse(localStorage.getItem('userData'));
     if (userData && userData.user_id) {
         loadAvatar(userData.user_id);
     }
+
     loadProfileData();
 
-    async function loadProfileData() {
-        const token = localStorage.getItem('accessToken');
-        if (!token) {
-            console.error('No access token found');
-            return;
-        }
-    
-        try {
-            const response = await fetch('http://localhost:50000/api/users/profile/', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            if (response.ok) {
-                console.log(response);
-                const profileData = await response.json();
-                updateProfileUI(profileData);
-            } else {
-                const errorData = await response.json();
-                console.error('Failed to fetch profile data:', errorData);
-            }
-        } catch (error) {
-            console.error('Error fetching profile data:', error);
-        }
-    }
-    
-    function updateProfileUI(profileData) {
-        const usernameField = document.getElementById('username');
-        if (usernameField) {
-            usernameField.textContent = profileData.username;
-        }
+ 
 
-        const joinedField = document.getElementById('date_joined');
-        if (joinedField) {
-            const date = new Date(profileData.date_joined);
-            const formattedDate = date.toLocaleString();
-            joinedField.textContent = formattedDate;
-        }
 
-        const friendField = document.getElementById('friends');
-        if (friendField) {
-            friendField.value = profileData.friends || '';
-        }
-
-        const firstNameField = document.getElementById('first_name');
-        if (firstNameField) {
-            firstNameField.value = profileData.first_name || '';
-        }
-
-        const lastNameField = document.getElementById('last_name');
-        if (lastNameField) {
-            lastNameField.value = profileData.last_name || '';
-        }
-
-        updateTwoFAStatus(profileData.two_factor_enabled);
-    }
-
-    function updateTwoFAStatus(isEnabled) {
-        const statusElement = document.getElementById('twoFAStatus');
-        const toggleButton = document.getElementById('toggle2FA');
-        
-        if (statusElement) {
-            statusElement.textContent = isEnabled ? '2FA is currently enabled.' : '2FA is currently disabled.';
-        }
-        if (toggleButton) {
-            toggleButton.textContent = isEnabled ? 'Disable 2FA' : 'Enable 2FA';
-        }
-    }
 
     // Configurar manejadores de eventos
     setup2FAHandlers();
-    setupAvatarHandlers();
+    setupAvatarHandlers(loadProfileData);
     setupFormHandlers();
+
 }
 
 function setup2FAHandlers() {
@@ -172,17 +187,28 @@ async function verify2FA() {
     }
 }
 
-function setupAvatarHandlers() {
+function setupAvatarHandlers(loadProfileDataCallback) {
     const changeAvatarBtn = document.getElementById('changeAvatarBtn');
     const avatarInput = document.getElementById('avatarInput');
 
     if (changeAvatarBtn && avatarInput) {
-        changeAvatarBtn.addEventListener('click', () => avatarInput.click());
-        avatarInput.addEventListener('change', uploadAvatar);
+        if (!changeAvatarBtn.hasAttribute('data-listener-attached')) {
+            changeAvatarBtn.addEventListener('click', () => avatarInput.click());
+            changeAvatarBtn.setAttribute('data-listener-attached', 'true');
+        }
+
+        if (!avatarInput.hasAttribute('data-listener-attached')) {
+            avatarInput.addEventListener('change', function(event) {
+                uploadAvatar.call(this, loadProfileDataCallback);
+            });
+            avatarInput.setAttribute('data-listener-attached', 'true');
+        }
     }
 }
 
-async function uploadAvatar() {
+async function uploadAvatar(onSuccessCallback) {
+    console.log('uploadAvatar called');
+
     const file = this.files[0];
     if (file) {
         const formData = new FormData();
@@ -199,7 +225,9 @@ async function uploadAvatar() {
 
             if (response.ok) {
                 console.log('Avatar uploaded successfully');
-                // ... resto del código
+                if (typeof onSuccessCallback === 'function') {
+                    onSuccessCallback();
+                }
             } else {
                 console.error('Failed to upload avatar:', await response.text());
             }
@@ -215,29 +243,52 @@ function setupFormHandlers() {
     const submitPasswordChange = document.getElementById('submitPasswordChange');
     const submitProfileChange = document.getElementById('submitProfileChange');
 
-    if (changePasswordBtn) {
-        changePasswordBtn.addEventListener('click', toggleForm);
-    }
-    if (changeProfileBtn) {
-        changeProfileBtn.addEventListener('click', toggleForm);
-    }
-    if (submitPasswordChange) {
-        submitPasswordChange.addEventListener('click', changePassword);
-    }
-    if (submitProfileChange) {
-        submitProfileChange.addEventListener('click', updateProfile);
-    }
+    // Remover los listeners existentes antes de agregar nuevos
+    changePasswordBtn.removeEventListener('click', toggleForm);
+    changeProfileBtn.removeEventListener('click', toggleForm);
+    submitPasswordChange.removeEventListener('click', changePassword);
+    submitProfileChange.removeEventListener('click', updateProfile);
+
+    // Agregar nuevos listeners
+    changePasswordBtn.addEventListener('click', toggleForm);
+    changeProfileBtn.addEventListener('click', toggleForm);
+    submitPasswordChange.addEventListener('click', changePassword);
+    submitProfileChange.addEventListener('click', updateProfile);
 }
 
 function toggleForm(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
     const passwordForm = document.getElementById('changePasswordForm');
     const profileForm = document.getElementById('changeProfileForm');
-    const isPasswordBtn = event.target.id === 'changePasswordBtn';
+    const passwordBtn = document.getElementById('changePasswordBtn');
+    const profileBtn = document.getElementById('changeProfilelBtn');
 
-    passwordForm.classList.toggle('collapse', !isPasswordBtn);
-    profileForm.classList.toggle('collapse', isPasswordBtn);
-    event.target.classList.toggle('active');
-    document.getElementById(isPasswordBtn ? 'changeProfilelBtn' : 'changePasswordBtn').classList.remove('active');
+    // Determinar qué botón se pulsó
+    const clickedButton = event.currentTarget;
+    const isPasswordBtn = clickedButton.id === 'changePasswordBtn';
+
+    console.log('Button clicked:', clickedButton.id);
+
+    // Ocultar ambos formularios
+    passwordForm.style.display = 'none';
+    profileForm.style.display = 'none';
+
+    // Mostrar el formulario correspondiente
+    if (isPasswordBtn) {
+        passwordForm.style.display = 'block';
+        passwordBtn.classList.add('active');
+        profileBtn.classList.remove('active');
+        console.log('Showing password form');
+    } else {
+        profileForm.style.display = 'block';
+        profileBtn.classList.add('active');
+        passwordBtn.classList.remove('active');
+        console.log('Showing profile form');
+    }
+
+    console.log('Toggled form:', isPasswordBtn ? 'Password' : 'Profile');
 }
 
 async function changePassword(event) {
@@ -279,6 +330,11 @@ async function changePassword(event) {
 
 async function updateProfile(event) {
     event.preventDefault();
+    
+    // Desactivar el botón para evitar múltiples clics
+    const submitButton = event.target;
+    submitButton.disabled = true;
+
     const first_name = document.getElementById('first_name').value;
     const last_name = document.getElementById('last_name').value;
     const friends = document.getElementById('friends').value;
@@ -309,6 +365,9 @@ async function updateProfile(event) {
     } catch (error) {
         console.error('Error updating profile:', error);
         alert('An error occurred while updating the profile.');
+    } finally {
+        // Reactivar el botón
+        submitButton.disabled = false;
     }
 }
 

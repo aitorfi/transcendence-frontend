@@ -44,6 +44,14 @@ async function handleSignOut(loadWindowLocationFunc) {
             const errorData = await response.json();
             console.error('Signout failed:', errorData);
             alert('Sign out failed. Please try again.');
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            window.history.pushState({}, "", "/Login");
+            if (typeof loadWindowLocationFunc === 'function') {
+                loadWindowLocationFunc();
+            } else {
+                window.location.reload();
+            }            
         }
     } catch (error) {
         console.error('Error during signout:', error);
