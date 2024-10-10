@@ -52,6 +52,13 @@ function updateProfileUI(profileData) {
         usernameField.textContent = profileData.username;
     }
 
+    const displayField = document.getElementById('display_name');
+    if (displayField) {
+        displayField.value = profileData.display_name || '';
+    }
+
+
+
     const joinedField = document.getElementById('date_joined');
     if (joinedField) {
         const date = new Date(profileData.date_joined);
@@ -338,6 +345,7 @@ async function updateProfile(event) {
     const first_name = document.getElementById('first_name').value;
     const last_name = document.getElementById('last_name').value;
     const friends = document.getElementById('friends').value;
+    const display_name = document.getElementById('display_name').value;
 
     try {
         const response = await fetch('http://localhost:50000/api/users/update-profile/', {
@@ -349,7 +357,8 @@ async function updateProfile(event) {
             body: JSON.stringify({
                 first_name,
                 last_name,
-                friends
+                friends,
+                display_name
             })
         });
 
