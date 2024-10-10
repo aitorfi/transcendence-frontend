@@ -36,7 +36,6 @@ function initFriendsRequest() {
 
     async function Add_Friend_Final(userId) {
 
-
         const token = localStorage.getItem("accessToken");
         
         try {
@@ -59,9 +58,40 @@ function initFriendsRequest() {
         } catch (error) {
             console.error('Error al añadir amigo:', error);
             alert('No se pudo añadir el amigo');
-        } 
+        }
+        delete_friend_from_requestList(userId);
     }
 
+    async function delete_friend_from_requestList(userId)
+    {
+        console.log("user id:", userId);
+        const  token = localStorage.getItem("accessToken");
+        try
+        {
+            const response = await fetch(`http://localhost:50000/api/friends/remove-request/${userId}/`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) 
+                throw new Error(`HTTP error! status: ${response.status}`);
+            const result_do = await response.json();
+            console.log("result_do", result_do);
+            alert(result_do.message);
+        } 
+        catch (error) 
+        {
+            console.error('Error al añadir amigo:', error);
+            alert('No se pudo añadir el amigo');
+        }
+        //delete_friend_from_requestList(userId);
+
+            
+    }   
+    
 
     function displayResults(friends) {
         if (!resultsContainer) {
