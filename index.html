@@ -18,7 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand spa-route" href="/">Home</a>
+            <a class="navbar-brand spa-route" href="/"><b class="spa-route" data-path="/">Home</b></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -27,41 +27,36 @@
                     <li class="nav-item">
                         <a class="nav-link active spa-route" aria-current="page" href="/TournamentInterface">Tournaments</a>
                     </li>
-                </ul>
-<!--                 <form id="search-user-form" class="d-flex align-items-center mb-0">
-                    <div class="mb-0 me-2">
-                        <input type="text" class="form-control" id="search-username" placeholder="Username">
-                    </div>
-                    <button type="submit" class="btn btn-primary spa-route" data-path="/ListSearch">Search</button>
-                </form>   -->              
+                </ul>      
                 <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
                     <li class="nav-item">
                         <a class="nav-link active spa-route" aria-current="page" href="/ListSearch" id="ListSearch-link">Find User</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active spa-route" aria-current="page" href="/Register" id="register-link">Register</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active spa-route" aria-current="page" href="/Login" id="login-link">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active spa-route" aria-current="page" href="/Profile" id="profile-link">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active spa-route" aria-current="page" href="/Friends" id="friends-link">Friends</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active spa-route" aria-current="page" href="/FriendsWait" id="friends-link">Friends Waiting</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active spa-route" aria-current="page" href="/FriendsBlocked" id="friends-link">Friends Blocked</a>
-                    </li>                    
-                    <li class="nav-item">
-                        <a class="nav-link active spa-route" aria-current="page" href="/FriendsRequest" id="friends-link">Friends Request</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active spa-route" aria-current="page" href="/SignOut" id="signout-link">Sign out</a>
-                    </li>
+                    <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                        <li class="nav-item dropdown" id="Friends-Menu">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Friends
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item spa-route" href="/Friends">All Friends</a></li>
+                                <li><a class="dropdown-item spa-route" href="/FriendsWait">Friends Waiting</a></li>
+                                <li><a class="dropdown-item spa-route" href="/FriendsBlocked">Blocked Friends</a></li>
+                                <li><a class="dropdown-item spa-route" href="/FriendsRequest">Requests Pending</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active spa-route" aria-current="page" href="/Profile" id="profile-link"><b class="spa-route" data-path="/Profile">Profile</b></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active spa-route" aria-current="page" href="/SignOut" id="signout-link"><b class="spa-route" data-path="/SignOut">Sign out</b></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active spa-route" aria-current="page" href="/Register" id="register-link"><b class="spa-route" data-path="/Register">Register</b></a>
+                        </li>                                                                                                                                <!-- hemos puesto en necrita con <b -->
+                        <li class="nav-item">
+                            <a class="nav-link active spa-route" aria-current="page" href="/Login" id="login-link" style="font-weight: bold;" >Login</a> <!-- hemos puesto en negrita con fontstyle -->
+                        </li>
+                    </ul>
                 </ul>
             </div>
         </div>

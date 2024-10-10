@@ -34,6 +34,35 @@ function initFriendsRequest() {
         }
     }
 
+    async function Add_Friend_Final(userId) {
+
+
+        const token = localStorage.getItem("accessToken");
+        
+        try {
+            const response = await fetch('http://localhost:50000/api/friends/add_final/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ friend_id: userId })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result_do = await response.json();
+            console.log("result_do", result_do);
+            alert(result_do.message);
+        } catch (error) {
+            console.error('Error al añadir amigo:', error);
+            alert('No se pudo añadir el amigo');
+        } 
+    }
+
+
     function displayResults(friends) {
         if (!resultsContainer) {
             console.error("Results container not found");
@@ -58,22 +87,24 @@ function initFriendsRequest() {
             const rightDiv = document.createElement('div');
             rightDiv.classList.add('d-flex', 'justify-content-end');
 
-            const chatButton = document.createElement('button');
-            chatButton.classList.add('btn', 'btn-success', 'btn-sm', 'me-2', 'spa-route');
-            chatButton.setAttribute('data-path', '/Friends');
-            chatButton.style.border = 'solid black';
-            chatButton.style.width = '60px';
-            chatButton.innerHTML = '<b class="spa-route" data-path="/Friends">Yes</b>';
+            const yesButton = document.createElement('button');
+            yesButton.classList.add('btn', 'btn-success', 'btn-sm', 'me-2', 'spa-route');
+            yesButton.setAttribute('data-path', '/Friends');
+            yesButton.style.border = 'solid black';
+            yesButton.style.width = '60px';
+            yesButton.innerHTML = '<b class="spa-route" data-path="/Friends">Yes</b>';
 
-            const matchButton = document.createElement('button');
-            matchButton.classList.add('btn', 'btn-danger', 'btn-sm', 'text-white', 'spa-route');
-            matchButton.setAttribute('data-path', '/Friends');
-            matchButton.style.border = 'solid black';
-            matchButton.style.width = '60px';
-            matchButton.innerHTML = '<b class="spa-route" data-path="/Friends">No  </b>';
+            const noButton = document.createElement('button');
+            noButton.classList.add('btn', 'btn-danger', 'btn-sm', 'text-white', 'spa-route');
+            noButton.setAttribute('data-path', '/Friends');
+            noButton.style.border = 'solid black';
+            noButton.style.width = '60px';
+            noButton.innerHTML = '<b class="spa-route" data-path="/Friends">No</b>';
 
-            rightDiv.appendChild(chatButton);
-            rightDiv.appendChild(matchButton);
+            rightDiv.appendChild(yesButton);
+            rightDiv.appendChild(noButton);
+
+            yesButton.addEventListener('click', () => Add_Friend_Final(friend.id));
 
             // Añadir las dos partes al list item
             listItem.appendChild(leftDiv);
