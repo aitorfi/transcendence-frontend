@@ -60,7 +60,66 @@ function initFriendsRequest() {
             alert('No se pudo añadir el amigo');
         }
         delete_friend_from_requestList(userId);
+        
     }
+///////////////////////////////////////////////////////////////
+// friends.js
+async function delete_friend_from_FriendsWaiting(userId) {
+    console.log("user id:", userId);
+    const token = localStorage.getItem("accessToken");
+    
+    // Verificamos si el token existe antes de hacer la solicitud
+    if (!token) {
+        alert('No se encontró un token de acceso. Por favor, inicia sesión.');
+        return;
+    }
+
+    try {
+        // Log para verificar la URL correcta
+        const url = `http://localhost:50000/api/friends/remove-from-waiting/${userId}/`;
+        console.log(`Requesting DELETE to URL: ${url}`);
+        console.log("user id3=", userId);
+        const response = await fetch(url, { ////
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            // Manejo de errores según el código de estado
+            const errorData = await response.json();
+            console.error(`Error: ${response.status}`, errorData); ////
+
+            // Mostrar mensajes de error específicos si el backend retorna detalles
+            if (response.status === 400) {
+                alert(errorData.error || 'No estás en la lista de espera de este usuario.');
+            } else if (response.status === 500) {
+                alert('Ocurrió un error en el servidor. Inténtalo nuevamente más tarde.');
+            } else {
+                alert(`Error: ${response.status}`);
+            }
+            return;
+        }
+
+        const result_do = await response.json();
+        console.log("result_do", result_do);
+        alert(result_do.message);
+
+    } catch (error) {
+        console.error('Error al eliminar amigo:', error);
+        alert('No se pudo eliminar el amigo. Intenta nuevamente más tarde.');
+    }
+}
+
+
+
+
+
+
+
+
 
     async function delete_friend_from_requestList(userId)
     {
@@ -88,7 +147,7 @@ function initFriendsRequest() {
             alert('No se pudo añadir el amigo');
         }
         //delete_friend_from_requestList(userId);
-
+        delete_friend_from_FriendsWaiting(userId);
             
     }   
     

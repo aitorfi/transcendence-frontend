@@ -12,6 +12,8 @@ function initScriptFriendRequest() {
         doFetchRequestPending(selectedId);
     });
 
+
+
     async function doFetchRequestPending(selectedId) {
 
         const token = localStorage.getItem("accessToken");
