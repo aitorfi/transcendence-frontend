@@ -34,26 +34,10 @@ function initFriends() {
         }
     }
 
-    async function removeFriend(friendId) {
-        const token = localStorage.getItem("accessToken");
-        try {
-            const response = await fetch(`http://localhost:50000/api/friends/remove/${friendId}/`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-            });
+    function removeFriend(friendId, username) {
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            return true;
-        } catch (error) {
-            console.error('Error al eliminar amigo:', error);
-            return false;
-        }
+        localStorage.setItem('delete-friend-id', friendId);
+        localStorage.setItem('delete-friend-username', username);
     }
 
     function displayResults(friends) {
@@ -85,13 +69,8 @@ function initFriends() {
             removeIcon.setAttribute('data-path', '/DeleteFriend');
             removeButton.appendChild(removeIcon);
 
-            removeButton.addEventListener('click', async () => {
-                if (await removeFriend(friend.id)) {
-                    listItem.remove();
-                } else {
-                    alert('Failed to remove friend');
-                }
-            });
+            removeButton.addEventListener('click', () => removeFriend(friend.id, friend.username));
+    
 
             const friendName = document.createElement('p');
             friendName.classList.add('mb-0');
