@@ -26,12 +26,63 @@ function initListSearch() {
         }
     }
 
+    async function fetchUserId() {
+        const token = localStorage.getItem("accessToken");
+        try {
+            const response = await fetch('http://localhost:50000/api/test-token/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const userNameId = await response.json();
+            return userNameId;
+        } catch (error) {
+            console.error('Error al obtener usuarios:', error);
+            return [];
+        }
+    }
+
+    async function fetchFriends() {
+        const token = localStorage.getItem("accessToken");
+        try {
+            const response = await fetch('http://localhost:50000/api/friends/get_user_friends/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const friends = await response.json();
+            return friends;
+        } catch (error) {
+            console.error('Error al obtener usuarios:', error);
+            return [];
+        }
+    }
+
     async function searchUsers(query) {
+
+        const myUsernameId = await fetchUserId();
+        console.log("my username id", myUsernameId);
+        const myFriends = await fetchFriends();
+        console.log("my friends", myFriends);
         const users = await fetchUsers();
         const matches = users.filter(user => 
             user.user__username.toLowerCase().includes(query.toLowerCase())
         );
-        displayResults(matches);
+        displayResults(matches, myUsernameId, myFriends);
     }
 
 
@@ -42,29 +93,44 @@ function initListSearch() {
     }
 
 
-    function displayResults(matches) {
+    function displayResults(matches, myUsernameId, myFriends) {
         resultsContainer.innerHTML = '';
-
+    
+        // Access the friends array from the myFriends object
+        const friendsArray = myFriends.friends || [];
+    
         matches.forEach(match => {
+            // Skip if the match is the user themselves
+            if (match.user__id === myUsernameId.user_id) {
+                return; // Continue to the next match
+            }
+    
             const item = document.createElement('li');
             item.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
             item.textContent = match.user__username;
-
-            const addButton = document.createElement('button');
-            addButton.classList.add('btn', 'btn-success', 'btn-sm', 'spa-route');
-            addButton.setAttribute('data-path', '/FriendRequest');
-            addButton.style.border = '2px solid black'; 
-            addButton.style.fontWeight = 'bold';  
-            addButton.textContent = 'ADD';
- 
-            addButton.addEventListener('click', () => setFriend(match.user__id, match.user__username));
-
-             
-            item.appendChild(addButton);
+    
+            // Check if the match is already a friend
+            const isFriend = friendsArray.some(friend => friend.id === match.user__id);
+    
+            // Only add the 'ADD' button if the user is not already a friend
+            if (!isFriend) {
+                const addButton = document.createElement('button');
+                addButton.classList.add('btn', 'btn-success', 'btn-sm', 'spa-route');
+                addButton.setAttribute('data-path', '/FriendRequest');
+                addButton.style.border = '2px solid black';
+                addButton.style.fontWeight = 'bold';
+                addButton.textContent = 'ADD';
+    
+                addButton.addEventListener('click', () => setFriend(match.user__id, match.user__username));
+    
+                item.appendChild(addButton);
+            }
+    
             resultsContainer.appendChild(item);
         });
     }
-
+    
+    
     buttonInput.addEventListener('submit', (event) => {
         event.preventDefault();
         const query = searchInput.value.trim();
