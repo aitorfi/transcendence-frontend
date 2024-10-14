@@ -34,26 +34,10 @@ function initFriendsBlocked() {
         }
     }
 
-    async function removeFriendBlocked(friendId) {
-        const token = localStorage.getItem("accessToken");
-        try {
-            const response = await fetch(`http://localhost:50000/api/friends/remove-blocked/${friendId}/`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-            });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            return true;
-        } catch (error) {
-            console.error('Error al eliminar amigo:', error);
-            return false;
-        }
+    function SetToUnblockFriend(friendid, usernameid) {
+        localStorage.setItem("block-friendId",friendid);
+        localStorage.setItem("block-username",usernameid);
     }
 
     function displayResults(friends) {
@@ -81,22 +65,16 @@ function initFriendsBlocked() {
             const rightDiv = document.createElement('div');
             rightDiv.classList.add('d-flex', 'justify-content-end');
 
-            const chatButton = document.createElement('button');
-            chatButton.classList.add('btn', 'btn-success', 'btn-sm', 'me-2', 'spa-route');
-            chatButton.setAttribute('data-path', '/Chat');
-            chatButton.style.border = 'solid black';
-            chatButton.style.width = '60px';
-            chatButton.innerHTML = '<b class="spa-route" data-path="/Chat">Yes</b>';
 
-            const matchButton = document.createElement('button');
-            matchButton.classList.add('btn', 'btn-danger', 'btn-sm', 'text-white', 'spa-route');
-            matchButton.setAttribute('data-path', '/LocalMultiplayer');
-            matchButton.style.border = 'solid black';
-            matchButton.style.width = '60px';
-            matchButton.innerHTML = '<b class="spa-route" data-path="/Chat">No</b>';
+            const unblockButton = document.createElement('button');
+            unblockButton.classList.add('btn', 'btn-danger', 'btn-sm', 'text-white', 'spa-route');
+            unblockButton.setAttribute('data-path', '/UnlockedFriend');
+            unblockButton.style.border = 'solid black';
+            unblockButton.style.width = '60px';
+            unblockButton.innerHTML = '<b class="spa-route" data-path="/UnlockedFriend">Unlock</b>';
 
-            rightDiv.appendChild(chatButton);
-            rightDiv.appendChild(matchButton);
+            rightDiv.appendChild(unblockButton);
+            unblockButton.addEventListener('click', () => SetToUnblockFriend(friend.id, friend.username));
 
             // Añadir las dos partes al list item
             listItem.appendChild(leftDiv);

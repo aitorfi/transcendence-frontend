@@ -163,6 +163,16 @@ const ROUTES = {
         title: "Match History | " + DEFAULT_PAGE_TITLE,
         description: "This is the Match History page for the Pong Game",
     },
+    "/BlockUser": {
+        template: "../templates/BlockUser.html",
+        title: "BlockUser | " + DEFAULT_PAGE_TITLE,
+        description: "This is the BlockUser page ",
+    },
+    "/UnlockedFriend": {
+        template: "../templates/UnlockedFriend.html",
+        title: "UnlockedFriend | " + DEFAULT_PAGE_TITLE,
+        description: "This is the UnlockedFriend page ",
+    },
     "/RequestPending": {
         template: "../templates/RequestPending.html",
         title: "Request Pending | " + DEFAULT_PAGE_TITLE,
@@ -473,6 +483,17 @@ async function loadWindowLocation() {
             };
             document.body.appendChild(script);
         }
+        if (locationPath === "/BlockUser") {
+            const script = document.createElement('script');
+            script.src = './src/BlockUser.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initBlockRequest === 'function') {
+                    window.initBlockRequest();
+                }
+            };
+            document.body.appendChild(script);
+        }
         if (locationPath === "/FriendRequest") {
             const script = document.createElement('script');
             script.src = './src/ScriptFriendRequest.js';
@@ -491,6 +512,17 @@ async function loadWindowLocation() {
                 // Asegurarse de que la función de inicialización de friends se ejecuta
                 if (typeof window.initDeleteFriendScript === 'function') {
                     window.initDeleteFriendScript();
+                }
+            };
+            document.body.appendChild(script);
+        }
+        if (locationPath === "/UnlockedFriend") {
+            const script = document.createElement('script');
+            script.src = './src/UnlockedFriend.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initUnlockedFriendScript === 'function') {
+                    window.initUnlockedFriendScript();
                 }
             };
             document.body.appendChild(script);
