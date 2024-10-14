@@ -1,18 +1,5 @@
 const resultsContainer = document.getElementById('result-list');
 
-// Simulación de respuestas de usuarios para las solicitudes de amistad
-async function fetchMatches() {
-    const simulatedResponse = [
-        { username: 'Ibantxo' },
-        { username: 'Iñigo' },
-        { username: 'Juan' },
-        { username: 'JoseMari' }
-    ];
-
-    // Muestra los resultados simulados en el contenedor
-    displayResults(simulatedResponse);
-}
-
 // Función para mostrar los resultados en el HTML
 function displayResults(matches) {
     // Limpia el contenedor de resultados

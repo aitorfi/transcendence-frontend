@@ -116,7 +116,7 @@ function initListSearch() {
             if (!isFriend) {
                 const addButton = document.createElement('button');
                 addButton.classList.add('btn', 'btn-success', 'btn-sm', 'spa-route');
-                addButton.setAttribute('data-path', '/FriendRequest');
+                addButton.setAttribute('data-path', '/ExecuteFriendRequest');
                 addButton.style.border = '2px solid black';
                 addButton.style.fontWeight = 'bold';
                 addButton.textContent = 'ADD';
