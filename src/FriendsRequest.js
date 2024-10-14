@@ -114,13 +114,6 @@ async function delete_friend_from_FriendsWaiting(userId) {
 }
 
 
-
-
-
-
-
-
-
     async function delete_friend_from_requestList(userId)
     {
         console.log("user id:", userId);

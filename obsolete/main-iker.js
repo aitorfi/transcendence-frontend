@@ -22,7 +22,7 @@ const ROUTES = {
         description: "This is the Sign In page",
     },
     "/Logged": {
-        template: "../templates/home.html",
+        template: "../templates/Home.html",
         title: "Home logged | " + DEFAULT_PAGE_TITLE,
         description: "This is the logged home page",
     },
@@ -49,7 +49,7 @@ const ROUTES = {
         script: "./src/SignOut.js"
     },
     "/LocalMultiplayer": {
-        template: "../templates/localGame.html",
+        template: "../templates/LocalGame.html",
         title: "Local Game | " + DEFAULT_PAGE_TITLE,
         description: "This is the Pong Local Multiplayer Game",
     },
@@ -64,7 +64,7 @@ const ROUTES = {
         description: "This is the Tournaments page for the Pong Game",
     },
     "/SinglePlayerIA": {
-        template: "../templates/localGame.html",
+        template: "../templates/LocalGame.html",
         title: "Single Game | " + DEFAULT_PAGE_TITLE,
         description: "This is the Single Game page for the Pong Game",
     },

@@ -7,11 +7,11 @@
             <div class="d-flex justify-content-center align-items-center vh-50">
                 <form class="w-100" id="deleteFriendForm">
                     <!-- Texto de confirmación -->
-                    <p class="text-center">Do you really want to delete <mark style="font-weight: bold;"> Blocked Fidalgo</mark> from your friend's list?</p>
+                    <p class="text-center">Do you really want to delete <mark style="font-weight: bold;" id="delete-friend-name"></mark> from your friend's list?</p>
                     
                     <!-- Botones de confirmación -->
                     <div class="d-flex justify-content-around mt-3">
-                        <button type="button" class="btn btn-success spa-route" style="border: solid black;" data-path="/Logged">Yes</button>
+                        <button type="button" class="btn btn-success spa-route" style="border: solid black;" data-path="/Home" id="delete-yes-botton">Yes</button>
                         <button type="button" class="btn btn-danger spa-route" style="border: solid black;" data-path="/Friends">No</button>
                     </div>
                 </form>

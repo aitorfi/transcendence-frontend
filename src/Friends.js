@@ -65,7 +65,7 @@ function initFriends() {
             const removeButton = document.createElement('button');
             removeButton.classList.add('btn', 'btn-danger', 'spa-route', 'me-2');
             removeButton.setAttribute('aria-label', 'Remove');
-            removeButton.setAttribute('data-path', '/DeleteFriend');
+            removeButton.setAttribute('data-path', '/ExecuteDeleteFriend');
             removeButton.style.padding = '2px 6px';
             removeButton.style.border = '1px solid black';
             removeButton.style.borderRadius = '50%';
@@ -73,7 +73,7 @@ function initFriends() {
     
             const removeIcon = document.createElement('i');
             removeIcon.classList.add('bi', 'bi-x', 'text-white', 'spa-route');
-            removeIcon.setAttribute('data-path', '/DeleteFriend');
+            removeIcon.setAttribute('data-path', '/ExecuteDeleteFriend');
             removeButton.appendChild(removeIcon);
     
             removeButton.addEventListener('click', () => removeFriend(friend.id, friend.username));
@@ -91,12 +91,11 @@ function initFriends() {
     
             // Botón Block (Naranja)
             const blockButton = document.createElement('button');
-            blockButton.classList.add('btn','btn-warning' ,'btn-sm', 'me-2', 'spa-route');
-            blockButton.setAttribute('data-path', '/BlockUser');
-            blockButton.style.backgroundColor = 'red';
+            blockButton.classList.add('btn','btn-danger' ,'btn-sm', 'me-2', 'spa-route');
+            blockButton.setAttribute('data-path', '/ExecuteBlockFriend');
             blockButton.style.border = 'solid black';
             blockButton.style.width = '60px';
-            blockButton.innerHTML = '<b class="spa-route" data-path="/BlockUser">Block</b>';
+            blockButton.innerHTML = '<b class="spa-route" data-path="/ExecuteBlockFriend">Block</b>';
 
             // Botón Chat
             const chatButton = document.createElement('button');

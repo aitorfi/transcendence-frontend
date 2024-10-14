@@ -5,7 +5,7 @@ import { initializeGameIA, terminateGameIA } from "./SinglePlayerIA.js"
 import { initSignIn } from './SignIn.js';
 
 
-function isUserLoggedIn() {
+function isUserHomeIn() {
     const token = localStorage.getItem('accessToken');
     if (!token) {
         return false;
@@ -44,57 +44,30 @@ const ROUTES = {
         title: "404 | " + DEFAULT_PAGE_TITLE,
         description: "Page not found",
     },
-    "/Login": {
-        template: "../templates/Login.html",
-        title: "Sign In | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Sign In page",
+    "/Chat": {
+        template: "../templates/Chat.html",
+        title: "Chat | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Chat page for the Pong Game",
     },
-    "/Logged": {
-        template: "../templates/home.html",
-        title: "Home logged | " + DEFAULT_PAGE_TITLE,
-        description: "This is the logged home page",
+    "/ExecuteBlockFriend": {
+        template: "../templates/ExecuteBlockFriend.html",
+        title: "ExecuteBlockFriend | " + DEFAULT_PAGE_TITLE,
+        description: "This is the ExecuteBlockFriend page ",
     },
-    "/Register": {
-        template: "../templates/Register.html",
-        title: "Sign Up | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Sign Up page",
+    "/ExecuteDeleteFriend": {
+        template: "../templates/ExecuteDeleteFriend.html",
+        title: "ExecuteDeleteFriend | " + DEFAULT_PAGE_TITLE,
+        description: "This is the ExecuteDeleteFriend Friends page for the Pong Game",
     },
-    "/": {
-        template: "../templates/NoLogHome.html",
-        title: "Home | " + DEFAULT_PAGE_TITLE,
-        description: "This is the home page",
+    "/ExecuteFriendRequest": {
+        template: "../templates/ExecuteFriendRequest.html",
+        title: "ExecuteFriendRequest | " + DEFAULT_PAGE_TITLE,
+        description: "This is the ExecuteFriendRequest page for the Pong Game",
     },
-    "/Profile": {
-        template: "../templates/Profile.html",
-        title: "Profile | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Profile page",
-        script: "./src/Profile.js"
-    },
-    "/SignOut": {
-        template: "../templates/SignOut.html",
-        title: "Sign Out | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Sign Out page",
-        script: "./src/SignOut.js"
-    },
-    "/LocalMultiplayer": {
-        template: "../templates/localGame.html",
-        title: "Local Game | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Pong Local Multiplayer Game",
-    },
-    "/Tournament": {
-        template: "../templates/Tournament.html",
-        title: "Tournament | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Tournament page for the Pong Game",
-    },
-    "/TournamentInterface": {
-        template: "../templates/TournamentInterface.html",
-        title: "Tournaments | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Tournaments page for the Pong Game",
-    },
-    "/SinglePlayerIA": {
-        template: "../templates/localGame.html",
-        title: "Single Game | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Single Game page for the Pong Game",
+    "/ExecuteUnblockedFriend": {
+        template: "../templates/ExecuteUnblockedFriend.html",
+        title: "ExecuteUnblockedFriend | " + DEFAULT_PAGE_TITLE,
+        description: "This is the ExecuteUnblockedFriend page ",
     },
     "/Friends": {
         template: "../templates/Friends.html",
@@ -102,13 +75,6 @@ const ROUTES = {
         description: "This is the Friends page for the Pong Game",
         script: "./src/Friends.js"  // Añade esta línea
     },
-    "/FriendsWait": {
-        template: "../templates/FriendsWait.html",
-        title: "Friends Waiting | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Friends Waiting page for the Pong Game",
-        script: "./src/FriendsWait.js"  // Añade esta línea
-
-    },    
     "/FriendsBlocked": {
         template: "../templates/FriendsBlocked.html",
         title: "Friends Blocked | " + DEFAULT_PAGE_TITLE,
@@ -123,61 +89,78 @@ const ROUTES = {
         script: "./src/FriendsRequest.js"  // Añade esta línea
 
     },    
-    "/FriendRequest": {
-        template: "../templates/FriendRequest.html",
-        title: "FriendRequest | " + DEFAULT_PAGE_TITLE,
-        description: "This is the FriendRequest page for the Pong Game",
+    "/FriendsWait": {
+        template: "../templates/FriendsWait.html",
+        title: "Friends Waiting | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Friends Waiting page for the Pong Game",
+        script: "./src/FriendsWait.js"  // Añade esta línea
+
+    },    
+    "/Home": {
+        template: "../templates/Home.html",
+        title: "Home Home | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Home home page",
     },
-    "/DeleteFriend": {
-        template: "../templates/DeleteFriend.html",
-        title: "Delete Friends | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Delete Friends page for the Pong Game",
+    "/SinglePlayerIA": {
+        template: "../templates/LocalGame.html",
+        title: "Single Game | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Single Game page for the Pong Game",
     },
-    "/DeleteFriendBlocked": {
-        template: "../templates/DeleteFriendBlocked.html",
-        title: "Delete Friends | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Delete Friends Blocked page for the Pong Game",
+    "/LocalMultiplayer": {
+        template: "../templates/LocalGame.html",
+        title: "Local Game | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Pong Local Multiplayer Game",
     },
-    "/DeleteFriendRequest": {
-        template: "../templates/DeleteFriendRequest.html",
-        title: "Delete Friends | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Delete Friends Request page for the Pong Game",
-    },
-    "/DeleteFriendWaiting": {
-        template: "../templates/DeleteFriendRequest.html",
-        title: "Delete Friends | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Delete Friends Waiting page for the Pong Game",
-    },
-    "/ListSearch": {
-        template: "../templates/ListSearch.html",
-        title: "ListSearch | " + DEFAULT_PAGE_TITLE,
-        description: "This is the ListSearch page for the Pong Game",
-    },
-    "/Chat": {
-        template: "../templates/Chat.html",
-        title: "Chat | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Chat page for the Pong Game",
+    "/Login": {
+        template: "../templates/Login.html",
+        title: "Sign In | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Sign In page",
     },
     "/MatchHistory": {
         template: "../templates/MatchHistory.html",
         title: "Match History | " + DEFAULT_PAGE_TITLE,
         description: "This is the Match History page for the Pong Game",
     },
-    "/BlockUser": {
-        template: "../templates/BlockUser.html",
-        title: "BlockUser | " + DEFAULT_PAGE_TITLE,
-        description: "This is the BlockUser page ",
+    "/": {
+        template: "../templates/NoLogHome.html",
+        title: "Home | " + DEFAULT_PAGE_TITLE,
+        description: "This is the home page",
     },
-    "/UnlockedFriend": {
-        template: "../templates/UnlockedFriend.html",
-        title: "UnlockedFriend | " + DEFAULT_PAGE_TITLE,
-        description: "This is the UnlockedFriend page ",
+    "/Profile": {
+        template: "../templates/Profile.html",
+        title: "Profile | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Profile page",
+        script: "./src/Profile.js"
     },
-    "/RequestPending": {
-        template: "../templates/RequestPending.html",
-        title: "Request Pending | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Request Pending page for the Pong Game",
-    }
+    "/Register": {
+        template: "../templates/Register.html",
+        title: "Sign Up | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Sign Up page",
+    },
+    "/SignOut": {
+        template: "../templates/SignOut.html",
+        title: "Sign Out | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Sign Out page",
+        script: "./src/SignOut.js"
+    },
+    "/SearchUser": {
+        template: "../templates/SearchUser.html",
+        title: "SearchUser | " + DEFAULT_PAGE_TITLE,
+        description: "This is the SearchUser page for the Pong Game",
+    },
+    "/Tournament": {
+        template: "../templates/Tournament.html",
+        title: "Tournament | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Tournament page for the Pong Game",
+    },
+    "/TournamentInterface": {
+        template: "../templates/TournamentInterface.html",
+        title: "Tournaments | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Tournaments page for the Pong Game",
+    },
+
+
+
 };
 
 window.onpopstate = () => {
@@ -383,51 +366,58 @@ async function loadWindowLocation() {
         terminateGame();
         terminateGameIA();
 
-        if (locationPath === "/LocalMultiplayer") {
-            initializeGame();
-        }
 
         if (locationPath === "/") {
-            if (isUserLoggedIn()) {
-                window.history.replaceState({}, "", "/Logged");
+            if (isUserHomeIn()) {
+                window.history.replaceState({}, "", "/Home");
                 loadWindowLocation();
                 return; // Importante: salir de la función después de la redirección
             } 
-        }        
-
-		if (locationPath === "/Profile") {
-			const script = document.createElement('script');
-			script.src = './src/Profile.js';
-			script.onload = function() {
-				if (typeof window.initProfile === 'function') {
-					window.initProfile();
-				} else {
-					console.error('initProfile function not found');
-				}
-			};
-			document.body.appendChild(script);
-		}	
-
-        if (locationPath === "/Register") {
+        }   
+        if (locationPath === "/ExecuteBlockFriend") {
             const script = document.createElement('script');
-            script.src = './src/Register.js';
-            document.body.appendChild(script);
-        }
-        if (locationPath === "/Login") {
-            initSignIn();
-        }
-
-        if (locationPath === "/ListSearch") {
-            const script = document.createElement('script');
-            script.src = './src/ListSearch.js';
+            script.src = './src/ExecuteBlockFriend.js';
             script.onload = function() {
-                if (typeof window.initListSearch === 'function') {
-                    window.initListSearch();
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initBlockRequest === 'function') {
+                    window.initBlockRequest();
                 }
             };
             document.body.appendChild(script);
         }
-
+        if (locationPath === "/ExecuteDeleteFriend") {
+            const script = document.createElement('script');
+            script.src = './src/ExecuteDeleteFriend.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initDeleteFriendScript === 'function') {
+                    window.initDeleteFriendScript();
+                }
+            };
+            document.body.appendChild(script);
+        }
+        if (locationPath === "/ExecuteFriendRequest") {
+            const script = document.createElement('script');
+            script.src = './src/ExecuteFriendRequest.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initScriptFriendRequest === 'function') {
+                    window.initScriptFriendRequest();
+                }
+            };
+            document.body.appendChild(script);
+        }
+        if (locationPath === "/ExecuteUnblockedFriend") {
+            const script = document.createElement('script');
+            script.src = './src/ExecuteUnblockedFriend.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initUnlockedFriendScript === 'function') {
+                    window.initUnlockedFriendScript();
+                }
+            };
+            document.body.appendChild(script);
+        }
         if (locationPath === "/Friends") {
             const script = document.createElement('script');
             script.src = './src/Friends.js';
@@ -435,28 +425,6 @@ async function loadWindowLocation() {
                 // Asegurarse de que la función de inicialización de friends se ejecuta
                 if (typeof window.initFriends === 'function') {
                     window.initFriends();
-                }
-            };
-            document.body.appendChild(script);
-        }
-        if (locationPath === "/FriendsWait") {
-            const script = document.createElement('script');
-            script.src = './src/FriendsWait.js';
-            script.onload = function() {
-                // Asegurarse de que la función de inicialización de friends se ejecuta
-                if (typeof window.initFriendsWait === 'function') {
-                    window.initFriendsWait();
-                }
-            };
-            document.body.appendChild(script);
-        }
-        if (locationPath === "/FriendsWait") {
-            const script = document.createElement('script');
-            script.src = './src/FriendsWait.js';
-            script.onload = function() {
-                // Asegurarse de que la función de inicialización de friends se ejecuta
-                if (typeof window.initFriendsWait === 'function') {
-                    window.initFriendsWait();
                 }
             };
             document.body.appendChild(script);
@@ -483,57 +451,52 @@ async function loadWindowLocation() {
             };
             document.body.appendChild(script);
         }
-        if (locationPath === "/BlockUser") {
+        if (locationPath === "/FriendsWait") {
             const script = document.createElement('script');
-            script.src = './src/BlockUser.js';
+            script.src = './src/FriendsWait.js';
             script.onload = function() {
                 // Asegurarse de que la función de inicialización de friends se ejecuta
-                if (typeof window.initBlockRequest === 'function') {
-                    window.initBlockRequest();
+                if (typeof window.initFriendsWait === 'function') {
+                    window.initFriendsWait();
                 }
             };
             document.body.appendChild(script);
         }
-        if (locationPath === "/FriendRequest") {
+        if (locationPath === "/LocalMultiplayer") {
+            initializeGame();
+        }
+		if (locationPath === "/Profile") {
+			const script = document.createElement('script');
+			script.src = './src/Profile.js';
+			script.onload = function() {
+				if (typeof window.initProfile === 'function') {
+					window.initProfile();
+				} else {
+					console.error('initProfile function not found');
+				}
+			};
+			document.body.appendChild(script);
+		}	
+
+        if (locationPath === "/Register") {
             const script = document.createElement('script');
-            script.src = './src/ScriptFriendRequest.js';
-            script.onload = function() {
-                // Asegurarse de que la función de inicialización de friends se ejecuta
-                if (typeof window.initScriptFriendRequest === 'function') {
-                    window.initScriptFriendRequest();
-                }
-            };
+            script.src = './src/Register.js';
             document.body.appendChild(script);
         }
-        if (locationPath === "/DeleteFriend") {
-            const script = document.createElement('script');
-            script.src = './src/DeleteFriend.js';
-            script.onload = function() {
-                // Asegurarse de que la función de inicialización de friends se ejecuta
-                if (typeof window.initDeleteFriendScript === 'function') {
-                    window.initDeleteFriendScript();
-                }
-            };
-            document.body.appendChild(script);
-        }
-        if (locationPath === "/UnlockedFriend") {
-            const script = document.createElement('script');
-            script.src = './src/UnlockedFriend.js';
-            script.onload = function() {
-                // Asegurarse de que la función de inicialización de friends se ejecuta
-                if (typeof window.initUnlockedFriendScript === 'function') {
-                    window.initUnlockedFriendScript();
-                }
-            };
-            document.body.appendChild(script);
+        if (locationPath === "/Login") {
+            initSignIn();
         }
 
-        if (locationPath === "/RequestPending") {
+        if (locationPath === "/SearchUser") {
             const script = document.createElement('script');
-            script.src = './src/RequestPending.js';
+            script.src = './src/SearchUser.js';
+            script.onload = function() {
+                if (typeof window.initListSearch === 'function') {
+                    window.initListSearch();
+                }
+            };
             document.body.appendChild(script);
-        }        
-
+        }
         if (locationPath === "/SignOut") {
             const script = document.createElement('script');
             script.src = './src/SignOut.js';
@@ -543,6 +506,9 @@ async function loadWindowLocation() {
                 }
             };
             document.body.appendChild(script);
+        }
+        if (locationPath === "/SinglePlayerIA") {
+            initializeGameIA();
         }
         if (route.script) {
             const script = document.createElement('script');
@@ -557,14 +523,11 @@ async function loadWindowLocation() {
             };
             document.body.appendChild(script);
         }
-        if (locationPath === "/SinglePlayerIA") {
-            initializeGameIA();
-        }
         const loginLink = document.getElementById("login-link");
         const registerLink = document.getElementById("register-link");
         const profileLink = document.getElementById("profile-link");
         const signoutLink = document.getElementById("signout-link");
-        const ListSearchLink = document.getElementById("ListSearch-link");
+        const ListSearchLink = document.getElementById("SearchUser-link");
         const FriendMenu = document.getElementById("Friends-Menu");
 
 		const retrievedToken = localStorage.getItem("accessToken");
