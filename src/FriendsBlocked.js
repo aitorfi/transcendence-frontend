@@ -70,7 +70,7 @@ function initFriendsBlocked() {
             unblockButton.classList.add('btn', 'btn-danger', 'btn-sm', 'text-white', 'spa-route');
             unblockButton.setAttribute('data-path', '/UnlockedFriend');
             unblockButton.style.border = 'solid black';
-            unblockButton.innerHTML = '<b class="spa-route" data-path="/ExecuteUnblockedFriend">Unlock</b>';
+            unblockButton.innerHTML = '<b class="spa-route" data-path="/ExecuteUnblockedFriend">Unblock</b>';
 
             rightDiv.appendChild(unblockButton);
             unblockButton.addEventListener('click', () => SetToUnblockFriend(friend.id, friend.username));
