@@ -194,6 +194,7 @@ async function delete_friend_from_FriendsWaiting(userId) {
             rightDiv.appendChild(noButton);
 
             yesButton.addEventListener('click', () => Add_Friend_Final(friend.id));
+            noButton.addEventListener('click',() => delete_friend_from_requestList(friend.id));
 
             // Añadir las dos partes al list item
             listItem.appendChild(leftDiv);
