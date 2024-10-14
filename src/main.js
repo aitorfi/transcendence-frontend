@@ -484,6 +484,18 @@ async function loadWindowLocation() {
             };
             document.body.appendChild(script);
         }
+        if (locationPath === "/DeleteFriend") {
+            const script = document.createElement('script');
+            script.src = './src/DeleteFriend.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initDeleteFriendScript === 'function') {
+                    window.initDeleteFriendScript();
+                }
+            };
+            document.body.appendChild(script);
+        }
+
         if (locationPath === "/RequestPending") {
             const script = document.createElement('script');
             script.src = './src/RequestPending.js';
