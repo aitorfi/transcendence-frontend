@@ -126,11 +126,17 @@ const ROUTES = {
         title: "Home | " + DEFAULT_PAGE_TITLE,
         description: "This is the home page",
     },
-    "/Profile": {
-        template: "../templates/Profile.html",
-        title: "Profile | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Profile page",
-        script: "./src/Profile.js"
+    "/PrivateProfile": {
+        template: "../templates/PrivateProfile.html",
+        title: "PrivateProfile | " + DEFAULT_PAGE_TITLE,
+        description: "This is the PrivateProfile page",
+        script: "./src/PrivateProfile.js"
+    },
+    "/PublicProfile": {
+        template: "../templates/PublicProfile.html",
+        title: "PublicProfile | " + DEFAULT_PAGE_TITLE,
+        description: "This is the PublicProfile page",
+        //script: "./src/Profile.js"
     },
     "/Register": {
         template: "../templates/Register.html",
@@ -465,9 +471,9 @@ async function loadWindowLocation() {
         if (locationPath === "/LocalMultiplayer") {
             initializeGame();
         }
-		if (locationPath === "/Profile") {
+		if (locationPath === "/PrivateProfile") {
 			const script = document.createElement('script');
-			script.src = './src/Profile.js';
+			script.src = './src/PrivateProfile.js';
 			script.onload = function() {
 				if (typeof window.initProfile === 'function') {
 					window.initProfile();
