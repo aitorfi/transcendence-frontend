@@ -111,7 +111,7 @@ function initListSearch() {
     
             // Check if the match is already a friend
             const isFriend = friendsArray.some(friend => friend.id === match.user__id);
-    
+            
             // Only add the 'ADD' button if the user is not already a friend
             if (!isFriend) {
                 const addButton = document.createElement('button');
@@ -125,6 +125,9 @@ function initListSearch() {
     
                 item.appendChild(addButton);
             }
+            //si quitamos el comentario si eres amigo no sale en searchUser
+/*             else
+                return; */
     
             resultsContainer.appendChild(item);
         });
