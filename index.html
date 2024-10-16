@@ -24,8 +24,20 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active spa-route" aria-current="page" href="/TournamentInterface">Tournaments</a>
+                    <li class="nav-item dropdown" id="Friends-Menu">
+                        <a class="nav-link dropdown-toggle" href="#" id="friendsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <!-- Aquí agregamos el ícono de MSN Messenger junto a "Friends" -->
+                            <i class="bi bi-trophy-fill"></i>
+                            <!-- Friends -->
+                        </a>
+                        <ul class="dropdown-menu friends-dropdown-menu text-center" aria-labelledby="friendsDropdown">
+                            <li><a class="dropdown-item spa-route" href="/Match4Management">Match 4</a></li>
+                            <li><a class="dropdown-item spa-route" href="/Match2Management">1 Vs 1</a></li>
+                            <li><a class="dropdown-item spa-route" href="/TournamentInterface">Tournaments</a></li>
+                            <li><a class="dropdown-item spa-route" href="/TournamentAvailable">Tour.. Available</a></li>
+                            <li><a class="dropdown-item spa-route" href="/TournamentReady">Tour.. Ready</a></li>
+                            <li><a class="dropdown-item spa-route" href="/TournamentInterface">Tournaments</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active spa-route" aria-current="page" href="/PublicProfile">Public Profile</a>
