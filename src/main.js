@@ -106,6 +106,16 @@ const ROUTES = {
         title: "Single Game | " + DEFAULT_PAGE_TITLE,
         description: "This is the Single Game page for the Pong Game",
     },
+    "/Match4Management": {
+        template: "../templates/Match4Management.html",
+        title: "Match 4 | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Tournaments Match 4 page for the Pong Game",
+    },
+    "/Match2Management": {
+        template: "../templates/Match2Management.html",
+        title: "Match 4 | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Tournaments Match 2 page for the Pong Game",
+    },
     "/LocalMultiplayer": {
         template: "../templates/LocalGame.html",
         title: "Local Game | " + DEFAULT_PAGE_TITLE,
@@ -159,13 +169,21 @@ const ROUTES = {
         title: "Tournament | " + DEFAULT_PAGE_TITLE,
         description: "This is the Tournament page for the Pong Game",
     },
+    "/TournamentAvailable": {
+        template: "../templates/TournamentAvailable.html",
+        title: "Tournaments Availabe | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Tournaments Available page for the Pong Game",
+    },
     "/TournamentInterface": {
         template: "../templates/TournamentInterface.html",
         title: "Tournaments | " + DEFAULT_PAGE_TITLE,
         description: "This is the Tournaments page for the Pong Game",
     },
-
-
+    "/TournamentReady": {
+        template: "../templates/TournamentReady.html",
+        title: "Tournaments Ready | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Tournaments Ready page for the Pong Game",
+    },
 
 };
 
@@ -471,6 +489,28 @@ async function loadWindowLocation() {
         if (locationPath === "/LocalMultiplayer") {
             initializeGame();
         }
+        if (locationPath === "/Match2Management") {
+            const script = document.createElement('script');
+            script.src = './src/Match2Management.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initMatch2Management === 'function') {
+                    window.initMatch2Management();
+                }
+            };
+            document.body.appendChild(script);
+        }
+        if (locationPath === "/Match4Management") {
+            const script = document.createElement('script');
+            script.src = './src/Match4Management.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initMatch4Management === 'function') {
+                    window.initMatch4Management();
+                }
+            };
+            document.body.appendChild(script);
+        } 
 		if (locationPath === "/PrivateProfile") {
 			const script = document.createElement('script');
 			script.src = './src/PrivateProfile.js';
@@ -515,6 +555,39 @@ async function loadWindowLocation() {
         }
         if (locationPath === "/SinglePlayerIA") {
             initializeGameIA();
+        }
+        if (locationPath === "/TournamentAvailable") {
+            const script = document.createElement('script');
+            script.src = './src/TournamentAvailable.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initTournamentAvailable === 'function') {
+                    window.initTournamentAvailable();
+                }
+            };
+            document.body.appendChild(script);
+        }
+        if (locationPath === "/TournamentInterface") {
+            const script = document.createElement('script');
+            script.src = './src/TournamentInterface.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initCreateTournament === 'function') {
+                    window.initCreateTournament();
+                }
+            };
+            document.body.appendChild(script);
+        }
+        if (locationPath === "/TournamentReady") {
+            const script = document.createElement('script');
+            script.src = './src/TournamentReady.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initTournamentReady === 'function') {
+                    window.initTournamentReady();
+                }
+            };
+            document.body.appendChild(script);
         }
         if (route.script) {
             const script = document.createElement('script');
