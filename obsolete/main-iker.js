@@ -204,7 +204,7 @@ async function loadWindowLocation() {
         // Ocultar/mostrar enlaces en el menú según el estado de Navbar
         const loginLink = document.getElementById("login-link");
         const registerLink = document.getElementById("register-link");
-        const profileLink = document.getElementById("profile-link");
+        const profileLink = document.getElementById("Private-profile-link");
         const signoutLink = document.getElementById("signout-link");
         const friendsLink = document.getElementById("friends-link"); // Añadido
         const ListSearchLink = document.getElementById("ListSearch-link"); // Añadido
