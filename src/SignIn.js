@@ -55,7 +55,7 @@ async function handleSignIn(event) {
                         const twoFactorData = await twoFactorResponse.json();
                         localStorage.setItem('accessToken', twoFactorData.access);
                         localStorage.setItem('refreshToken', twoFactorData.refresh);
-                        window.history.pushState({}, "", "/Profile");
+                        window.history.pushState({}, "", "/PrivateProfile");
                         window.dispatchEvent(new PopStateEvent('popstate'));
                     } else {
                         alert('Invalid 2FA code');
@@ -64,7 +64,7 @@ async function handleSignIn(event) {
             } else {
                 localStorage.setItem('accessToken', data.access);
                 localStorage.setItem('refreshToken', data.refresh);
-                window.history.pushState({}, "", "/Profile");
+                window.history.pushState({}, "", "/PrivateProfile");
                 window.dispatchEvent(new PopStateEvent('popstate'));
                 window.dispatchEvent(new Event('locationchange'));
             }
