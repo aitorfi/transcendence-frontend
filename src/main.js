@@ -4,6 +4,47 @@ import { initializeGame, terminateGame } from "./LocalMultiplayer.js"
 import { initializeGameIA, terminateGameIA } from "./SinglePlayerIA.js"
 import { initSignIn } from './SignIn.js';
 
+function isUserLoggedIn() {
+    const token = localStorage.getItem('accessToken');
+
+    if (isTokenValid(token)) {
+        console.log ("El usuario esta logeado");
+        return 1;
+    } else {
+        console.log ("El usuario NO esta logeado");
+        return 0;
+    }
+}
+function isTokenValid(token) {
+    if (!token) {
+        return false;
+    }
+
+    // Dividir el token en sus tres partes
+    const [header, payload, signature] = token.split('.');
+
+    if (!header || !payload || !signature) {
+        return false;
+    }
+
+    try {
+        // Decodificar el payload
+        const decodedPayload = JSON.parse(atob(payload));
+
+        // Comprobar la expiración
+        const currentTime = Math.floor(Date.now() / 1000);
+        if (decodedPayload.exp && decodedPayload.exp < currentTime) {
+            console.log('Token has expired');
+            return false;
+        }
+
+        // El token parece válido
+        return true;
+    } catch (error) {
+        console.error('Error decoding token:', error);
+        return false;
+    }
+}
 
 async function getid() {
     const token = localStorage.getItem("accessToken");
@@ -444,7 +485,7 @@ async function loadWindowLocation() {
 
 
         if (locationPath === "/") {
-            if (isUserHomeIn()) {
+            if (isUserLoggedIn()) {
                 window.history.replaceState({}, "", "/Home");
                 loadWindowLocation();
                 return; // Importante: salir de la función después de la redirección
