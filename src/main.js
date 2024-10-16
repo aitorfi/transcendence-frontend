@@ -574,6 +574,18 @@ async function loadWindowLocation() {
 				}
 			};
 			document.body.appendChild(script);
+		}
+        if (locationPath === "/PublicProfile") {
+			const script = document.createElement('script');
+			script.src = './src/PublicProfile.js';
+			script.onload = function() {
+				if (typeof window.initPublicProfile === 'function') {
+					window.initPublicProfile();
+				} else {
+					console.error('initProfile function not found');
+				}
+			};
+			document.body.appendChild(script);
 		}	
 
         if (locationPath === "/Register") {
