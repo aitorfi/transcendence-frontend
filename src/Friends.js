@@ -105,6 +105,7 @@ function initFriends() {
 
             const friendName = document.createElement('p');
             friendName.classList.add('mb-0');
+            friendName.style.fontWeight = 'bold';
             friendName.textContent = friend.username;
 
             leftDiv.appendChild(removeButton);
@@ -123,7 +124,7 @@ function initFriends() {
                 blockButton.classList.add('btn', 'btn-danger', 'btn-sm', 'me-2', 'spa-route');
                 blockButton.setAttribute('data-path', '/ExecuteBlockFriend');
                 blockButton.style.border = 'solid black';
-                blockButton.style.width = '60px';
+                blockButton.style.width = '65px';
                 blockButton.innerHTML = '<b class="spa-route" data-path="/ExecuteBlockFriend">Block</b>';
 
                 blockButton.addEventListener('click', () => setBlockFriend(friend.id, friend.username));
@@ -134,20 +135,41 @@ function initFriends() {
                 chatButton.classList.add('btn', 'btn-success', 'btn-sm', 'me-2', 'spa-route');
                 chatButton.setAttribute('data-path', '/Chat');
                 chatButton.style.border = 'solid black';
-                chatButton.style.width = '60px';
+                chatButton.style.width = '65px';
                 chatButton.innerHTML = '<b class="spa-route" data-path="/Chat">Chat</b>';
                 
                 // Botón Match
                 const matchButton = document.createElement('button');
-                matchButton.classList.add('btn', 'btn-warning', 'btn-sm', 'text-white', 'spa-route');
+                matchButton.classList.add('btn', 'btn-warning', 'btn-sm', 'me-2', 'text-white', 'spa-route');
                 matchButton.setAttribute('data-path', '/LocalMultiplayer');
                 matchButton.style.border = 'solid black';
-                matchButton.style.width = '60px';
+                matchButton.style.width = '65px';
                 matchButton.innerHTML = '<b class="spa-route" data-path="/Chat">Match</b>';
                 
+                // Botón Profile
+                const ProfileButton = document.createElement('button');
+                ProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'me-2', 'spa-route');
+                ProfileButton.setAttribute('data-path', '/PublicProfile');
+                ProfileButton.style.border = 'solid black';
+                ProfileButton.style.width = '65px';
+                ProfileButton.innerHTML = '<b class="spa-route" data-path="/PublicProfile">Profile</b>';
+
+
                 // Añadir los botones a la parte derecha
                 rightDiv.appendChild(chatButton);
                 rightDiv.appendChild(matchButton);
+                rightDiv.appendChild(ProfileButton);
+            }
+            else
+            {
+                const ProfileButton = document.createElement('button');
+                ProfileButton.classList.add('btn', 'btn-primary', 'btn-sm', 'me-2', 'spa-route');
+                ProfileButton.setAttribute('data-path', '/PublicProfile');
+                ProfileButton.style.border = 'solid black';
+                ProfileButton.style.width = '65px';
+                ProfileButton.innerHTML = '<b class="spa-route" data-path="/PublicProfile">Profile</b>';
+
+                rightDiv.appendChild(ProfileButton);
             }
 
             // Añadir ambas partes al list item
