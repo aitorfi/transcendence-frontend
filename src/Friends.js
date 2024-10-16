@@ -128,27 +128,27 @@ function initFriends() {
 
                 blockButton.addEventListener('click', () => setBlockFriend(friend.id, friend.username));
                 rightDiv.appendChild(blockButton);
+                
+                // Botón Chat
+                const chatButton = document.createElement('button');
+                chatButton.classList.add('btn', 'btn-success', 'btn-sm', 'me-2', 'spa-route');
+                chatButton.setAttribute('data-path', '/Chat');
+                chatButton.style.border = 'solid black';
+                chatButton.style.width = '60px';
+                chatButton.innerHTML = '<b class="spa-route" data-path="/Chat">Chat</b>';
+                
+                // Botón Match
+                const matchButton = document.createElement('button');
+                matchButton.classList.add('btn', 'btn-warning', 'btn-sm', 'text-white', 'spa-route');
+                matchButton.setAttribute('data-path', '/LocalMultiplayer');
+                matchButton.style.border = 'solid black';
+                matchButton.style.width = '60px';
+                matchButton.innerHTML = '<b class="spa-route" data-path="/Chat">Match</b>';
+                
+                // Añadir los botones a la parte derecha
+                rightDiv.appendChild(chatButton);
+                rightDiv.appendChild(matchButton);
             }
-
-            // Botón Chat
-            const chatButton = document.createElement('button');
-            chatButton.classList.add('btn', 'btn-success', 'btn-sm', 'me-2', 'spa-route');
-            chatButton.setAttribute('data-path', '/Chat');
-            chatButton.style.border = 'solid black';
-            chatButton.style.width = '60px';
-            chatButton.innerHTML = '<b class="spa-route" data-path="/Chat">Chat</b>';
-
-            // Botón Match
-            const matchButton = document.createElement('button');
-            matchButton.classList.add('btn', 'btn-warning', 'btn-sm', 'text-white', 'spa-route');
-            matchButton.setAttribute('data-path', '/LocalMultiplayer');
-            matchButton.style.border = 'solid black';
-            matchButton.style.width = '60px';
-            matchButton.innerHTML = '<b class="spa-route" data-path="/Chat">Match</b>';
-
-            // Añadir los botones a la parte derecha
-            rightDiv.appendChild(chatButton);
-            rightDiv.appendChild(matchButton);
 
             // Añadir ambas partes al list item
             listItem.appendChild(leftDiv);

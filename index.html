@@ -24,7 +24,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown" id="Friends-Menu">
+                    <li class="nav-item dropdown" id="Tournaments-Menu">
                         <a class="nav-link dropdown-toggle" href="#" id="friendsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <!-- Aquí agregamos el ícono de MSN Messenger junto a "Friends" -->
                             <i class="bi bi-trophy-fill"></i>
@@ -44,10 +44,12 @@
                     </li>
                 </ul>      
                     <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active spa-route bi bi-search icon" aria-current="page" href="/SearchUser" id="SearchUser-link" style="font-size: 30px; color: #007bff;"></a>
+                        </li>
                         <li class="nav-item dropdown" id="Friends-Menu">
                             <a class="nav-link dropdown-toggle" href="#" id="friendsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <!-- Aquí agregamos el ícono de MSN Messenger junto a "Friends" -->
-                                <img src="./templates/msn-logo.png" style="width: 25px; height: 25px; margin-right: 5px;">
+                                <i class="bi bi-person" style="font-size: 40px; color: #007bff;"></i> <!-- Cambié aquí el tamaño y el color -->
                                 <!-- Friends -->
                             </a>
                             <ul class="dropdown-menu friends-dropdown-menu text-center" aria-labelledby="friendsDropdown">
@@ -58,8 +60,10 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active spa-route" aria-current="page" href="/SearchUser" id="SearchUser-link"><!-- Find User --></a>
-                            <img src="./templates/lupa.png" alt="Search" style="width: 20px; height: 20px; margin-right: 5px;">
+                            <a class="nav-link active spa-route" aria-current="page" href="/PrivateProfile" id="Private-profile-link">
+                                <img class="spa-route" data-path="/PrivateProfile" src="" id="id-avatar" style="width: 40px; height: 40px; ;">
+                            </a>
+                            <b class="spa-route" data-path="/PrivateProfile" id="id-username" style="display: block; text-align: center;"></b>
                         </li>
 
 <!--                         <li class="nav-link active spa-route" aria-current="page" href="/SearchUser" id="SearchUser-link">
@@ -67,25 +71,27 @@
                             Find User
                         </li> -->
                         
-                        <li class="nav-item">
-                            <a class="nav-link active spa-route" aria-current="page" href="/PrivateProfile" id="profile-link"><b class="spa-route" data-path="/PrivateProfile">Profile</b></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active spa-route" aria-current="page" href="/SignOut" id="signout-link"><b class="spa-route" data-path="/SignOut">Sign out</b></a>
-                        </li>
+
+                        
                         <li class="nav-item">
                             <a class="nav-link active spa-route" aria-current="page" href="/Register" id="register-link"><b class="spa-route" data-path="/Register">Register</b></a>
                         </li>                                                                                                                                <!-- hemos puesto en necrita con <b -->
-                        <li class="nav-item">
-                            <a class="nav-link active spa-route" aria-current="page" href="/Login" id="login-link" style="font-weight: bold;" >Login</a> <!-- hemos puesto en negrita con fontstyle -->
-                        </li>
-                    </ul>
-            </div>
-        </div>
-    </nav>
-    <main id="spa-template-content"></main>
-    <footer>
-        Pong Transcendence Game
-    </footer>
+                            <li class="nav-item">
+                                <a class="nav-link active spa-route" aria-current="page" href="/Login" id="login-link" style="font-weight: bold;" >Login</a> <!-- hemos puesto en negrita con fontstyle -->
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn btn-danger me-2" aria-current="page" href="/SignOut" id="signout-link" style="width: 40px; height: 40px; margin-top: 15px;">
+                                    <i class="bi bi-power spa-route"  data-path="/SignOut"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <main id="spa-template-content"></main>
+            <footer>
+                Pong Transcendence Game
+            </footer>
 </body>
 </html>
+
