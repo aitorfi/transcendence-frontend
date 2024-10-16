@@ -658,7 +658,7 @@ async function loadWindowLocation() {
         const registerLink = document.getElementById("register-link");
         const profileLink = document.getElementById("Private-profile-link");
         const avatarlink = document.getElementById("id-avatar");
-        const avatarName = document.getElementById("name-avatar");
+        const avatarName = document.getElementById("id-username");
         const signoutLink = document.getElementById("signout-link");
         const ListSearchLink = document.getElementById("SearchUser-link");
         const FriendMenu = document.getElementById("Friends-Menu");
