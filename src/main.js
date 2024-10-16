@@ -5,6 +5,58 @@ import { initializeGameIA, terminateGameIA } from "./SinglePlayerIA.js"
 import { initSignIn } from './SignIn.js';
 
 
+async function getid() {
+    const token = localStorage.getItem("accessToken");
+    try {
+        const response = await fetch('http://localhost:50000/api/test-token/', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const user = await response.json();
+        console.log("XXXXXXXXXX->", user);
+        return user/* .user_id */;
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+        return [];
+    }  
+}
+
+async function getusername(id){
+    return id.username;
+}
+    
+async function getAvatar(id) {
+    const token = localStorage.getItem("accessToken");
+    try {
+        const response = await fetch(`http://localhost:50000/api/users/avatar/${id}/`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        //const userNameId = await response.json();
+        console.log("XXXXXXXXXXXXXXX--->>>>",response.url);
+        return response.url;
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+        return [];
+    }
+}
+
 function isUserHomeIn() {
     const token = localStorage.getItem('accessToken');
     if (!token) {
@@ -531,8 +583,16 @@ async function loadWindowLocation() {
         const FriendMenu = document.getElementById("Friends-Menu");
 
 		const retrievedToken = localStorage.getItem("accessToken");
+
+
         // Lógica para mostrar u ocultar elementos del menú
         if (retrievedToken) {
+            let id = await getid();
+
+            let avatar = await getAvatar(id.user_id)
+            document.getElementById('id-avatar').setAttribute("src", avatar);
+            document.getElementById('id-username').textContent = id.username; // .innerHTML o .textContent valen las 2
+            console.log("id.username-->", id.username);
             if (loginLink) loginLink.parentElement.style.display = 'none';
             if (registerLink) registerLink.parentElement.style.display = 'none';
             if (profileLink) profileLink.parentElement.style.display = '';
@@ -552,4 +612,5 @@ async function loadWindowLocation() {
     } catch (error) {
         console.error('Error fetching template:', error);
     }
+    
 }
