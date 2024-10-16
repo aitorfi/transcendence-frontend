@@ -23,12 +23,18 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown" id="Tournaments-Menu">
+                <!-- Lista de la izquierda -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link active spa-route" aria-current="page" href="/PublicProfile">Public Profile</a>
+                    </li>
+                </ul>      
+
+                <!-- Lista de la derecha -->
+                <ul class="navbar-nav mb-2 mb-lg-0 ms-auto align-items-center">
+                    <li class="nav-item dropdown ms-3" id="Tournaments-Menu">
                         <a class="nav-link dropdown-toggle" href="#" id="friendsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <!-- Aquí agregamos el ícono de MSN Messenger junto a "Friends" -->
-                            <i class="bi bi-trophy-fill"></i>
-                            <!-- Friends -->
+                            <i class="bi bi-trophy" style="font-size: 25px; color: black;"></i>
                         </a>
                         <ul class="dropdown-menu friends-dropdown-menu text-center" aria-labelledby="friendsDropdown">
                             <li><a class="dropdown-item spa-route" href="/Match4Management">Match 4</a></li>
@@ -39,59 +45,50 @@
                             <li><a class="dropdown-item spa-route" href="/TournamentInterface">Tournaments</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active spa-route" aria-current="page" href="/PublicProfile">Public Profile</a>
+
+                    <li class="nav-item ms-3">
+                        <a class="nav-link active spa-route" aria-current="page" href="/SearchUser" id="SearchUser-link">
+                            <i class="bi bi-search spa-route" data-path="/SearchUser" style="font-size: 27px;"></i>
+                        </a>
                     </li>
-                </ul>      
-                    <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link active spa-route bi bi-search icon" aria-current="page" href="/SearchUser" id="SearchUser-link" style="font-size: 30px; color: #007bff;"></a>
-                        </li>
-                        <li class="nav-item dropdown" id="Friends-Menu">
-                            <a class="nav-link dropdown-toggle" href="#" id="friendsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-person" style="font-size: 40px; color: #007bff;"></i> <!-- Cambié aquí el tamaño y el color -->
-                                <!-- Friends -->
-                            </a>
-                            <ul class="dropdown-menu friends-dropdown-menu text-center" aria-labelledby="friendsDropdown">
-                                <li><a class="dropdown-item spa-route" href="/Friends">All Friends</a></li>
-                                <li><a class="dropdown-item spa-route" href="/FriendsWait">Friends Waiting</a></li>
-                                <li><a class="dropdown-item spa-route" href="/FriendsBlocked">Blocked Friends</a></li>
-                                <li><a class="dropdown-item spa-route" href="/FriendsRequest">Friend Requests</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active spa-route" aria-current="page" href="/PrivateProfile" id="Private-profile-link">
-                                <img class="spa-route" data-path="/PrivateProfile" src="" id="id-avatar" style="width: 40px; height: 40px; ;">
-                            </a>
-                            <b class="spa-route" data-path="/PrivateProfile" id="id-username" style="display: block; text-align: center;"></b>
-                        </li>
 
-<!--                         <li class="nav-link active spa-route" aria-current="page" href="/SearchUser" id="SearchUser-link">
-                            <img src="./templates/lupa.png" alt="Search" style="width: 20px; height: 20px; margin-right: 5px;">
-                            Find User
-                        </li> -->
-                        
-
-                        
-                        <li class="nav-item">
-                            <a class="nav-link active spa-route" aria-current="page" href="/Register" id="register-link"><b class="spa-route" data-path="/Register">Register</b></a>
-                        </li>                                                                                                                                <!-- hemos puesto en necrita con <b -->
-                            <li class="nav-item">
-                                <a class="nav-link active spa-route" aria-current="page" href="/Login" id="login-link" style="font-weight: bold;" >Login</a> <!-- hemos puesto en negrita con fontstyle -->
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link btn btn-danger me-2" aria-current="page" href="/SignOut" id="signout-link" style="width: 40px; height: 40px; margin-top: 15px;">
-                                    <i class="bi bi-power spa-route"  data-path="/SignOut"></i>
-                                </a>
-                            </li>
+                    <li class="nav-item dropdown ms-3" id="Friends-Menu">
+                        <a class="nav-link dropdown-toggle" href="#" id="friendsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person" style="font-size: 32px; color: black;"></i>
+                        </a>
+                        <ul class="dropdown-menu friends-dropdown-menu text-center" aria-labelledby="friendsDropdown">
+                            <li><a class="dropdown-item spa-route" href="/Friends">All Friends</a></li>
+                            <li><a class="dropdown-item spa-route" href="/FriendsWait">Friends Waiting</a></li>
+                            <li><a class="dropdown-item spa-route" href="/FriendsBlocked">Blocked Friends</a></li>
+                            <li><a class="dropdown-item spa-route" href="/FriendsRequest">Friend Requests</a></li>
                         </ul>
-                    </div>
-                </div>
-            </nav>
-            <main id="spa-template-content"></main>
-            <footer>
-                Pong Transcendence Game
-            </footer>
+                    </li>
+
+                    <li class="nav-item d-flex align-items-center ms-1">
+                        <a class="nav-link active spa-route" href="/PrivateProfile" id="Private-profile-link">
+                            <img class="spa-route rounded-circle mt-3" data-path="/PrivateProfile"  src="" id="id-avatar" style="width: 30px; height: 30px; border: solid black;">
+                            <p class="spa-route mb-0" id="id-username" data-path="/PrivateProfile" style="text-align: center;"></p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-3">
+                        <a class="nav-link active spa-route" aria-current="page" href="/Register" id="register-link" style="font-weight: bold;">Register</a>
+                    </li>
+
+                    <li class="nav-item ms-3">
+                        <a class="nav-link active spa-route" aria-current="page" href="/Login" id="login-link" style="font-weight: bold;">Login</a>
+                    </li>
+
+                    <li class="nav-item ms-2">
+                        <i class="bi bi-power spa-route" data-path="/SignOut" style="font-size: 32px;" id="signout-link"></i>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main id="spa-template-content"></main>
+    <footer>
+        Pong Transcendence Game
+    </footer>
 </body>
 </html>
-

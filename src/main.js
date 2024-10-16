@@ -657,6 +657,7 @@ async function loadWindowLocation() {
         const loginLink = document.getElementById("login-link");
         const registerLink = document.getElementById("register-link");
         const profileLink = document.getElementById("Private-profile-link");
+        const avatarlink = document.getElementById("id-avatar");
         const signoutLink = document.getElementById("signout-link");
         const ListSearchLink = document.getElementById("SearchUser-link");
         const FriendMenu = document.getElementById("Friends-Menu");
@@ -681,6 +682,7 @@ async function loadWindowLocation() {
             if (ListSearchLink) ListSearchLink.style.display = ''; 
             if (FriendMenu) FriendMenu.style.display = '';
             if (TournamentsMenu) TournamentsMenu.style.display = '';
+            if (avatarlink) avatarlink.style.display = '';
         } else if (!retrievedToken) {
             
             if (loginLink) loginLink.parentElement.style.display = '';
@@ -690,6 +692,7 @@ async function loadWindowLocation() {
             if (ListSearchLink) ListSearchLink.style.display = 'none'; 
             if (FriendMenu) FriendMenu.style.display = 'none';
             if (TournamentsMenu) TournamentsMenu.style.display = 'none';
+            if (avatarlink) avatarlink.style.display = 'none';
         }
 
     } catch (error) {
