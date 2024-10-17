@@ -35,12 +35,14 @@ export async function button(b)
 
 }
 
-export function join()
+export async function join()
 {
+    const id = localStorage.getItem('id-online');
+    console.log("id online: ", id);
     if (socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify({
                             type: "join_game",
-                            user_id: "12"
+                            user_id: id
                         }));
     }
 }

@@ -748,7 +748,7 @@ async function loadWindowLocation() {
         // Lógica para mostrar u ocultar elementos del menú
         if (retrievedToken) {
             let id = await getid();
-
+            localStorage.setItem('id-online', id.user_id);
             let avatar = await getAvatar(id.user_id)
             document.getElementById('id-avatar').setAttribute("src", avatar);
             document.getElementById('id-username').textContent = id.username; // .innerHTML o .textContent valen las 2
