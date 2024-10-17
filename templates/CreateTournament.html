@@ -1,0 +1,29 @@
+<div class="container mt-5">
+    <div class="card mx-auto mb-4 border-dark" style="max-width: 500px;">
+        <div class="card-header text-center bg-dark" style="color: #f6f8fa;">
+            <h5><b>Create Tournament</b></h5>
+        </div>
+        <div class="card-body">
+            <form id="createTournamentForm">
+                <div class="mb-3">
+                    <label for="tournamentName" class="form-label"><b>Tournament Name</b></label>
+                    <input type="text" class="form-control" id="tournamentName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="maxParticipants" class="form-label"><b>Participants</b></label>
+                    <select class="form-select" id="maxParticipants" required>
+                        <option value="2" selected>2 players</option>
+                        <option value="4">4 players</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="startDate" class="form-label"><b>Start Date</b></label>
+                    <input type="datetime-local" class="form-control" id="startDate" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Create Tournament</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

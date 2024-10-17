@@ -231,6 +231,11 @@ const ROUTES = {
         title: "Tournaments | " + DEFAULT_PAGE_TITLE,
         description: "This is the Tournaments page for the Pong Game",
     },
+    "/CreateTournament": {
+        template: "../templates/CreateTournament.html",
+        title: "CreateTournament | " + DEFAULT_PAGE_TITLE,
+        description: "This is the CreateTournament page for the Pong Game",
+    },
     "/TournamentReady": {
         template: "../templates/TournamentReady.html",
         title: "Tournaments Ready | " + DEFAULT_PAGE_TITLE,
@@ -637,6 +642,17 @@ async function loadWindowLocation() {
                 // Asegurarse de que la función de inicialización de friends se ejecuta
                 if (typeof window.initTournamentReady === 'function') {
                     window.initTournamentReady();
+                }
+            };
+            document.body.appendChild(script);
+        }
+        if (locationPath === "/CreateTournament") {
+            const script = document.createElement('script');
+            script.src = './src/CreateTournament.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initTournamentReady === 'function') {
+                    window.initCreateTournament();
                 }
             };
             document.body.appendChild(script);
