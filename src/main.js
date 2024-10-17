@@ -3,6 +3,9 @@
 import { initializeGame, terminateGame } from "./LocalMultiplayer.js"
 import { initializeGameIA, terminateGameIA } from "./SinglePlayerIA.js"
 import { initSignIn } from './SignIn.js';
+import { onlineInitializeGame } from './game.js';
+
+
 
 function isUserLoggedIn() {
     const token = localStorage.getItem('accessToken');
@@ -234,6 +237,12 @@ const ROUTES = {
         title: "PrivateProfile | " + DEFAULT_PAGE_TITLE,
         description: "This is the PrivateProfile page",
         script: "./src/PrivateProfile.js"
+    },
+    "/OnlineMultiplayer": {
+        template: "../templates/LocalGame.html",
+        title: "OnlineMultiplayer | " + DEFAULT_PAGE_TITLE,
+        description: "This is the OnlineMultiplayer page",
+        script: "./src/game.js"
     },
     "/PublicProfile": {
         template: "../templates/PublicProfile.html",
@@ -603,8 +612,8 @@ async function loadWindowLocation() {
                 }
             };
             document.body.appendChild(script);
-        } 
-		if (locationPath === "/PrivateProfile") {
+        }
+        if (locationPath === "/PrivateProfile") {
 			const script = document.createElement('script');
 			script.src = './src/PrivateProfile.js';
 			script.onload = function() {
@@ -616,6 +625,21 @@ async function loadWindowLocation() {
 			};
 			document.body.appendChild(script);
 		}
+        if (locationPath === "/OnlineMultiplayer") {
+            onlineInitializeGame();
+        }
+/* 		if (locationPath === "/OnlineMultiplayer") {
+			const script = document.createElement('script');
+			script.src = './src/game.js';
+			script.onload = function() {
+				if (typeof window.initProfile === 'function') {
+					window.initProfile();
+				} else {
+					console.error('initProfile function not found');
+				}
+			};
+			document.body.appendChild(script);
+		} */
         if (locationPath === "/PublicProfile") {
 			const script = document.createElement('script');
 			script.src = './src/PublicProfile.js';
