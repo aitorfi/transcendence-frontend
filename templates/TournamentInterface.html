@@ -1,55 +1,34 @@
-
 <div class="container mt-5">
+    <!-- Card principal -->
     <div class="card mx-auto mb-4 border-dark" style="max-width: 500px;">
         <div class="card-header bg-dark d-flex justify-content-center align-items-center" style="color: #f6f8fa;">
-            <h5 class="mb-0"><b>Create tournament</b></h5>
+            <h5 class="mb-0"><b>Tournament:</b></h5>
         </div>
         <div class="card-body">
-            <form id="createTournamentForm">
-                <div class="mb-3">
-                    <label for="tournamentName" class="form-label"><b>Tournament Name</b></label>
-                    <input type="text" class="form-control" id="tournamentName" required>
+            <!-- Descripciones y botones A y B -->
+            <div class="d-flex justify-content-around mt-3">
+                <div class="container mt-2 spa-route" data-path="/OnlineMultiplayer" style="max-width: 500px;">
+                    <!-- Cuarto botón: Local Tournament -->
+                    <div class="d-flex align-items-center border rounded-2 p-2 mb-2 spa-route bg-dark" style="color: #f6f8fa; height: auto;" data-path="/OnlineMultiplayer">
+                        <i class="bi bi-joystick text-primary spa-route" style="font-size: 40px; margin-right: 10px;" data-path="/OnlineMultiplayer"></i>
+                        <div>
+                            <h5 class="mb-0 spa-route" data-path="/OnlineMultiplayer"><b class="spa-route" data-path="/OnlineMultiplayer">2 Players</b></h5>
+                            <small class="text-white spa-route" style="font-size: 10px;" data-path="/OnlineMultiplayer">Play a Match with other Player</small>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="maxParticipants" class="form-label"><b>Participants</b></label>
-                    <select class="form-select" id="maxParticipants" required>
-                        <option value="2" selected>2 players</option>
-                        <option value="4">4 players</option>
-                    </select>
+                <div class="container mt-2 spa-route" data-path="/OnlineMultiplayer" style="max-width: 500px;">
+                    <!-- Cuarto botón: Local Tournament -->
+                    <div class="d-flex align-items-center border rounded-2 p-2 mb-2 spa-route bg-dark" style="color: #f6f8fa; height: auto;" data-path="/MatchHistory">
+                        <i class="bi bi-controller text-warning spa-route" style="font-size: 40px; margin-right: 10px;" data-path="/MatchHistory"></i>
+                        <div>
+                            <h5 class="mb-0 spa-route" data-path="/OnlineMultiplayer"><b class="spa-route" data-path="/MatchHistory">4 Players</b></h5>
+                            <small class="text-white spa-route" style="font-size: 10px;" data-path="/MatchHistory">Play a Match a group of Friends</small>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="startDate" class="form-label"><b>Start Date</b></label>
-                    <input type="datetime-local" class="form-control" id="startDate" required>
-                </div>
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">Create Tournament</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="card mx-auto mb-4 border-dark" style="max-width: 500px;">
-        <div class="card-header bg-dark d-flex justify-content-center align-items-center" style="color: #f6f8fa;">
-            <h5 class="mb-0"><b>Your tournaments</b></h5>
-        </div>
-        <div class="card-body">
-            <ul class="list-group" id="tournamentsList">
-                <!-- Tournaments will be listed here -->
-            </ul>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="tournamentDetailsModal" tabindex="-1" aria-labelledby="tournamentDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="tournamentDetailsModalLabel">Tournament Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="tournamentDetailsBody">
-                <!-- Tournament details will be inserted here -->
             </div>
         </div>
     </div>
 </div>
+
