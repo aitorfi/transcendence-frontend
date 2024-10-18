@@ -22,6 +22,7 @@ export let Player1Points = 0;
 export let Player2Points = 0;
 export let Player1Name  = "Player 1";
 export let Player2Name  = "Player 2";
+export let serverTime;
 let coord;
 
 export async function button(b)
