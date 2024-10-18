@@ -432,7 +432,7 @@ function setBallSpeed()
 {
 	let ballDirSideways = getDirectionSideForBall();
 	let ballDirUpOrDown = getDirectionUpOrDownBall();
-	ballSpeedX = 4;
+	ballSpeedX = 6;
 	if (ballDirSideways == BALL_DIR_LEFT)
 		ballSpeedX = (-1) * ballSpeedX;
 	ballSpeedY = 1;
