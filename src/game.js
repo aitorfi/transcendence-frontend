@@ -1,7 +1,7 @@
 'use strict'
 
-import { getGamePositions, join, button } from "./com.js";
-import { game_state,ballx, bally, Player1Y, Player2Y, screen_mesagge, color, Player1Points, Player2Points, Player1Name, Player2Name } from "./com.js";
+import { join, button } from "./com.js";
+import { game_state,ballx, bally, Player1Y, Player2Y, screen_mesagge, color, Player1Points, Player2Points, serverTime, speedx, speedy } from "./com.js";
 //Game variables
 let canvas;
 let ctx;
@@ -11,11 +11,13 @@ let gameLoopId;
 let timeoutId;
 let player1Score;
 let player2Score;
-let wait;
-let finish;
-let gameCoord;
+//let wait;
+//let finish;
 let connect = 0;
+let latency;
 let x;
+let fX;
+let fY;
 
 
 //constants  
@@ -24,9 +26,7 @@ const BALL_SIZE = 10;
 const PADDLE_HEIGHT = 100;
 const PADDLE_WIDTH = 10;
 
-
-
-export function onlineInitializeGame() {
+export function initializeGame() {
 	canvas = document.getElementById('pongCanvas');
 	ctx = canvas.getContext('2d');
 	player1Up = false;
@@ -35,8 +35,8 @@ export function onlineInitializeGame() {
 	player2Down = false;
 	player1Score = 0;
 	player2Score = 0;
-	wait = false;
-	finish = false;
+	//wait = false;
+	//finish = false;
 
 
     document.addEventListener('keydown', (event) => {
@@ -50,7 +50,6 @@ export function onlineInitializeGame() {
 			button("downOn");
 			player1Down = true;
 		} 
-
     });
 
     document.addEventListener('keyup', (event) => {
@@ -63,22 +62,18 @@ export function onlineInitializeGame() {
 		{
 			button("downOff");
 			player1Down = false;
-		}
-		
+		}	
     });
 
 	const h1Element = document.querySelector('#pong-container h1');
 	  // Cambia el texto del h1
 	h1Element.textContent = 'Online Multiplayer';
 
-	wait = true;
-
-	gameCoord = [50, 50];
+	//wait = true;
 	
 	if (connect == 0)
 	{
 		join();
-		//join();
 		connect = 1;
 	}
 	//deactivateKeydown();
@@ -104,30 +99,24 @@ function gameLoop() {
 	refresh();	
 }
 
-
-/* function drawRect(x, y, w, h, color) {
-	ctx.fillStyle = color;
-	ctx.fillRect(x, y, w, h);
-}
-
-function drawBall(x, y, size, color) {
-	
-	ctx.fillStyle = color;
-	ctx.beginPath();
-	ctx.arc(x, y, size, 0, Math.PI * 2);
-	ctx.fill();
-} */
-
 function drawRect(x, y) {
 	ctx.fillStyle = 'white';
 	ctx.fillRect(x, y, 10, 100);
 }
 
-function drawBall(x, y) {
-	
+function drawBall() {
+	//console.log("Front time: ", Date.now() / 1000, "    Back time: ", serverTime)
+	//console.log("Speed X: ", speedx, "    Speed Y: ", speedy)
+	//console.log("latency: ", latency)
 	ctx.fillStyle = 'yellow';
 	ctx.beginPath();
-	ctx.arc(x, y, 10, 0, 6.28318);
+	
+	latency = (Date.now() / 1000) - serverTime;
+	fX = ballx + speedx * latency;
+	fY = bally + speedy * latency;
+	
+	ctx.arc(fX, fY, 10, 0, 6.28318);
+	//ctx.arc(ballx, bally, 10, 0, 6.28318);
 	ctx.fill();
 }
 
@@ -156,13 +145,14 @@ function drawCanva()
 	drawRect(0, Player1Y);
 	drawRect(590, Player2Y);
 	drawDashedLine();
-	drawBall(ballx, bally);
+	drawBall();
+	//drawBall(ballx, bally);
 }
 
 export function updateScore()
 {
-	document.getElementById('player1-score').textContent = Player1Name + ': ' + Player1Points;
-	document.getElementById('player2-score').textContent = Player2Name +': ' + Player2Points;
+	document.getElementById('player1-score').textContent = 'Player 1: ' + Player1Points;
+	document.getElementById('player2-score').textContent = 'Player 2: ' + Player2Points;
 }
 
 function refresh() {

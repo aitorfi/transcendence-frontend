@@ -16,17 +16,13 @@ export let ballx;
 export let bally;
 export let Player1Y;
 export let Player2Y;
+export let speedx;
+export let speedy;
 export let Player1Points = 0;
 export let Player2Points = 0;
 export let Player1Name  = "Player 1";
 export let Player2Name  = "Player 2";
 let coord;
-
-export function getGamePositions()
-{
-    coord = [ballx, bally, Player1Y, Player2Y];
-	return coord;
-}
 
 export async function button(b)
 {
@@ -65,6 +61,9 @@ socket.onmessage = function(event) {
         bally = mensaje.ballY;
         Player1Y = mensaje.player1Y;
         Player2Y = mensaje.player2Y;
+        serverTime = mensaje.time;
+        speedx = mensaje.speedX;
+        speedy = mensaje.speedY;
         //console.log("game update");
     }
     else if (mensaje.type == "start_game")
@@ -96,12 +95,12 @@ socket.onmessage = function(event) {
         updateScore();
     }
     else if(mensaje.type == "setName")
-        {
-            Player1Name = mensaje.player1DisplayName;
-            Player2Name = mensaje.player2DisplayName;
-            document.getElementById('player1-score').textContent = Player1Name + ': ' + Player1Points;
-            document.getElementById('player2-score').textContent = Player2Name +': ' + Player2Points;
-        }
+    {
+        Player1Name = mensaje.player1DisplayName;
+        Player2Name = mensaje.player2DisplayName;
+        document.getElementById('player1-score').textContent = Player1Name + ': ' + Player1Points;
+        document.getElementById('player2-score').textContent = Player2Name +': ' + Player2Points;
+    }
 };
 
 socket.onclose = function(event) {
@@ -116,6 +115,12 @@ socket.onerror = function(error) {
     console.log("Error en el WebSocket", error);
 };
 
+
+/* export function getGamePositions()
+{
+    coord = [ballx, bally, Player1Y, Player2Y];
+	return coord;
+} */
 
 /* document.getElementById("join_game").onclick = () => {
     user_id = document.getElementById('user_id_txt_field').value;
