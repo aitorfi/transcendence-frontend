@@ -1,7 +1,7 @@
 'use strict'
 
 import { join, button } from "./com.js";
-import { game_state,ballx, bally, Player1Y, Player2Y, screen_mesagge, color, Player1Points, Player2Points, serverTime, speedx, speedy } from "./com.js";
+import { game_state,ballx, bally, Player1Y, Player2Y, screen_mesagge, color, Player1Points, Player2Points, serverTime, speedx, speedy, Player1Name, Player2Name } from "./com.js";
 //Game variables
 let canvas;
 let ctx;
@@ -151,8 +151,8 @@ function drawCanva()
 
 export function updateScore()
 {
-	document.getElementById('player1-score').textContent = 'Player 1: ' + Player1Points;
-	document.getElementById('player2-score').textContent = 'Player 2: ' + Player2Points;
+	document.getElementById('player1-score').textContent = Player1Name + Player1Points;
+	document.getElementById('player2-score').textContent = Player2Name + Player2Points;
 }
 
 function refresh() {
