@@ -18,6 +18,8 @@ export let Player1Y;
 export let Player2Y;
 export let Player1Points = 0;
 export let Player2Points = 0;
+export let Player1Name  = "Player 1";
+export let Player2Name  = "Player 2";
 let coord;
 
 export function getGamePositions()
@@ -37,18 +39,21 @@ export async function button(b)
 
 export async function join()
 {
-    const id = localStorage.getItem('id-online');
-    console.log("id online: ", id);
     if (socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify({
                             type: "join_game",
-                            user_id: id
+                            user_id: "12",
+                            token: localStorage.getItem('accessToken')
                         }));
     }
 }
 
 socket.onopen = function(e) {
     console.log("Conectado al WebSocket");
+    socket.send(JSON.stringify({
+        type: 'authentication',
+        token: localStorage.getItem('accessToken')
+      }));    
 };
 
 socket.onmessage = function(event) {
@@ -90,6 +95,13 @@ socket.onmessage = function(event) {
         Player2Points = mensaje.player2Points;
         updateScore();
     }
+    else if(mensaje.type == "setName")
+        {
+            Player1Name = mensaje.player1DisplayName;
+            Player2Name = mensaje.player2DisplayName;
+            document.getElementById('player1-score').textContent = Player1Name + ': ' + Player1Points;
+            document.getElementById('player2-score').textContent = Player2Name +': ' + Player2Points;
+        }
 };
 
 socket.onclose = function(event) {
