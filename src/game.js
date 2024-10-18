@@ -26,7 +26,7 @@ const BALL_SIZE = 10;
 const PADDLE_HEIGHT = 100;
 const PADDLE_WIDTH = 10;
 
-export function initializeGame() {
+export function onlineInitializeGame() {
 	canvas = document.getElementById('pongCanvas');
 	ctx = canvas.getContext('2d');
 	player1Up = false;
