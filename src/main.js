@@ -636,6 +636,9 @@ async function loadWindowLocation() {
             localStorage.setItem("tournament", "INDIVIDUAL");
             localStorage.setItem("tournament_id", "0");
             onlineInitializeGame();
+
+
+            
         }
         if (locationPath === "/OnlineMultiplayer4") {
             localStorage.setItem("tournament", "SEMIFINAL");
