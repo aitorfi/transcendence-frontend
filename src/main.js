@@ -3,7 +3,8 @@
 import { initializeGame, terminateGame } from "./LocalMultiplayer.js"
 import { initializeGameIA, terminateGameIA } from "./SinglePlayerIA.js"
 import { initSignIn } from './SignIn.js';
-import { onlineInitializeGame } from './game.js';
+import { onlineInitializeGame } from './game4.js';
+
 
 
 
@@ -239,10 +240,16 @@ const ROUTES = {
         script: "./src/PrivateProfile.js"
     },
     "/OnlineMultiplayer": {
-        template: "../templates/LocalGame.html",
-        title: "OnlineMultiplayer | " + DEFAULT_PAGE_TITLE,
-        description: "This is the OnlineMultiplayer page",
-        script: "./src/game.js"
+        template: "../templates/Game4.html",
+        title: "1 Vs 1 | " + DEFAULT_PAGE_TITLE,
+        description: "This is the 1 Vs 1",
+        script: "./src/game4.js"
+    },
+    "/OnlineMultiplayer4": {
+        template: "../templates/Game4.html",
+        title: "OnlineMultiplayer 4 players | " + DEFAULT_PAGE_TITLE,
+        description: "This is the OnlineMultiplayer 4 page",
+        script: "./src/game4.js"
     },
     "/PublicProfile": {
         template: "../templates/PublicProfile.html",
@@ -626,7 +633,15 @@ async function loadWindowLocation() {
 			document.body.appendChild(script);
 		}
         if (locationPath === "/OnlineMultiplayer") {
+            localStorage.setItem("tournament", "INDIVIDUAL");
+            localStorage.setItem("tournament_id", "0");
             onlineInitializeGame();
+        }
+        if (locationPath === "/OnlineMultiplayer4") {
+            localStorage.setItem("tournament", "SEMIFINAL");
+            localStorage.setItem("tournament_id", "0");
+            onlineInitializeGame();
+
         }
 /* 		if (locationPath === "/OnlineMultiplayer") {
 			const script = document.createElement('script');

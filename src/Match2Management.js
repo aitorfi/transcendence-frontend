@@ -1,6 +1,33 @@
+
+async function getid() {
+    const token = localStorage.getItem("accessToken");
+    try {
+        const response = await fetch('http://localhost:50000/api/test-token/', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+        });
+        console.log(response);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const user = await response.json();
+        console.log("XXXXXXXXXX->", user);
+        return user.user_id;
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+        return [];
+    }  
+}
+
 function initMatch2Management() {
     console.log("Initializing Match Management");
 
+
+    console.log (localStorage.getItem("tournament"));
     const matchList = document.getElementById('matchList');
     const matchDetailsModal = new bootstrap.Modal(document.getElementById('matchDetailsModal'));
     const matchDetailsBody = document.getElementById('matchDetailsBody');
@@ -8,12 +35,12 @@ function initMatch2Management() {
     async function fetchMatches() {
         const token = localStorage.getItem("accessToken");
         try {
-            const response = await fetch('http://localhost:60000/api/matches/', {
+            const response = await fetch('http://localhost:60000/api/matches/' + await getid() + "/", {
                 headers: {
                     'Content-Type': 'application/json'
                 },
             });
-
+            console.log("xx---XXX->", response);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -97,6 +124,8 @@ function initMatch2Management() {
     async function startMatch(matchId) {
         try {
             const token = localStorage.getItem("accessToken");
+ 
+
             const response = await fetch(`http://localhost:60000/api/matches2/${matchId}/start/`, {
                 method: 'POST',
                 headers: {
