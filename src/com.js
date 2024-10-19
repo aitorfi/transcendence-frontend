@@ -2,11 +2,8 @@
 
 import { updateScore } from "./game4.js";
 
-const gameType = localStorage.getItem("tournament") || "INDIVIDUAL";
-const gameId = localStorage.getItem("tournament_id") || "0";
-
 //const socket = new WebSocket('ws://10.14.2.1:50002/ws/game/');
-const socket = new WebSocket(`ws://127.0.0.1:50002/ws/game/${gameType}/${gameId}/`);
+const socket = new WebSocket(`ws://127.0.0.1:50002/ws/game/`);
 
 const campoUserId = document.getElementById('user_id_txt_field');
 
@@ -46,16 +43,25 @@ export async function button(b)
 
 export async function join()
 {
+    const gameType = localStorage.getItem("tournament") || "INDIVIDUAL";
+    const gameId = localStorage.getItem("tournament_id") || "0";
+
     if (socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify({
                             type: "join_game",
                             user_id: "12",
+                            game_type: gameType,
+                            game_id: gameId,
+                            
                             token: localStorage.getItem('accessToken')
                         }));
     }
 }
 
 socket.onopen = function(e) {
+    const gameType = localStorage.getItem("tournament") || "INDIVIDUAL";
+    const gameId = localStorage.getItem("tournament_id") || "0";
+
     console.log("Conectado al WebSocket");
     socket.send(JSON.stringify({
         type: 'authentication',
@@ -98,11 +104,11 @@ socket.onmessage = function(event) {
         color = mensaje.color;
         Player1Points = mensaje.player1Points;
         Player2Points = mensaje.player2Points;
-        if (localStorage.getItem("tournament") == "SEMIFINAL")
+/*         if (localStorage.getItem("tournament") == "SEMIFINAL")
         {
-            localStorage.setItem("tournament", "Final");
+            localStorage.setItem("tournament", "FINAL");
             console.log ("Torneo: " + localStorage.getItem("tournament"));
-        }
+        } */
 
         updateScore();
     }
