@@ -1,7 +1,6 @@
 'use strict'
 
-import { join, button } from "./com.js";
-import { game_state,ballx, bally, Player1Y, Player2Y, screen_mesagge, color, Player1Points, Player2Points, serverTime, speedx, speedy, Player1Name, Player2Name } from "./com.js";
+import { join, button, game_state, ballx, bally, Player1Y, Player2Y, screen_mesagge, color, Player1Points, Player2Points, serverTime, speedx, speedy, Player1Name, Player2Name, Player1Id, Player2Id } from "./com.js";
 //Game variables
 let canvas;
 let ctx;
@@ -19,7 +18,6 @@ let x;
 let fX;
 let fY;
 
-
 //constants  
 const BALL_SIZE = 10;
 //const PADDLE_SPEED = 6;
@@ -27,6 +25,9 @@ const PADDLE_HEIGHT = 100;
 const PADDLE_WIDTH = 10;
 
 export function onlineInitializeGame() {
+
+
+
 	canvas = document.getElementById('pongCanvas');
 	ctx = canvas.getContext('2d');
 	player1Up = false;
@@ -67,7 +68,10 @@ export function onlineInitializeGame() {
 
 	const h1Element = document.querySelector('#pong-container h1');
 	  // Cambia el texto del h1
-	h1Element.textContent = 'Online Multiplayer';
+
+
+
+	h1Element.textContent = localStorage.getItem("tournament");
 
 	//wait = true;
 	
@@ -93,9 +97,10 @@ function gameLoop() {
 			drawCanva();
 		}
 	}
-	else if (game_state == "waiting")
-		showMessage(screen_mesagge, color);
+	else if (game_state == "waiting"){
 
+		showMessage(screen_mesagge, color);
+	}
 	refresh();	
 }
 
@@ -149,10 +154,15 @@ function drawCanva()
 	//drawBall(ballx, bally);
 }
 
-export function updateScore()
-{
-	document.getElementById('player1-score').textContent = Player1Name + ": " + Player1Points;
-	document.getElementById('player2-score').textContent = Player2Name + ": " + Player2Points;
+export function updateScore() {
+
+
+
+    document.getElementById('player1-avatar').src = "http://localhost:50000/api/users/avatar/" + Player1Id + "/";
+    document.getElementById('player1-name-score').textContent = Player1Name + ": " + Player1Points;
+    
+    document.getElementById('player2-avatar').src = "http://localhost:50000/api/users/avatar/" + Player2Id + "/";
+    document.getElementById('player2-name-score').textContent = Player2Name + ": " + Player2Points;
 }
 
 function refresh() {

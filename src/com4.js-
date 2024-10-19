@@ -2,18 +2,10 @@
 
 import { updateScore } from "./game4.js";
 
-const gameType = localStorage.getItem("tournament") || "INDIVIDUAL";
-const gameId = localStorage.getItem("tournament_id") || "0";
-
 //const socket = new WebSocket('ws://10.14.2.1:50002/ws/game/');
-const socket = new WebSocket(`ws://127.0.0.1:50002/ws/game/${gameType}/${gameId}/`);
+const socket = new WebSocket('ws://127.0.0.1:50002/ws/game/');
 
 const campoUserId = document.getElementById('user_id_txt_field');
-
-/*
-		localStorage.setItem("tournament", "INDIVIDUAL");
-		localStorage.setItem("tournament_id", "0");
-*/
 
 let user_id;
 let type;
@@ -59,10 +51,8 @@ socket.onopen = function(e) {
     console.log("Conectado al WebSocket");
     socket.send(JSON.stringify({
         type: 'authentication',
-        token: localStorage.getItem('accessToken'),
-        gameType: gameType,
-        gameId: gameId
-    }));    
+        token: localStorage.getItem('accessToken')
+      }));    
 };
 
 socket.onmessage = function(event) {
@@ -98,12 +88,6 @@ socket.onmessage = function(event) {
         color = mensaje.color;
         Player1Points = mensaje.player1Points;
         Player2Points = mensaje.player2Points;
-        if (localStorage.getItem("tournament") == "SEMIFINAL")
-        {
-            localStorage.setItem("tournament", "Final");
-            console.log ("Torneo: " + localStorage.getItem("tournament"));
-        }
-
         updateScore();
     }
     else if (mensaje.type =="update")
@@ -115,21 +99,11 @@ socket.onmessage = function(event) {
     }
     else if(mensaje.type == "setName")
     {
-		console.log ("Torneo: " + localStorage.getItem("tournament"));
-        console.log ("ID Torneo: " + localStorage.getItem("tournament_id"));
-
         Player1Name = mensaje.player1DisplayName;
         Player2Name = mensaje.player2DisplayName;
-        Player1Id = mensaje.player1Id;
-        Player2Id = mensaje.player2Id;        
-/*         document.getElementById('player1-score').textContent = Player1Name + ': ' + Player1Points;
-        document.getElementById('player2-score').textContent = Player2Name +': ' + Player2Points; */
-
-        document.getElementById('player1-avatar').src = "http://localhost:50000/api/users/avatar/" + Player1Id + "/";
-        document.getElementById('player1-name-score').textContent = Player1Name + ": " + Player1Points;
         
-        document.getElementById('player2-avatar').src = "http://localhost:50000/api/users/avatar/" + Player2Id + "/";
-        document.getElementById('player2-name-score').textContent = Player2Name + ": " + Player2Points;        
+        document.getElementById('player1-score').textContent = Player1Name + ': ' + Player1Points;
+        document.getElementById('player2-score').textContent = Player2Name +': ' + Player2Points;
     }
 };
 
