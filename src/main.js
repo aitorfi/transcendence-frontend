@@ -610,6 +610,18 @@ async function loadWindowLocation() {
 			};
 			document.body.appendChild(script);
 		}
+/*         if (locationPath === "/MatchHistory") {
+			const script = document.createElement('script');
+			script.src = './src/PrivateProfile.js';
+			script.onload = function() {
+				if (typeof window.initProfile === 'function') {
+					window.initProfile();
+				} else {
+					console.error('initProfile function not found');
+				}
+			};
+			document.body.appendChild(script);
+		} */
         if (locationPath === "/OnlineMultiplayer") {
             localStorage.setItem("tournament", "INDIVIDUAL");
             localStorage.setItem("tournament_id", "0");
