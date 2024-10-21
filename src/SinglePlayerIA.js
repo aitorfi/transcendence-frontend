@@ -183,16 +183,29 @@ function drawIABall(x, y, size, color) {
 	ctx.fill();
 }
 
+function drawDashedLine() {
+    ctx.beginPath();
+    ctx.setLineDash([5, 5]); // Define el patrón de línea discontinua
+    ctx.moveTo(canvas.width / 2, 0); // Comienza en la parte superior
+    ctx.lineTo(canvas.width / 2, canvas.height); // Termina en la parte inferior
+    ctx.strokeStyle = 'white'; // Color de la línea
+    ctx.lineWidth = 1; // Ancho de la línea
+    ctx.stroke();
+    ctx.setLineDash([]); // Restablece el patrón de línea a sólido
+}
+
 function cleanCanva()
 {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+
 function drawCanva()
 {
 	drawRect(0, player1Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
 	drawRect(canvas.width - PADDLE_WIDTH, player2Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
-	drawBall(ballX, ballY, BALL_SIZE, 'white');
+	drawDashedLine();
+	drawBall(ballX, ballY, BALL_SIZE, 'yellow');
 	//drawIABall(ballIAX, ballIAY, BALL_SIZE, 'green');
 }
 
@@ -435,7 +448,7 @@ function setBallSpeed()
 	ballSpeedX = 6;
 	if (ballDirSideways == BALL_DIR_LEFT)
 		ballSpeedX = (-1) * ballSpeedX;
-	ballSpeedY = 1;
+	ballSpeedY = 2;
 	if (ballDirUpOrDown == BALL_DIR_UP)
 		ballSpeedY = (-1) * ballSpeedY;
 }
@@ -461,12 +474,12 @@ function moveAI()
 	} */
 
 	
-	if (player2Y < ballIAY - 90)// - 80
+	if (player2Y < ballIAY - 80)// - 80 -90
 	{
 		player2Up = false;
 		player2Down = true;
 	}
-	if (player2Y > ballIAY )// - 10
+	if (player2Y > ballIAY - 10)// - 10
 	{
 		player2Down = false;
 		player2Up = true;
