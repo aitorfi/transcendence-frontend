@@ -11,6 +11,31 @@ export function initSignIn() {
     }
 }
 
+/* async function setOnline(bool) {
+  
+    const id = localStorage.getItem('id-online');
+    console.log("id", id);
+    try 
+    {
+        const response = await fetch('http://localhost:50000/api/users/login/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    }
+    catch (error) 
+    {
+    console.error('Error sending data:', error);
+    alert('Error connecting to the server');
+}
+} */
+
 async function handleSignIn(event) {
     event.preventDefault();
     const username = document.getElementById('username').value;
@@ -67,6 +92,10 @@ async function handleSignIn(event) {
                 window.history.pushState({}, "", "/PrivateProfile");
                 window.dispatchEvent(new PopStateEvent('popstate'));
                 window.dispatchEvent(new Event('locationchange'));
+/* 
+                setOnline(true); */
+
+
             }
         } else {
             const error = await response.json();
