@@ -203,22 +203,6 @@ const ROUTES = {
         title: "Single Game | " + DEFAULT_PAGE_TITLE,
         description: "This is the Single Game page for the Pong Game",
     },
-    "/Match4Management": {
-        template: "../templates/Match4Management.html",
-        title: "Match 4 | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Tournaments Match 4 page for the Pong Game",
-    },
-    "/Match2Management": {
-        template: "../templates/Match2Management.html",
-        title: "Match 4 | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Tournaments Match 2 page for the Pong Game",
-    },
-    "/Lobby": {
-        template: "../templates/Lobby.html",
-        title: "Lobby | " + DEFAULT_PAGE_TITLE,
-        description: "This is the Home home page",
-        //script: "./src/Lobby.js"
-    },
     "/LocalMultiplayer": {
         template: "../templates/LocalGame.html",
         title: "Local Game | " + DEFAULT_PAGE_TITLE,
@@ -505,7 +489,6 @@ async function loadWindowLocation() {
         terminateGame();
         terminateGameIA();
 
-
         if (locationPath === "/") {
             if (isUserLoggedIn()) {
                 window.history.replaceState({}, "", "/Home");
@@ -513,13 +496,6 @@ async function loadWindowLocation() {
                 return; // Importante: salir de la función después de la redirección
             } 
         }
-
-/*         "/Chat": {
-            template: "../templates/Chat.html",
-            title: "Chat | " + DEFAULT_PAGE_TITLE,
-            description: "This is the Chat page for the Pong Game",
-        }, */
-
         if (locationPath === "/Chat") {
             const script = document.createElement('script');
             script.src = './src/Match2Management.js';
@@ -531,12 +507,6 @@ async function loadWindowLocation() {
             };
             document.body.appendChild(script);
         }
-
-
-
-
-
-
         if (locationPath === "/ExecuteBlockFriend") {
             const script = document.createElement('script');
             script.src = './src/ExecuteBlockFriend.js';
@@ -625,42 +595,8 @@ async function loadWindowLocation() {
             };
             document.body.appendChild(script);
         }
-        if (locationPath === "/Lobby") {
-            console.log("ENTRA");
-            const script = document.createElement('script');
-            script.src = './src/Lobby.js';
-            script.onload = function() {
-                // Asegurarse de que la función de inicialización de friends se ejecuta
-                if (typeof window.initLobby === 'function') {
-                    window.initLobby();
-                }
-            };
-            document.body.appendChild(script);
-        }
         if (locationPath === "/LocalMultiplayer") {
             initializeGame();
-        }
-        if (locationPath === "/Match2Management") {
-            const script = document.createElement('script');
-            script.src = './src/Match2Management.js';
-            script.onload = function() {
-                // Asegurarse de que la función de inicialización de friends se ejecuta
-                if (typeof window.initMatch2Management === 'function') {
-                    window.initMatch2Management();
-                }
-            };
-            document.body.appendChild(script);
-        }
-        if (locationPath === "/Match4Management") {
-            const script = document.createElement('script');
-            script.src = './src/Match4Management.js';
-            script.onload = function() {
-                // Asegurarse de que la función de inicialización de friends se ejecuta
-                if (typeof window.initMatch4Management === 'function') {
-                    window.initMatch4Management();
-                }
-            };
-            document.body.appendChild(script);
         }
         if (locationPath === "/PrivateProfile") {
 			const script = document.createElement('script');
@@ -678,28 +614,12 @@ async function loadWindowLocation() {
             localStorage.setItem("tournament", "INDIVIDUAL");
             localStorage.setItem("tournament_id", "0");
             onlineInitializeGame();
-
-
-            
         }
         if (locationPath === "/OnlineMultiplayer4") {
             localStorage.setItem("tournament", "SEMIFINAL");
             localStorage.setItem("tournament_id", "0");
             onlineInitializeGame();
-
         }
-/* 		if (locationPath === "/OnlineMultiplayer") {
-			const script = document.createElement('script');
-			script.src = './src/game.js';
-			script.onload = function() {
-				if (typeof window.initProfile === 'function') {
-					window.initProfile();
-				} else {
-					console.error('initProfile function not found');
-				}
-			};
-			document.body.appendChild(script);
-		} */
         if (locationPath === "/PublicProfile") {
 			const script = document.createElement('script');
 			script.src = './src/PublicProfile.js';
@@ -712,7 +632,6 @@ async function loadWindowLocation() {
 			};
 			document.body.appendChild(script);
 		}	
-
         if (locationPath === "/Register") {
             const script = document.createElement('script');
             script.src = './src/Register.js';
@@ -721,7 +640,6 @@ async function loadWindowLocation() {
         if (locationPath === "/Login") {
             initSignIn();
         }
-
         if (locationPath === "/SearchUser") {
             const script = document.createElement('script');
             script.src = './src/SearchUser.js';
@@ -810,7 +728,7 @@ async function loadWindowLocation() {
         // Lógica para mostrar u ocultar elementos del menú
         if (retrievedToken) {
             let id = await getid();
-            //localStorage.setItem('id-online', id.user_id);
+            localStorage.setItem('id-online', id.user_id);
             let avatar = await getAvatar(id.user_id)
             document.getElementById('id-avatar').setAttribute("src", avatar);
             document.getElementById('id-username').textContent = id.username; // .innerHTML o .textContent valen las 2
