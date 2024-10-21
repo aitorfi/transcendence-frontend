@@ -11,104 +11,6 @@ export function initSignIn() {
     }
 }
 
-
-
-async function getOnlineStatus(userId) {
-    const token = localStorage.getItem("accessToken");
-    console.log("Access Token:", token);
-
-    try {
-          const response = await fetch(`http://localhost:50000/api/users/get_user_online_status/${userId}/`, {
-        //const response = await fetch(`http://localhost:50000/api/users/get-online/${userId}/`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Error response:', errorText);
-            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-        }
-
-        const data = await response.json();
-        console.log("Received data:", data);
-        return data;  // Devuelve los datos recibidos
-    } catch (error) {
-        console.error('Error en getOnlineStatus:', error);
-        return null;  // O cualquier otro valor que prefieras
-    }
-}
-
-
-async function setOnline() {
-
-
-
-
-    
-    const token = localStorage.getItem("accessToken");
-    const accessToken = localStorage.getItem("accessToken");
-    //console.log("Access Token:", data.access);
-
-    ///console.log("DATA.ACCESS:", accessToken);
-    console.log("token:", token);
-    //console.log("DATA.ACCESS:", data);
-    //const dataaccess = localStorage.getItem("")
-    try{
-        const response = await fetch(`http://localhost:50000/api/users/${userId}/online-status/`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`, // o twoFactorData.access, según corresponda
-                'Content-Type': 'application/json',
-            },
-                body: JSON.stringify({ is_online: true }), // Aquí podrías omitirlo si solo cambias el estado a True
-            });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Error response:', errorText);
-            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-        }
-
-        const data = await response.json();
-        console.log("Received data:", data);
-        return ;  // Asegurarse de devolver un array, incluso si está vacío.
-    } catch (error) {
-        console.error('catch error de setOnline:', error);
-        return ;
-    }
-
-
-    }
-    
-
-    async function getid() {
-        const token = localStorage.getItem("accessToken");
-        try {
-            const response = await fetch('http://localhost:50000/api/test-token/', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-            });
-    
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const user = await response.json();
-            console.log("XXXXXXXXXX->", user);
-            return user/* .user_id */;
-        } catch (error) {
-            console.error('Error al obtener usuarios:', error);
-            return [];
-        }  
-    }
-
 async function handleSignIn(event) {
     event.preventDefault();
     const username = document.getElementById('username').value;
@@ -162,18 +64,9 @@ async function handleSignIn(event) {
             } else {
                 localStorage.setItem('accessToken', data.access);
                 localStorage.setItem('refreshToken', data.refresh);
-
-               /*  console.log("EMPIEZA");
-                ///////////
-                const pepe = await getid()
-
-                console.log("PEPE==", pepe.user_id); 
-                 await setOnline();
-                console.log("TERMINA");
-                 await getOnlineStatus(pepe.user_id);
                 window.history.pushState({}, "", "/PrivateProfile");
                 window.dispatchEvent(new PopStateEvent('popstate'));
-                window.dispatchEvent(new Event('locationchange')); */
+                window.dispatchEvent(new Event('locationchange'));
             }
         } else {
             const error = await response.json();
