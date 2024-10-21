@@ -195,7 +195,7 @@ const ROUTES = {
     },    
     "/Home": {
         template: "../templates/Home.html",
-        title: "Home Home | " + DEFAULT_PAGE_TITLE,
+        title: "Home | " + DEFAULT_PAGE_TITLE,
         description: "This is the Home home page",
     },
     "/SinglePlayerIA": {
@@ -212,6 +212,12 @@ const ROUTES = {
         template: "../templates/Match2Management.html",
         title: "Match 4 | " + DEFAULT_PAGE_TITLE,
         description: "This is the Tournaments Match 2 page for the Pong Game",
+    },
+    "/Lobby": {
+        template: "../templates/Lobby.html",
+        title: "Lobby | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Home home page",
+        //script: "./src/Lobby.js"
     },
     "/LocalMultiplayer": {
         template: "../templates/LocalGame.html",
@@ -506,7 +512,31 @@ async function loadWindowLocation() {
                 loadWindowLocation();
                 return; // Importante: salir de la función después de la redirección
             } 
-        }   
+        }
+
+/*         "/Chat": {
+            template: "../templates/Chat.html",
+            title: "Chat | " + DEFAULT_PAGE_TITLE,
+            description: "This is the Chat page for the Pong Game",
+        }, */
+
+        if (locationPath === "/Chat") {
+            const script = document.createElement('script');
+            script.src = './src/Match2Management.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initMatch2Management === 'function') {
+                    window.initMatch2Management();
+                }
+            };
+            document.body.appendChild(script);
+        }
+
+
+
+
+
+
         if (locationPath === "/ExecuteBlockFriend") {
             const script = document.createElement('script');
             script.src = './src/ExecuteBlockFriend.js';
@@ -591,6 +621,18 @@ async function loadWindowLocation() {
                 // Asegurarse de que la función de inicialización de friends se ejecuta
                 if (typeof window.initFriendsWait === 'function') {
                     window.initFriendsWait();
+                }
+            };
+            document.body.appendChild(script);
+        }
+        if (locationPath === "/Lobby") {
+            console.log("ENTRA");
+            const script = document.createElement('script');
+            script.src = './src/Lobby.js';
+            script.onload = function() {
+                // Asegurarse de que la función de inicialización de friends se ejecuta
+                if (typeof window.initLobby === 'function') {
+                    window.initLobby();
                 }
             };
             document.body.appendChild(script);
@@ -758,7 +800,9 @@ async function loadWindowLocation() {
         const ListSearchLink = document.getElementById("SearchUser-link");
         const FriendMenu = document.getElementById("Friends-Menu");
         const TournamentsMenu = document.getElementById("Tournaments-Menu");
-        
+
+        const WaitRoomLink =document.getElementById("WaitRoom");
+        const ChatLink = document.getElementById("Chat");
 
 		const retrievedToken = localStorage.getItem("accessToken");
 
@@ -766,7 +810,7 @@ async function loadWindowLocation() {
         // Lógica para mostrar u ocultar elementos del menú
         if (retrievedToken) {
             let id = await getid();
-            localStorage.setItem('id-online', id.user_id);
+            //localStorage.setItem('id-online', id.user_id);
             let avatar = await getAvatar(id.user_id)
             document.getElementById('id-avatar').setAttribute("src", avatar);
             document.getElementById('id-username').textContent = id.username; // .innerHTML o .textContent valen las 2
@@ -780,6 +824,8 @@ async function loadWindowLocation() {
             if (TournamentsMenu) TournamentsMenu.style.display = '';
             if (avatarlink) avatarlink.style.display = '';
             if (avatarName) avatarName.style.display = '';
+            if (ChatLink) Chat.style.display = "";
+            if (WaitRoomLink) WaitRoomLink.style.display = "";
         } else if (!retrievedToken) {
             
             if (loginLink) loginLink.parentElement.style.display = '';
@@ -791,6 +837,8 @@ async function loadWindowLocation() {
             if (TournamentsMenu) TournamentsMenu.style.display = 'none';
             if (avatarlink) avatarlink.style.display = 'none';
             if (avatarName) avatarName.style.display = 'none';
+            if (WaitRoomLink) WaitRoomLink.style.display = "none";
+            if (ChatLink) Chat.style.display = "none";
         }
 
     } catch (error) {
