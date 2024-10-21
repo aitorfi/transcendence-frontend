@@ -1,5 +1,31 @@
+
+async function getid() {
+    const token = localStorage.getItem("accessToken");
+    try {
+        const response = await fetch('http://localhost:50000/api/test-token/', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+        });
+        console.log(response);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const user = await response.json();
+        console.log("XXXXXXXXXX->", user);
+        return user.user_id;
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+        return [];
+    }  
+}
+
 function initMatch4Management() {
     console.log("Initializing Match Management");
+
 
     const matchList = document.getElementById('matchList');
     const matchDetailsModal = new bootstrap.Modal(document.getElementById('matchDetailsModal'));
@@ -8,13 +34,12 @@ function initMatch4Management() {
     async function fetchMatches() {
         const token = localStorage.getItem("accessToken");
         try {
-            const response = await fetch('http://localhost:60000/api/matches4/', {
+            const response = await fetch('http://localhost:60000/api/matches4/' + await getid() + "/", {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
             });
-
+            console.log("xx---XXX->", response);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -26,6 +51,7 @@ function initMatch4Management() {
         }
     }
 
+
     function displayMatches(matches) {
         matchList.innerHTML = '';
         matches.forEach(match => {
@@ -35,13 +61,13 @@ function initMatch4Management() {
             listItem.innerHTML = `
                 <div>
                     <strong>Match ${match.id}</strong><br>
-                    <small>Tournament: ${match.tournament.name}</small><br>
-                    <small>Round: ${match.round}</small><br>
-                    <small>Status: ${match.status}</small>
+                    <small>Tournament: ${match.match_type_display}</small><br>
+                    <small>${match.player1_display_name} ( ${match.player1_score}  ) -- ( ${match.player2_score}  ) ${match.player2_display_name}:  </small><br>
+                    <small>Fecha: ${match.date}</small>
                 </div>
                 <div>
-                    <button class="btn btn-info btn-sm details-btn" data-id="${match.id}">Details</button>
-                    ${match.status === 'PENDING' ? `<button class="btn btn-success btn-sm start-btn" data-id="${match.id}">Start</button>` : ''}
+                    <img src="http://localhost:50000/api/users/avatar/${match.winner_id}/" height=80 width=80>
+                    
                 </div>
             `;
             
@@ -61,7 +87,7 @@ function initMatch4Management() {
     async function showMatchDetails(matchId) {
         try {
             const token = localStorage.getItem("accessToken");
-            const response = await fetch(`http://localhost:60000/api/matches4/${matchId}/`, {
+            const response = await fetch(`http://localhost:60000/api/matches2/${matchId}/`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -83,8 +109,6 @@ function initMatch4Management() {
                 <ul>
                     <li>${match.player1.display_name}: ${match.player1_score} points</li>
                     <li>${match.player2.display_name}: ${match.player2_score} points</li>
-                    <li>${match.player3.display_name}: ${match.player3_score} points</li>
-                    <li>${match.player4.display_name}: ${match.player4_score} points</li>
                 </ul>
                 ${match.winner ? `<p><strong>Winner:</strong> ${match.winner.display_name}</p>` : ''}
             `;
@@ -99,7 +123,9 @@ function initMatch4Management() {
     async function startMatch(matchId) {
         try {
             const token = localStorage.getItem("accessToken");
-            const response = await fetch(`http://localhost:60000/api/matches4/${matchId}/start/`, {
+ 
+
+            const response = await fetch(`http://localhost:60000/api/matches2/${matchId}/start/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

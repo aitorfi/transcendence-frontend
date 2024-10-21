@@ -1,6 +1,33 @@
+
+async function getid() {
+    const token = localStorage.getItem("accessToken");
+    try {
+        const response = await fetch('http://localhost:50000/api/test-token/', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+        });
+        console.log(response);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const user = await response.json();
+        console.log("XXXXXXXXXX->", user);
+        return user.user_id;
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+        return [];
+    }  
+}
+
 function initMatch2Management() {
     console.log("Initializing Match Management");
 
+
+    console.log (localStorage.getItem("tournament"));
     const matchList = document.getElementById('matchList');
     const matchDetailsModal = new bootstrap.Modal(document.getElementById('matchDetailsModal'));
     const matchDetailsBody = document.getElementById('matchDetailsBody');
@@ -8,13 +35,12 @@ function initMatch2Management() {
     async function fetchMatches() {
         const token = localStorage.getItem("accessToken");
         try {
-            const response = await fetch('http://localhost:60000/api/matches2/', {
+            const response = await fetch('http://localhost:60000/api/matches/' + await getid() + "/", {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
             });
-
+            console.log("xx---XXX->", response);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -26,6 +52,7 @@ function initMatch2Management() {
         }
     }
 
+
     function displayMatches(matches) {
         matchList.innerHTML = '';
         matches.forEach(match => {
@@ -35,13 +62,13 @@ function initMatch2Management() {
             listItem.innerHTML = `
                 <div>
                     <strong>Match ${match.id}</strong><br>
-                    <small>Tournament: ${match.tournament.name}</small><br>
-                    <small>Round: ${match.round}</small><br>
-                    <small>Status: ${match.status}</small>
+                    <small>Tournament: ${match.match_type_display}</small><br>
+                    <small>${match.player1_display_name} ( ${match.player1_score}  ) -- ( ${match.player2_score}  ) ${match.player2_display_name}:  </small><br>
+                    <small>Fecha: ${match.date}</small>
                 </div>
                 <div>
-                    <button class="btn btn-info btn-sm details-btn" data-id="${match.id}">Details</button>
-                    ${match.status === 'PENDING' ? `<button class="btn btn-success btn-sm start-btn" data-id="${match.id}">Start</button>` : ''}
+                    <img src="http://localhost:50000/api/users/avatar/${match.winner_id}/" height=80 width=80>
+                    
                 </div>
             `;
             
@@ -97,6 +124,8 @@ function initMatch2Management() {
     async function startMatch(matchId) {
         try {
             const token = localStorage.getItem("accessToken");
+ 
+
             const response = await fetch(`http://localhost:60000/api/matches2/${matchId}/start/`, {
                 method: 'POST',
                 headers: {

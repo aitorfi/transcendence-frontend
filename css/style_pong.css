@@ -19,7 +19,16 @@
 	padding: 10px;
 	border-radius: 10px;
 }
-  
+#pong-container h4 {
+	/*position: absolute;*/
+	color: white;
+	font-size: 40px;
+	/*z-index: 1; /* Asegura que el título esté encima del canvas */
+	background-color: rgba(0, 0, 0, 0.5); /* Fondo negro semi-transparente para que el texto sea más visible */
+	padding: 10px;
+	border-radius: 10px;
+}
+
 #pong-container canvas {
 	border: 2px solid white;
 	/*position: relative;*/
