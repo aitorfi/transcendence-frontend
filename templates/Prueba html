@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sala de Espera</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Si tienes estilos CSS -->
+</head>
+<body>
+    <div id="waitingRoom">
+        <h1>Sala de Espera</h1>
+        <p id="statusMessage">Esperando al segundo jugador...</p>
+        <button id="readyButton" style="display: none;">Estoy Listo</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
