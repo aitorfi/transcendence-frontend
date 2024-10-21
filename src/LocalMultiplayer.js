@@ -132,6 +132,17 @@ function drawBall(x, y, size, color) {
 	ctx.fill();
 }
 
+function drawDashedLine() {
+    ctx.beginPath();
+    ctx.setLineDash([5, 5]); // Define el patrón de línea discontinua
+    ctx.moveTo(canvas.width / 2, 0); // Comienza en la parte superior
+    ctx.lineTo(canvas.width / 2, canvas.height); // Termina en la parte inferior
+    ctx.strokeStyle = 'white'; // Color de la línea
+    ctx.lineWidth = 1; // Ancho de la línea
+    ctx.stroke();
+    ctx.setLineDash([]); // Restablece el patrón de línea a sólido
+}
+
 function cleanCanva()
 {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -141,7 +152,8 @@ function drawCanva()
 {
 	drawRect(0, player1Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
 	drawRect(canvas.width - PADDLE_WIDTH, player2Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
-	drawBall(ballX, ballY, BALL_SIZE, 'white');
+	drawDashedLine();
+	drawBall(ballX, ballY, BALL_SIZE, 'yellow');
 }
 
 function updatePlayerAndBall()
@@ -368,10 +380,10 @@ function setBallSpeed()
 {
 	let ballDirSideways = getDirectionSideForBall();
 	let ballDirUpOrDown = getDirectionUpOrDownBall();
-	ballSpeedX = 4;
+	ballSpeedX = 6;
 	if (ballDirSideways == BALL_DIR_LEFT)
 		ballSpeedX = (-1) * ballSpeedX;
-	ballSpeedY = 1;
+	ballSpeedY = 2;
 	if (ballDirUpOrDown == BALL_DIR_UP)
 		ballSpeedY = (-1) * ballSpeedY;
 }
