@@ -15,7 +15,6 @@ async function getid() {
         }
         
         const user = await response.json();
-        console.log("XXXXXXXXXX->", user);
         return user.user_id;
     } catch (error) {
         console.error('Error al obtener usuarios:', error);
@@ -25,11 +24,45 @@ async function getid() {
 
 function initMatchHistoryTournament() {
     console.log("Initializing Match Management");
-
-
     const matchList = document.getElementById('matchList');
     const matchDetailsModal = new bootstrap.Modal(document.getElementById('matchDetailsModal'));
     const matchDetailsBody = document.getElementById('matchDetailsBody');
+    const tournamentPlayed = document.getElementById('tournament-played');
+    const tournamentWin = document.getElementById('tournament-wins');
+    const tournamentLosses = document.getElementById('tournament-losses');
+    const tournamentWinRate = document.getElementById('tournament-winRate');
+
+    async function fetchStats() {
+        const userId = await getid();
+        try {
+            const response = await fetch(`http://localhost:60000/api/matches2/stats_view/${userId}/`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching matches:', error);
+            return [];
+        }
+    }
+
+    function displayStats(stats) {
+        tournamentPlayed.innerHTML = stats.tournaments.played;
+        tournamentWin.innerHTML = stats.tournaments.won;
+        tournamentLosses.innerHTML = stats.tournaments.played - stats.tournaments.won;
+        if (stats.tournaments.played > 0) {
+            // Calcula la tasa de victorias
+            const winRate = (stats.tournaments.won / stats.tournaments.played) * 100;
+            tournamentWinRate.innerHTML = winRate.toFixed(2) + "%"; // Formatea el valor como porcentaje con dos decimales
+        } else {
+            tournamentWinRate.innerHTML = "0%"; // Si no se han jugado partidas
+        }
+    }
 
     async function fetchMatches() {
         const token = localStorage.getItem("accessToken");
@@ -39,11 +72,9 @@ function initMatchHistoryTournament() {
                     'Content-Type': 'application/json'
                 },
             });
-            console.log("xx---XXX->", response);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            console.log("reponse", response);
             return await response.json();
         } catch (error) {
             console.error('Error fetching matches:', error);
@@ -147,6 +178,7 @@ function initMatchHistoryTournament() {
     }
 
     // Fetch and display matches on page load
+    fetchStats().then(displayStats);
     fetchMatches().then(displayMatches);
 }
 

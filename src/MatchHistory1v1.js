@@ -15,7 +15,6 @@ async function getid() {
         }
         
         const user = await response.json();
-        console.log("XXXXXXXXXX->", user);
         return user.user_id;
     } catch (error) {
         console.error('Error al obtener usuarios:', error);
@@ -25,12 +24,46 @@ async function getid() {
 
 function initMatchHistory1v1() {
     console.log("Initializing Match Management");
-
-
     console.log (localStorage.getItem("tournament"));
     const matchList = document.getElementById('matchList');
     const matchDetailsModal = new bootstrap.Modal(document.getElementById('matchDetailsModal'));
     const matchDetailsBody = document.getElementById('matchDetailsBody');
+    const oneVsonePlayed = document.getElementById('1v1-total');
+    const oneVsoneWin = document.getElementById('1v1-wins');
+    const oneVsoneLosses = document.getElementById('1v1-losses');
+    const oneVsoneWinRate = document.getElementById('1v1-winrate');
+
+    async function fetchStats() {
+        const userId = await getid();
+        try {
+            const response = await fetch(`http://localhost:60000/api/matches2/stats_view/${userId}/`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching matches:', error);
+            return [];
+        }
+    }
+
+    function displayStats(stats) {
+        oneVsonePlayed.innerHTML = stats.individual_matches.played;
+        oneVsoneWin.innerHTML = stats.individual_matches.won;
+        oneVsoneLosses.innerHTML = stats.individual_matches.played - stats.individual_matches.won;
+        if (stats.individual_matches.played > 0) {
+            // Calcula la tasa de victorias
+            const winRate = (stats.individual_matches.won / stats.individual_matches.played) * 100;
+            oneVsoneWinRate.innerHTML = winRate.toFixed(2) + "%"; // Formatea el valor como porcentaje con dos decimales
+        } else {
+            oneVsoneWinRate.innerHTML = "0%"; // Si no se han jugado partidas
+        }
+    }
 
     async function fetchMatches() {
         const token = localStorage.getItem("accessToken");
@@ -40,7 +73,6 @@ function initMatchHistory1v1() {
                     'Content-Type': 'application/json'
                 },
             });
-            console.log("xx---XXX->", response);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -148,6 +180,7 @@ function initMatchHistory1v1() {
     }
 
     // Fetch and display matches on page load
+    fetchStats().then(displayStats);
     fetchMatches().then(displayMatches);
 }
 
