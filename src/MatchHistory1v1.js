@@ -23,7 +23,7 @@ async function getid() {
     }  
 }
 
-function initMatch2Management() {
+function initMatchHistory1v1() {
     console.log("Initializing Match Management");
 
 
@@ -152,4 +152,4 @@ function initMatch2Management() {
 }
 
 // Expose the initialization function globally
-window.initMatch2Management = initMatch2Management;
+window.initMatchHistory1v1 = initMatchHistory1v1;

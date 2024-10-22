@@ -213,8 +213,13 @@ const ROUTES = {
         title: "Sign In | " + DEFAULT_PAGE_TITLE,
         description: "This is the Sign In page",
     },
-    "/MatchHistory": {
-        template: "../templates/MatchHistory.html",
+    "/MatchHistory1v1": {
+        template: "../templates/MatchHistory1v1.html",
+        title: "Match History | " + DEFAULT_PAGE_TITLE,
+        description: "This is the Match History page for the Pong Game",
+    },
+    "/MatchHistoryTournament": {
+        template: "../templates/MatchHistoryTournament.html",
         title: "Match History | " + DEFAULT_PAGE_TITLE,
         description: "This is the Match History page for the Pong Game",
     },
@@ -598,6 +603,32 @@ async function loadWindowLocation() {
         if (locationPath === "/LocalMultiplayer") {
             initializeGame();
         }
+        if (locationPath === "/MatchHistory1v1") {
+			const script = document.createElement('script');
+			script.src = './src/MatchHistory1v1.js';
+			script.onload = function() {
+				if (typeof window.initMatchHistory1v1 === 'function') {
+					window.initMatchHistory1v1();
+				} else {
+					console.error('initMatchHistory1v1 function not found');
+				}
+			};
+			document.body.appendChild(script);
+		}
+        if (locationPath === "/MatchHistoryTournament") {
+			const script = document.createElement('script');
+			script.src = './src/MatchHistoryTournament.js';
+			script.onload = function() {
+				if (typeof window.initMatchHistoryTournament === 'function') {
+					window.initMatchHistoryTournament();
+				} else {
+					console.error('initMatchHistoryTournament function not found');
+				}
+			};
+			document.body.appendChild(script);
+		}
+
+
         if (locationPath === "/PrivateProfile") {
 			const script = document.createElement('script');
 			script.src = './src/PrivateProfile.js';

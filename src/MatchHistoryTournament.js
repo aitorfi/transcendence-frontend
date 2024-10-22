@@ -23,7 +23,7 @@ async function getid() {
     }  
 }
 
-function initMatch4Management() {
+function initMatchHistoryTournament() {
     console.log("Initializing Match Management");
 
 
@@ -43,7 +43,7 @@ function initMatch4Management() {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
+            console.log("reponse", response);
             return await response.json();
         } catch (error) {
             console.error('Error fetching matches:', error);
@@ -151,4 +151,4 @@ function initMatch4Management() {
 }
 
 // Expose the initialization function globally
-window.initMatch4Management = initMatch4Management;
+window.initMatchHistoryTournament = initMatchHistoryTournament;
