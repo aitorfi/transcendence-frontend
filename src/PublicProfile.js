@@ -1,3 +1,5 @@
+
+
 async function initPublicProfile(){
 
     console.log("PublicProfile script init");
@@ -8,9 +10,9 @@ async function initPublicProfile(){
     document.getElementById('PublicProfile-username').innerHTML = userName;
     document.getElementById('public-title-name').innerHTML = userName;
     document.getElementById('PublicAvatarImage').setAttribute("src", avatar);
-    document.getElementById('date_joined_public').innerHTML = format(dateCreated);
+    document.getElementById('date_joined_public').innerHTML = formatDate(dateCreated);
 
-    function format(dateCreated)
+    function formatDate(dateCreated)
     {
         const date = new Date(dateCreated);
         const formattedDate = date.toLocaleString();
