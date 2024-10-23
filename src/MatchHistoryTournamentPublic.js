@@ -1,27 +1,4 @@
 
-async function getid() {
-    const token = localStorage.getItem("accessToken");
-    try {
-        const response = await fetch('http://localhost:50000/api/test-token/', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-        });
-        console.log(response);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const user = await response.json();
-        return user.user_id;
-    } catch (error) {
-        console.error('Error al obtener usuarios:', error);
-        return [];
-    }  
-}
-
 function initMatchHistoryTournamentPublic() {
     console.log("Initializing Match Management public");
     const matchList = document.getElementById('matchList');
@@ -31,9 +8,12 @@ function initMatchHistoryTournamentPublic() {
     const tournamentWin = document.getElementById('public-tournament-wins');
     const tournamentLosses = document.getElementById('public-tournament-losses');
     const tournamentWinRate = document.getElementById('public-tournament-winRate');
+    const userName = localStorage.getItem('profile-friend-username');
+    document.getElementById('stats-tournament-name').innerHTML = userName;
+    document.getElementById('history-tournament-name').innerHTML = userName;
 
     async function fetchStats() {
-        /* const userName = localStorage.getItem('profile-friend-username'); */
+
         const userId = localStorage.getItem('profile-friend-id');
         console.log("friend id", userId);
         try {
@@ -68,9 +48,10 @@ function initMatchHistoryTournamentPublic() {
     }
 
     async function fetchMatches() {
-        const token = localStorage.getItem("accessToken");
+
+        const userId = localStorage.getItem('profile-friend-id');
         try {
-            const response = await fetch('http://localhost:60000/api/matches4/' + await getid() + "/", {
+            const response = await fetch(`http://localhost:60000/api/matches4/${userId}/`, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
