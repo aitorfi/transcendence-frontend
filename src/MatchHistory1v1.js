@@ -22,6 +22,13 @@ async function getid() {
     }  
 }
 
+function formatDate(dateCreated)
+{
+    const date = new Date(dateCreated);
+    const formattedDate = date.toLocaleString();
+    return formattedDate;
+}
+
 function initMatchHistory1v1() {
     console.log("Initializing Match Management");
     console.log (localStorage.getItem("tournament"));
@@ -90,16 +97,16 @@ function initMatchHistory1v1() {
         matches.forEach(match => {
             const listItem = document.createElement('li');
             listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
-            
+            const Date = formatDate(match.date);
             listItem.innerHTML = `
                 <div>
                     <strong>Match ${match.id}</strong><br>
                     <small>Tournament: ${match.match_type_display}</small><br>
                     <small>${match.player1_display_name} ( ${match.player1_score}  ) -- ( ${match.player2_score}  ) ${match.player2_display_name}:  </small><br>
-                    <small>Fecha: ${match.date}</small>
+                    <small>Fecha: ${Date}</small>
                 </div>
                 <div>
-                    <img src="http://localhost:50000/api/users/avatar/${match.winner_id}/" height=80 width=80>
+                    <img src="http://localhost:50000/api/users/avatar/${match.winner_id}/" height=80 width=80 class="rounded-circle" style="border: 2px solid black;">
                     
                 </div>
             `;
