@@ -1,27 +1,4 @@
 
-async function getid() {
-    const token = localStorage.getItem("accessToken");
-    try {
-        const response = await fetch('http://localhost:50000/api/test-token/', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-        });
-        console.log(response);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const user = await response.json();
-        return user.user_id;
-    } catch (error) {
-        console.error('Error al obtener usuarios:', error);
-        return [];
-    }  
-}
-
 function initMatchHistory1v1Public() {
     console.log("Initializing Match Management 1v1 public");
     console.log (localStorage.getItem("tournament"));
@@ -32,6 +9,9 @@ function initMatchHistory1v1Public() {
     const oneVsoneWin = document.getElementById('public-1v1-wins');
     const oneVsoneLosses = document.getElementById('public-1v1-losses');
     const oneVsoneWinRate = document.getElementById('public-1v1-winrate');
+    const userName = localStorage.getItem('profile-friend-username');
+    document.getElementById('stats-1v1-name').innerHTML = userName;
+    document.getElementById('history-1v1-name').innerHTML = userName;
 
     async function fetchStats() {
         
@@ -48,7 +28,6 @@ function initMatchHistory1v1Public() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return await response.json();
-            console.log("public response", response);
         } catch (error) {
             console.error('Error fetching matches:', error);
             return [];
@@ -69,9 +48,10 @@ function initMatchHistory1v1Public() {
     }
 
     async function fetchMatches() {
+        const userId = localStorage.getItem('profile-friend-id');
         const token = localStorage.getItem("accessToken");
         try {
-            const response = await fetch('http://localhost:60000/api/matches/' + await getid() + "/", {
+            const response = await fetch(`http://localhost:60000/api/matches/${userId}/`, {
                 headers: {
                     'Content-Type': 'application/json'
                 },
