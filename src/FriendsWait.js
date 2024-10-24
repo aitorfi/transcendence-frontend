@@ -8,10 +8,10 @@ function initFriendsWait() {
 
     async function fetchFriends() {
         const token = localStorage.getItem("accessToken");
-        console.log("Access Token:", token); // Log the token
+        const userId = localStorage.getItem('id-online');
         
         try {
-            const response = await fetch('http://localhost:50000/api/friends/get_friends_wait/', {
+            const response = await fetch(`http://localhost:50002/chat/friend_requests/pending/${userId}/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -26,36 +26,14 @@ function initFriendsWait() {
             }
     
             const data = await response.json();
-            console.log("Received data:", data); // Log the received data
-            return data.friends;
+            console.log("Received sender data:", data); // Log the received data
+            return data;
+            /* return data.friends; */
         } catch (error) {
             console.error('Error al obtener amigos:', error);
             return [];
         }
     }
-
-    async function removeFriendWait(friendId) {
-        const token = localStorage.getItem("accessToken");
-        try {
-            const response = await fetch(`http://localhost:50000/api/friends/remove-wait/${friendId}/`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            return true;
-        } catch (error) {
-            console.error('Error al eliminar amigo:', error);
-            return false;
-        }
-    }
-
 
     function displayResults(friends) {
         if (!resultsContainer) {

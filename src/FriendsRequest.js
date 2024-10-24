@@ -8,10 +8,10 @@ function initFriendsRequest() {
 
     async function fetchFriends() {
         const token = localStorage.getItem("accessToken");
-        console.log("Access Token:", token); // Log the token
+        const userId = localStorage.getItem('id-online');
         
         try {
-            const response = await fetch('http://localhost:50000/api/friends/get_friends_request/', {
+            const response = await fetch(`http://localhost:50002/chat/friend_requests/pending_recipient/${userId}/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -26,7 +26,7 @@ function initFriendsRequest() {
             }
     
             const data = await response.json();
-            console.log("Received data:", data); // Log the received data
+            console.log("Received recipient data:", data); // Log the received data
             return data.friends;
         } catch (error) {
             console.error('Error al obtener amigos:', error);
@@ -62,8 +62,7 @@ function initFriendsRequest() {
         delete_friend_from_requestList(userId);
         
     }
-///////////////////////////////////////////////////////////////
-// friends.js
+
 async function delete_friend_from_FriendsWaiting(userId) {
     console.log("user id:", userId);
     const token = localStorage.getItem("accessToken");
